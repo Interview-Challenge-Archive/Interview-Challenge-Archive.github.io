@@ -27,19 +27,7 @@
         <h1><a href="index.html">Job<strong>Test</strong>Vault</a></h1>
         <nav>
             <ul>
-                <li>
-                    <input type="checkbox" class="hidden" id="search_toggle">
-                    <form action="#" method="get" class="search hidden">
-                    <select id="search_by" name="search_by">
-                        <option value="company" class="icon fa-building">Company</option>
-                        <option value="user" class="icon fa-user">User</option>
-                        <option value="job" class="icon fa-briefcase">Position</option>
-                    </select>
-                    <label for="search_term">is</label>
-                    <input type="search" id="search_term" name="search_term" />
-                </form>
-                    <a href="#search"><label for="search_toggle"><span for="search_toggle">Search</span> <i class="icon fa-search"></i></label></a>
-                </li>
+                <li><a href="#search" class="icon fa-search"><span>Search</span></a></li>
                 <li><a href="#submit" class="icon fa-plus"><span>Submit</span></a></li>
                 <li><a href="#footer" class="icon fa-info"><span>About</span></a></li>
             </ul>
@@ -144,6 +132,53 @@
         </div>
     </footer>
 
+    <div id="search" class="panel">
+        <div class="inner split">
+            <div>
+        <section>
+            <h2>Search by</h2>
+            <form action="#" method="get" class="search hidden">
+                <div class="field half first">
+                    <input type="search" name="country" placeholder="Country"/>
+                </div>
+                <div class="field half">
+                    <input type="search" name="company" placeholder="Company"/>
+                </div>
+                <div class="field half first">
+                    <input type="search" name="position" placeholder="Position"/>
+                </div>
+                <div class="field half">
+                    <input type="search" name="project_language" placeholder="Project language"/>
+                </div>
+                <ul class="actions">
+                    <li><input type="submit" value="Search" class="special"/></li>
+                    <li><input type="reset" value="Reset"/></li>
+                </ul>
+                </form>
+            </section>
+                </div>
+            <div>
+                <section>
+                    <h2>Generate a link</h2>
+                    <p>Here you can get a link to share for current search:
+                        <div class="field multiple">
+                        <input type="text" value="http://" readonly>
+                    <button type="button" class="icon fa-copy">Copy</button>
+                </div>
+                    </p>
+                 </section>
+                <h2>Share a link</h2>
+                <ul class="icons">
+                    <li><a href="https://twitter.com/home?status=You%20should%20visit%20%23JobTestVault%20for%20some%20interesting%20job%20test%20examples!%20http%3A//bit.ly/2hfiU2n" class="icon fa-twitter popup"><span class="label">Twitter</span></a></li>
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//bit.ly/2hfiU2n" class="popup icon fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="mailto:?&subject=Visit JobTestVault!&body=You%20should%20visit%20JobTestVault%20for%20some%20interesting%20job%20test%20examples!" class="icon fa-envelope"><span class="label">E-mail</span></a></li>
+                    <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A//bit.ly/2hfiU2n&title=Visit%20JobTestVault!&summary=You%20should%20visit%20%23JobTestVault%20for%20some%20interesting%20job%20test%20examples!&source=" class="icon fa-linkedin popup"><span class="label">LinkedIn</span></a></li>
+                    <li><a href="https://plus.google.com/share?url=http%3A//bit.ly/2hfiU2n" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
+                </ul>
+            </div>
+            </div>
+    </div>
+
     <div id="submit" class="panel">
         <div class="inner split">
             <div>
@@ -190,10 +225,16 @@
                     <button type="button" class="icon fa-file">Select</button>
                 </div>
                 <div class="field half first">
-                    <input type="search" name="company" id="company" placeholder="Name"/>
+                    <input type="search" name="country" placeholder="Country"/>
                 </div>
                 <div class="field half">
-                    <input type="search" name="position" id="position" placeholder="Position"/>
+                    <input type="search" name="company" placeholder="Company"/>
+                </div>
+                <div class="field half first">
+                    <input type="search" name="position" placeholder="Position"/>
+                </div>
+                <div class="field half">
+                    <input type="search" name="project_language" placeholder="Project language"/>
                 </div>
                 <div class="field">
                     <textarea name="description" id="description" rows="4" placeholder="Description"></textarea>

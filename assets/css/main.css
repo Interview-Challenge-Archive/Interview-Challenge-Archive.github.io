@@ -2009,41 +2009,6 @@ body.loading #main .thumb {
 
 /* Some Extra */
 
-form.search input, form.search select, form.search label {
-    display: inline;
-    width: inherit;
-}
-form.search label {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-
-#header nav > ul > li input[type="checkbox"]+form.search+a {
-    line-height: 14px;
-    padding-left: 0;
-}
-
-#header nav > ul > li input[type="checkbox"]:checked+form.search+a label span {
-    margin-left: 0.5em;
-    display: none;
-}
-
-#header nav > ul > li input[type="checkbox"]:checked+form.search+a label {
-    padding-left: 0.5em;
-}
-
-#header nav > ul > li form.search+a label {
-    display: inline-block;
-}
-
-#header nav > ul > li input[type="checkbox"]+form.search {
-    display: none;
-}
-
-#header nav > ul > li input[type="checkbox"]:checked+form.search {
-    display: inherit;
-}
-
 div.field.multiple {
     display: flex;
 }
