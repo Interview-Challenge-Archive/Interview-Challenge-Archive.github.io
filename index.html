@@ -138,7 +138,8 @@
             <div>
         <section>
             <h2>Search by</h2>
-            <form action="#" method="get" class="search hidden">
+            <form action="#" method="get" data-role="search" data-search-url-view="search_url"
+                  data-share-links-zone="search_share">
                 <div class="field half first">
                     <input type="search" name="country" placeholder="Country"/>
                 </div>
@@ -153,7 +154,8 @@
                 </div>
                 <div class="field half first">
                     <input type="search" name="github_username" placeholder="GitHub Username" data-role="autocomplete"
-                           data-key="login" data-src="https://api.github.com/search/users" data-query-name="q"/>
+                           data-key="login" data-src="https://api.github.com/search/users"
+                           data-dyn-param-q="this.val()"/>
                 </div>
                 <div class="field half">
                     <input type="search" name="project_name" placeholder="Project name"/>
@@ -170,18 +172,24 @@
                     <h2>Generate a link</h2>
                     <p>Here you can get a link to share for current search:
                         <div class="field multiple">
-                        <input type="text" value="http://" readonly>
+                            <input type="text" value="http://" readonly id="search_url">
                     <button type="button" class="icon fa-copy">Copy</button>
                 </div>
                     </p>
                  </section>
                 <h2>Share a link</h2>
-                <ul class="icons">
-                    <li><a href="https://twitter.com/home?status=You%20should%20visit%20%23JobTestVault%20for%20some%20interesting%20job%20test%20examples!%20http%3A//bit.ly/2hfiU2n" class="icon fa-twitter popup"><span class="label">Twitter</span></a></li>
-                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//bit.ly/2hfiU2n" class="popup icon fa-facebook"><span class="label">Facebook</span></a></li>
-                    <li><a href="mailto:?&subject=Visit JobTestVault!&body=You%20should%20visit%20JobTestVault%20for%20some%20interesting%20job%20test%20examples!" class="icon fa-envelope"><span class="label">E-mail</span></a></li>
-                    <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A//bit.ly/2hfiU2n&title=Visit%20JobTestVault!&summary=You%20should%20visit%20%23JobTestVault%20for%20some%20interesting%20job%20test%20examples!&source=" class="icon fa-linkedin popup"><span class="label">LinkedIn</span></a></li>
-                    <li><a href="https://plus.google.com/share?url=http%3A//bit.ly/2hfiU2n" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
+                <ul class="icons" id="search_share">
+                    <li><a data-href="https://twitter.com/home?status={message}%20{url}"
+                           class="icon fa-twitter popup"><span class="label">Twitter</span></a></li>
+                    <li><a data-href="https://www.facebook.com/sharer/sharer.php?u={url}"
+                           class="popup icon fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a data-href="mailto:?&subject=Visit%20JobTestVault!&body={message}%20{url}"
+                           class="icon fa-envelope"><span class="label">E-mail</span></a></li>
+                    <li>
+                        <a data-href="https://www.linkedin.com/shareArticle?mini=true&url={url}&title=Visit%20JobTestVault!&summary={message}&source="
+                           class="icon fa-linkedin popup"><span class="label">LinkedIn</span></a></li>
+                    <li><a data-href="https://plus.google.com/share?url={url}" class="icon fa-google-plus"><span
+                            class="label">Google+</span></a></li>
                 </ul>
             </div>
             </div>
@@ -220,6 +228,9 @@
                         <section>
             <h2>Fill the form</h2>
             <form method="post" action="#">
+                <div class="field">
+                    <input type="text" name="name" placeholder="Project name"/>
+                </div>
                 <div class="field multiple">
                     <input type="text" name="repository" id="repository" readonly placeholder="Select repository"/>
                     <button type="button" class="icon fa-github-alt">Select</button>
@@ -231,6 +242,10 @@
                 <div class="field multiple">
                     <input type="text" name="screenshot" id="license" readonly placeholder="Select license file"/>
                     <button type="button" class="icon fa-file">Select</button>
+                </div>
+                <div class="field multiple">
+                    <input type="text" name="linkedin" id="linkedin" readonly placeholder="Get your profile url"/>
+                    <button type="button" class="icon fa-linkedin">Login</button>
                 </div>
                 <div class="field half first">
                     <input type="search" name="country" placeholder="Country"/>
@@ -262,6 +277,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js" integrity="sha256-rsPUGdUPBXgalvIj4YKJrrUlmLXbOb6Cp7cdxn1qeUc=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.poptrox/2.5.1/jquery.poptrox.min.js" integrity="sha256-vTd7GTOBQ39N1EXsW3AMztVi8OPEq4mhXPUuQsIfyO0=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js" integrity="sha256-3e+NvOq+D/yeJy1qrWpYkEUr6SlOCL5mHpc2nZfX74E=" crossorigin="anonymous"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/string.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/data-roles.js"></script>
 <!--[if lte IE 8]>

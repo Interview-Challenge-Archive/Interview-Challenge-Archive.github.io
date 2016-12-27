@@ -66,15 +66,65 @@ $('input[data-role="autocomplete"]').on({
             }
         };
 
+        if (window.jobtestvault && window.jobtestvault.config && window.jobtestvault.config.github) {
+            if (window.jobtestvault.config.github.token) {
+                request.password = window.jobtestvault.config.github.token;
+            }
+            if (window.jobtestvault.config.github.user) {
+                request.username = window.jobtestvault.config.github.user;
+            }
+        }
+
         var data = self.data();
-        request.data[self.data('query-name')] = self.val();
         for (var k in data) {
-            if (k.indexOf('param-') == 0) {
-                request.data[k.substr(6)] = data[k];
+            if (k.beginsWith('param')) {
+                request.data[k.extractParamNameFromDataName('param')] = data[k];
+            }
+            if (k.beginsWith('dynParam')) {
+                var cmd = data[k].replace('this.', 'self.') + ';';
+                request.data[k.extractParamNameFromDataName('dynParam')] = eval(cmd);
             }
         }
         console.log(request);
 
         $.ajax(request);
     }
+});
+
+
+$('form[data-role="search"]').on({
+    'reset': function () {
+        $('input[type!="button"][type!="submit"][type!="reset"]', this).val('');
+        $('input', this).first().trigger('change');
+    }
+});
+$('form[data-role="search"] input').on({
+    change: function () {
+        $(this).trigger('keyup');
+    },
+    keyup: function () {
+        var form = $($(this).get(0).form);
+        var view = $('#' + form.data('search-url-view'));
+        var input_items = $("input", form).filter(function () {
+            return !!$(this).val() && !!$(this).attr('name');
+        });
+        view.val(window.location.href.split('?')[0] + '?' + input_items.serialize());
+        var link = encodeURIComponent(view.val());
+        if (input_items.length > 0) {
+            var message = 'Search in JobTestVault for items where';
+            input_items.each(function () {
+                message += ' ' + $(this).attr('name') + ' = ' + $(this).val();
+            });
+        } else {
+            var message = 'Search in JobTestVault for all items';
+        }
+        message = encodeURIComponent(message);
+        $('#' + form.data('share-links-zone') + ' [data-href]').each(function () {
+            $(this).attr('href', $(this).data('href').replace('{url}', link).replace('{message}', message));
+        });
+    }
+});
+
+$(function () {
+    $('form[data-role="search"] input:first-child').change();
 });

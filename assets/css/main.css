@@ -2012,3 +2012,7 @@ body.loading #main .thumb {
 div.field.multiple {
     display: flex;
 }
+
+div.field.multiple button {
+    min-width: 25%;
+}
