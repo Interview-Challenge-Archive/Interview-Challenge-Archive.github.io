@@ -152,7 +152,8 @@
                     <input type="search" name="project_language" placeholder="Project language"/>
                 </div>
                 <div class="field half first">
-                    <input type="search" name="github_username" placeholder="GitHub Username"/>
+                    <input type="search" name="github_username" placeholder="GitHub Username" data-role="autocomplete"
+                           data-key="login" data-src="https://api.github.com/search/users" data-query-name="q"/>
                 </div>
                 <div class="field half">
                     <input type="search" name="project_name" placeholder="Project name"/>
@@ -262,6 +263,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.poptrox/2.5.1/jquery.poptrox.min.js" integrity="sha256-vTd7GTOBQ39N1EXsW3AMztVi8OPEq4mhXPUuQsIfyO0=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js" integrity="sha256-3e+NvOq+D/yeJy1qrWpYkEUr6SlOCL5mHpc2nZfX74E=" crossorigin="anonymous"></script>
 <script src="assets/js/util.js"></script>
+<script src="assets/js/data-roles.js"></script>
 <!--[if lte IE 8]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
 <![endif]-->
