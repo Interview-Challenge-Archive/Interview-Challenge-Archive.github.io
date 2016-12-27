@@ -243,7 +243,7 @@
                     <input type="text" name="screenshot" id="license" readonly placeholder="Select license file"/>
                     <button type="button" class="icon fa-file">Select</button>
                 </div>
-                <div class="field multiple">
+                <div class="field multiple" data-role="get-profile-linkedin">
                     <input type="text" name="linkedin" id="linkedin" readonly placeholder="Get your profile url"/>
                     <button type="button" class="icon fa-linkedin">Login</button>
                 </div>
@@ -277,14 +277,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js" integrity="sha256-rsPUGdUPBXgalvIj4YKJrrUlmLXbOb6Cp7cdxn1qeUc=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.poptrox/2.5.1/jquery.poptrox.min.js" integrity="sha256-vTd7GTOBQ39N1EXsW3AMztVi8OPEq4mhXPUuQsIfyO0=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js" integrity="sha256-3e+NvOq+D/yeJy1qrWpYkEUr6SlOCL5mHpc2nZfX74E=" crossorigin="anonymous"></script>
-<script src="assets/js/config.js"></script>
-<script src="assets/js/string.js"></script>
 <script src="assets/js/util.js"></script>
-<script src="assets/js/data-roles.js"></script>
 <!--[if lte IE 8]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
 <![endif]-->
 <script src="assets/js/main.js"></script>
+
+<script src="assets/js/basic.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/string.js"></script>
+<script src="assets/js/data-roles.js"></script>
+
+<script type="text/javascript" src="https://platform.linkedin.com/in.js">
+    api_key:   86
+    r27rp7dsyn12
+    authorize: true
+    lang:  en_US
+    onLoad: window.jobtestvault.onLoadLinkedIn
+</script>
 
 </body>
 </html>

@@ -128,3 +128,21 @@ $('form[data-role="search"] input').on({
 $(function () {
     $('form[data-role="search"] input:first-child').change();
 });
+
+
+$('[data-role="get-profile-linkedin"] button').on({
+    click: function () {
+        var btn = $(this);
+        IN.User.authorize(function () {
+            btn.trigger('read');
+        });
+    },
+    read: function () {
+        var btn = $(this);
+        IN.API.Raw("/people/~:(public-profile-url)?format=json").result(function (data) {
+            btn.parent().find('input').first().val(data.publicProfileUrl);
+        }).error(function (err) {
+            btn.parent().find('input').first().val('');
+        });
+    }
+})
