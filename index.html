@@ -141,7 +141,9 @@
             <form action="#" method="get" data-role="search" data-search-url-view="search_url"
                   data-share-links-zone="search_share">
                 <div class="field half first">
-                    <input type="search" name="country" placeholder="Country"/>
+                    <input type="search" name="country" placeholder="Country" data-role="autocomplete"
+                           data-key="name" data-src="https://restcountries.eu/rest/v1/all" data-method="GET"
+                           data-cache="1"/>
                 </div>
                 <div class="field half">
                     <input type="search" name="company" placeholder="Company"/>
@@ -150,7 +152,10 @@
                     <input type="search" name="position" placeholder="Position"/>
                 </div>
                 <div class="field half">
-                    <input type="search" name="project_language" placeholder="Project language"/>
+                    <input type="search" name="project_language" placeholder="Project language" data-role="autocomplete"
+                           data-key="English"
+                           data-src="http://data.okfn.org/data/core/language-codes/r/language-codes-full.json"
+                           data-method="GET" data-cache="1"/>
                 </div>
                 <div class="field half first">
                     <input type="search" name="github_username" placeholder="GitHub Username" data-role="autocomplete"
@@ -172,9 +177,12 @@
                     <h2>Generate a link</h2>
                     <p>Here you can get a link to share for current search:
                         <div class="field multiple">
-                            <input type="text" value="http://" readonly id="search_url">
-                    <button type="button" class="icon fa-copy">Copy</button>
-                </div>
+                            <input type="text" readonly value="http://" id="search_url">
+                            <button class="icon fa-copy" data-role="clipboard" id="copy_url_to_clipboard"
+                                    data-clipboard-target="#search_url">Copy
+                            </button>
+
+                        </div>
                     </p>
                  </section>
                 <h2>Share a link</h2>
@@ -235,11 +243,12 @@
                     <input type="text" name="repository" id="repository" readonly placeholder="Select repository"/>
                     <button type="button" class="icon fa-github-alt">Select</button>
                 </div>
-                <div class="field multiple">
+                <div class="field multiple" data-accept="image/png,image/jpeg,image/gif" data-role="file-uploader"
+                     data-multiple="1">
                     <input type="text" name="screenshot" id="screenshot" readonly placeholder="Select screenshot file"/>
                     <button type="button" class="icon fa-file">Select</button>
                 </div>
-                <div class="field multiple">
+                <div class="field multiple" data-accept="text/markdown,text/plain,LICENSE" data-role="file-uploader">
                     <input type="text" name="screenshot" id="license" readonly placeholder="Select license file"/>
                     <button type="button" class="icon fa-file">Select</button>
                 </div>
@@ -248,7 +257,9 @@
                     <button type="button" class="icon fa-linkedin">Login</button>
                 </div>
                 <div class="field half first">
-                    <input type="search" name="country" placeholder="Country"/>
+                    <input type="search" name="country" placeholder="Country" data-role="autocomplete"
+                           data-key="name" data-src="https://restcountries.eu/rest/v1/all" data-method="GET"
+                           data-cache="1"/>
                 </div>
                 <div class="field half">
                     <input type="search" name="company" placeholder="Company"/>
@@ -257,7 +268,10 @@
                     <input type="search" name="position" placeholder="Position"/>
                 </div>
                 <div class="field half">
-                    <input type="search" name="project_language" placeholder="Project language"/>
+                    <input type="search" name="project_language" placeholder="Project language" data-role="autocomplete"
+                           data-key="English"
+                           data-src="http://data.okfn.org/data/core/language-codes/r/language-codes-full.json"
+                           data-method="GET" data-cache="1"/>
                 </div>
                 <div class="field">
                     <textarea name="description" id="description" rows="4" placeholder="Description"></textarea>
@@ -283,6 +297,9 @@
 <![endif]-->
 <script src="assets/js/main.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"
+        integrity="sha256-mYqjlBuTYmeoEFTjuPCrwns2stAp2HOJyXR5X2xjP70=" crossorigin="anonymous"></script>
+
 <script src="assets/js/basic.js"></script>
 <script src="assets/js/config.js"></script>
 <script src="assets/js/string.js"></script>
@@ -295,6 +312,7 @@
     lang:  en_US
     onLoad: window.jobtestvault.onLoadLinkedIn
 </script>
+
 
 </body>
 </html>

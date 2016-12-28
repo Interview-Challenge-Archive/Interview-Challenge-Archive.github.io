@@ -31,26 +31,19 @@ $('input[data-role="autocomplete"]').on({
         } else {
             var datalist = $('#' + data_list_id);
         }
-        self.removeAttr('list');
-        self.data('loading', true);
-        var loader = $('<span class="loading"><i class="fa fa-spinner fa-spin"></i></span>');
-        loader.css({
-            position: 'relative',
-            top: '2.2em',
-            left: '90%',
-        });
-        self.prepend(loader);
+
         var request = {
             url: self.data('src'),
-            cache: self.data('cache') ? self.data('cache') : false,
+            cache: self.data('cache') ? (parseInt(self.data('cache')) ? true : false) : false,
             data: {},
             crossDomain: self.data('cross-domain') ? self.data('cross-domain') : true,
             method: self.data('method') ? self.data('method') : 'GET',
             success: function (data, textStatus, jqXHR) {
                 $('option', datalist).remove();
                 var key_to_read = self.data('key');
-                for (var i = 0; i < data.total_count; i++) {
-                    var item = data.items[i];
+                var items = Array.isArray(data) ? data : data.items;
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
                     if (!item || !item[key_to_read]) {
                         continue;
                     }
@@ -58,13 +51,30 @@ $('input[data-role="autocomplete"]').on({
                 }
                 self.attr('list', data_list_id);
                 self.data('loading', false);
-                loader.remove();
                 if (self.data('postponed-loading')) {
                     self.data('postponed-loading', null);
                     self.trigger('keyup');
                 }
             }
         };
+
+        var data = self.data();
+        var c = 0;
+        for (var k in data) {
+            if (k.beginsWith('param')) {
+                request.data[k.extractParamNameFromDataName('param')] = data[k];
+                c++;
+            }
+            if (k.beginsWith('dynParam')) {
+                var cmd = data[k].replace('this.', 'self.') + ';';
+                request.data[k.extractParamNameFromDataName('dynParam')] = eval(cmd);
+                c++;
+            }
+        }
+
+        if (c == 0 && self.attr('list')) {
+            return;
+        }
 
         if (window.jobtestvault && window.jobtestvault.config && window.jobtestvault.config.github) {
             if (window.jobtestvault.config.github.token) {
@@ -75,17 +85,7 @@ $('input[data-role="autocomplete"]').on({
             }
         }
 
-        var data = self.data();
-        for (var k in data) {
-            if (k.beginsWith('param')) {
-                request.data[k.extractParamNameFromDataName('param')] = data[k];
-            }
-            if (k.beginsWith('dynParam')) {
-                var cmd = data[k].replace('this.', 'self.') + ';';
-                request.data[k.extractParamNameFromDataName('dynParam')] = eval(cmd);
-            }
-        }
-        console.log(request);
+        self.removeAttr('list');
 
         $.ajax(request);
     }
@@ -96,6 +96,10 @@ $('form[data-role="search"]').on({
     'reset': function () {
         $('input[type!="button"][type!="submit"][type!="reset"]', this).val('');
         $('input', this).first().trigger('change');
+    },
+    'submit': function (e) {
+        e.preventDefault();
+        window.history.pushState({}, $(this).data('message'), $('#' + $(this).data('search-url-view')).val());
     }
 });
 $('form[data-role="search"] input').on({
@@ -118,6 +122,7 @@ $('form[data-role="search"] input').on({
         } else {
             var message = 'Search in JobTestVault for all items';
         }
+        form.data('message', message);
         message = encodeURIComponent(message);
         $('#' + form.data('share-links-zone') + ' [data-href]').each(function () {
             $(this).attr('href', $(this).data('href').replace('{url}', link).replace('{message}', message));
@@ -126,7 +131,21 @@ $('form[data-role="search"] input').on({
 });
 
 $(function () {
+    var params = window.location.search.substring(1).parseQuery();
+    for (var x in params) {
+        $('form[data-role="search"] [name="' + x + '"]').val(params[x]);
+    }
     $('form[data-role="search"] input:first-child').change();
+
+    var clipboard = new Clipboard($('[data-role="clipboard"]').get(0));
+    clipboard.on('success', function (e) {
+        alert("Copied!");
+        e.clearSelection();
+    });
+
+    clipboard.on('error', function (e) {
+        alert("Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!");
+    });
 });
 
 
@@ -145,4 +164,37 @@ $('[data-role="get-profile-linkedin"] button').on({
             btn.parent().find('input').first().val('');
         });
     }
-})
+});
+
+$('[data-role="file-uploader"] button').on({
+    click: function () {
+        var btn = $(this);
+        if (!btn.data('uploader')) {
+            var uploader = $('<input type="file">');
+            var input = btn.parent().find('input').first();
+            uploader.attr('name', input.attr('name') + '_file');
+            uploader.css('display', 'none');
+            uploader.prop('accept', btn.parent().data('accept'));
+            console.log(btn.parent().attr('data-multiple'));
+            uploader.attr('multiple', parseInt(btn.parent().data('multiple')) ? true : false);
+            uploader.on({
+                change: function () {
+                    var l = uploader.get(0).files.length;
+                    if (l == 0) {
+                        input.val('');
+                        return;
+                    }
+                    if (uploader.prop('multiple')) {
+                        input.val(l + ' item(s) selected')
+                    } else {
+                        input.val(uploader.get(0).files[0].name);
+                    }
+                }
+            });
+            btn.parent().append(uploader);
+            btn.data('uploader', uploader);
+        }
+        btn.data('uploader').click();
+    }
+});
+

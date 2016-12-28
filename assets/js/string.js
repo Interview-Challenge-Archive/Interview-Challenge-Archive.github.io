@@ -24,3 +24,13 @@ String.prototype.beginsWith = function (text) {
 String.prototype.endsWith = function (text) {
     return this.substr(-text.length) == text;
 };
+
+String.prototype.parseQuery = function () {
+    var ret = {};
+    var groups = this.split('&');
+    for (var i = 0; i < groups.length; i++) {
+        var item = groups[i].split('=', 2);
+        ret[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
+    }
+    return ret;
+};
