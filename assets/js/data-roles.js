@@ -139,12 +139,12 @@ $(function () {
 
     var clipboard = new Clipboard($('[data-role="clipboard"]').get(0));
     clipboard.on('success', function (e) {
-        alert("Copied!");
+        window.jobtestvault.showInfoDialog('Clipboard', 'The link was copied to the clipboard!', true);
         e.clearSelection();
     });
 
     clipboard.on('error', function (e) {
-        alert("Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!");
+        window.jobtestvault.showErrorDialog('Clipboard', "Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!", true);
     });
 });
 
@@ -198,9 +198,9 @@ $('[data-role="file-uploader"] button').on({
     }
 });
 
-$('a.popup').on({
+$('.share a[data-role="popup"]').on({
     click: function (e) {
         e.preventDefault();
-        window.open($(this).attr('href'), "popup", "menubar=0,resizable=1,width=350,height=250");
+        window.open($(this).attr('href'), "share_popup", "menubar=0,resizable=1,width=350,height=250");
     }
 });

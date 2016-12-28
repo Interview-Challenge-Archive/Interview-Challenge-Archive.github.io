@@ -2016,3 +2016,36 @@ div.field.multiple {
 div.field.multiple button {
     min-width: 25%;
 }
+dialog {
+    background-color: rgb(31, 34, 36)!important;
+    color: rgb(160, 160, 161)!important;
+}
+dialog iframe {
+    width: 100%;
+    color: white;
+}
+dialog .closer {
+    -moz-transition: opacity 0.2s ease-in-out;
+    -webkit-transition: opacity 0.2s ease-in-out;
+    -ms-transition: opacity 0.2s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
+    background-image: url(images/close.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 3em;
+    height: 1em;
+    position: absolute;
+    opacity: 0.5;
+    right: 1em;
+    top: 1em;
+    width: 1em;
+    z-index: 2;
+    border-bottom-style: hidden!important;
+}
+dialog .closer:hover {
+    opacity: 1;
+}
+dialog .buttons {
+    margin-top: 1em;
+    text-align: center;
+}
