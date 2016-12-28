@@ -198,3 +198,9 @@ $('[data-role="file-uploader"] button').on({
     }
 });
 
+$('a.popup').on({
+    click: function (e) {
+        e.preventDefault();
+        window.open($(this).attr('href'), "popup", "menubar=0,resizable=1,width=350,height=250");
+    }
+});
