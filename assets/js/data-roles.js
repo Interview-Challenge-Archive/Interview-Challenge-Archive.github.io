@@ -181,13 +181,11 @@ $('[data-role="get-profile-github"] button').on({
         var btn = $(this);
         hello('github').login('github', {
             display: 'popup',
-            redirect_uri: window.jobtestvault.config.github.oauth.application_callback_url,
             scope: [
                 'user',
                 'read:org'
             ]
         }).then(function () {
-            alert(52);
             btn.trigger('read');
         }, function (e) {
             btn.parent().find('input').first().val('');
