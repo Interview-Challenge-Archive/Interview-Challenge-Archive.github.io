@@ -202,7 +202,9 @@ $('[data-role="get-profile-github"] button').on({
         var input = btn.parent().find('input').first();
         hello('github').api('user').then(function (response) {
             input.val(response.url);
-            $('[data-role="get-profile-github"]').trigger('update_repos_list_available', response);
+            window.jobtestvault.user || (window.jobtestvault.user = {});
+            window.jobtestvault.user.github = response;
+            $('[data-role="get-profile-github"]').trigger('update_repos_list_available');
         }, function (e) {
             input.val('');
             window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
@@ -211,20 +213,20 @@ $('[data-role="get-profile-github"] button').on({
 });
 
 $('[data-role="get-profile-github"]').on({
-    update_repos_list_available: function (user) {
+    update_repos_list_available: function () {
         var container = $(this);
         var target = $('#' + container.data('list-target'));
         target.find('option').remove();
         hello('github').api('user/orgs').then(function (response) {
             hello('github').api('user/repos').then(function (response) {
                 response.data = response.data.filter(function (repo) {
-                   return repo.owner.login == user.login;
+                   return repo.owner.login == window.jobtestvault.user.github.login;
                 });
                 if (response.data.length < 1) {
                     return;
                 }
                 var group = $('<optgroup></optgroup>');
-                group.attr('label', user.login);
+                group.attr('label', window.jobtestvault.user.github.login);
                 group.append(
                     response.data.map(function (repo) {
                         var option = $('<option>'+repo.full_name+'</option>');
