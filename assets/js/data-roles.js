@@ -142,13 +142,6 @@ $(function () {
         window.jobtestvault.showErrorDialog('Error', params.error_description, true);
         delete params.error_description;
     }
-    if (params.action) {
-        switch (params.action) {
-            case 'github_login':
-                //opener.$('[data-role="get-profile-github"]');
-            break;
-        }
-    }
     for (var x in params) {
         $('form[data-role="search"] [name="' + x + '"]').val(params[x]);
     }
@@ -194,6 +187,7 @@ $('[data-role="get-profile-github"] button').on({
                 'read:org'
             ]
         }).then(function () {
+            alert(52);
             btn.trigger('read');
         }, function (e) {
             btn.parent().find('input').first().val('');
