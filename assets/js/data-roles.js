@@ -225,8 +225,9 @@ $('[data-role="get-profile-github"]').on({
                     group.attr('label', org.login.descConcat(org.description));
                     group.append(
                         response.data.map(function (repo) {
-                            var option = $('<option>'+repo.full_name.descConcat(repo.description)+'</option>');
+                            var option = $('<option>'+repo.full_name+'</option>');
                             option.attr('value', repo.full_name );
+                            option.attr('title', repo.description);
                             return option;
                         })
                     );
