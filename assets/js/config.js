@@ -6,6 +6,9 @@ window.jobtestvault.config = {
             id: 'bad45375ab68d3570283',
             secret: '839d2e580a2f89622e3de4b143e8df6c9b75ef74'
         },
+        oauth: {
+            application_callback_url: 'http://jobtestvault.github.io/?action=github_login'
+        }
     },
     db: {
         host: 'ds145168.mlab.com',
