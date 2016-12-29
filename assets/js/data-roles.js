@@ -218,7 +218,7 @@ $('[data-role="get-profile-github"]').on({
         var target = $('#' + container.data('list-target'));
         target.find('option, optgroup').remove();
         hello('github').api('user/orgs').then(function (response) {
-            hello('github').api('user/repos', 'get', {affiliation: 'owner'}).then(function (response) {
+            hello('github').api('user/repos', 'get', {type: 'owner'}).then(function (response) {
                 response.data = response.data.filter(function (repo) {
                    return repo.owner.login == window.jobtestvault.user.github.login;
                 });
@@ -240,7 +240,7 @@ $('[data-role="get-profile-github"]').on({
                 console.error(e);
             });
             response.data.forEach(function (org) {
-                hello('github').api('orgs/'+org.login+'/repos', 'get', {affiliation: 'owner'}).then(function (response) {
+                hello('github').api('orgs/'+org.login+'/repos', 'get', {type: 'owner'}).then(function (response) {
                     if (response.data.length < 1) {
                         return;
                     }
