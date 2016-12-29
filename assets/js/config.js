@@ -7,7 +7,7 @@ window.jobtestvault.config = {
             secret: '839d2e580a2f89622e3de4b143e8df6c9b75ef74'
         },
         oauth: {
-            application_callback_url: 'http://jobtestvault.github.io/?action=github_login'
+            application_callback_url: 'https://jobtestvault.github.io'
         }
     },
     db: {
