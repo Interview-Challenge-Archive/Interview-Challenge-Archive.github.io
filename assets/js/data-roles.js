@@ -187,11 +187,11 @@ $('[data-role="get-profile-github"] button').on({
             ],
             redirect_uri: window.jobtestvault.config.github.oauth.redirect_url
         }, function (ret) {
-            console.log(ret);
+            //console.log(ret);
             //alert('login');
             //btn.trigger('read');
-        }).then(function () {
-
+        }).then(function (ret) {
+            btn.trigger('read');
         }, function (e) {
             btn.parent().find('input').first().val('');
             window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
@@ -200,7 +200,7 @@ $('[data-role="get-profile-github"] button').on({
     read: function () {
         var btn = $(this);
         var input = btn.parent().find('input').first();
-        hello('github').api('me').then(function (response) {
+        hello('github').api('user').then(function (response) {
             window.jobtestvault.github = response;
             input.val(response.url);
         }, function (e) {
