@@ -216,6 +216,7 @@ $('[data-role="get-profile-github"]').on({
         var target = $('#' + container.data('list-target'));
         target.find('option').remove();
         hello('github').api('user/orgs').then(function (response) {
+            console.log(response);
             for(var i = 0; i < response.length; i++) {
                 var org = response[i];
                 console.log(org);
