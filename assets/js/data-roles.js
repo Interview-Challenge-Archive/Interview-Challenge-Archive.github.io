@@ -189,8 +189,8 @@ $('[data-role="get-profile-github"] button').on({
         }).then(function () {
             btn.trigger('read');
         }, function (e) {
-            console.error(e);
             btn.parent().find('input').first().val('');
+            window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
         });
     },
     read: function () {
