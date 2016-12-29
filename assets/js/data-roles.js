@@ -228,8 +228,12 @@ $('[data-role="get-profile-github"]').on({
                         group.append(option);
                     }
                     target.append(group);
+                }, function (e) {
+                    console.error(e);
                 });
             }
+        }, function (e) {
+            console.error(e);
         });
     }
 });
