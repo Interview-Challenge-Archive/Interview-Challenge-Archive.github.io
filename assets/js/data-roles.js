@@ -216,7 +216,7 @@ $('[data-role="get-profile-github"]').on({
     update_repos_list_available: function () {
         var container = $(this);
         var target = $('#' + container.data('list-target'));
-        target.find('option').remove();
+        target.find('option, optgroup').remove();
         hello('github').api('user/orgs').then(function (response) {
             hello('github').api('user/repos').then(function (response) {
                 response.data = response.data.filter(function (repo) {
