@@ -202,7 +202,7 @@ $('[data-role="get-profile-github"] button').on({
         var input = btn.parent().find('input').first();
         hello('github').api('user').then(function (response) {
             input.val(response.url);
-            $('[data-role="get-profile-github"]').trigger('update_repos_list_available', response.data);
+            $('[data-role="get-profile-github"]').trigger('update_repos_list_available', response);
         }, function (e) {
             input.val('');
             window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
