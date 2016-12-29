@@ -218,6 +218,9 @@ $('[data-role="get-profile-github"]').on({
         hello('github').api('user/orgs').then(function (response) {
             response.data.forEach(function (org) {
                 hello('github').api('orgs/'+org.login+'/repos').then(function (response) {
+                    if (response.data.length < 1) {
+                        return;
+                    }
                     var group = $('<optgroup></optgroup>');
                     group.attr('label', org.login.descConcat(org.description));
                     group.append(
