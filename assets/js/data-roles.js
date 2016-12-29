@@ -216,10 +216,13 @@ $('[data-role="get-profile-github"]').on({
         var target = $('#' + container.data('list-target'));
         target.find('option').remove();
         hello('github').api('user/orgs').then(function (response) {
-                console.log(org);
+            for(var i = 0; i < response.data.length; i++) {
+                var org = response.data[i];
                 hello('github').api('orgs/'+org.login+'/repos').then(function (response) {
                     var group = $('<optgroup></optgroup>');
                     group.attr('label', org.login.descConcat(org.description));
+                    for(var o = 0; o < response.data.length; o++) {
+                        var repo = response.data[o];
                         var option = $('<option></option>');
                         option.attr('value', repo.full_name.descConcat(repo.description) );
                         group.append(option);
