@@ -215,10 +215,11 @@ $('[data-role="get-profile-github"]').on({
         var container = $(this);
         var target = $('#' + container.data('list-target'));
         target.find('option').remove();
-        hello('github').api('/user/orgs').then(function (response) {
+        hello('github').api('user/orgs').then(function (response) {
             for(var i = 0; i < response.length; i++) {
                 var org = response[i];
-                hello('github').api('/orgs/'+org.login+'/repos').then(function (response) {
+                console.log(org);
+                hello('github').api('orgs/'+org.login+'/repos').then(function (response) {
                     var group = $('<optgroup></optgroup>');
                     group.attr('label', org.login.descConcat(org.description));
                     for(var o = 0; o < response.length; o++) {
