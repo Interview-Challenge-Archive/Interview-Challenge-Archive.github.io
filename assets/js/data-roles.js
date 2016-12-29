@@ -216,25 +216,31 @@ $('[data-role="get-profile-github"]').on({
         var target = $('#' + container.data('list-target'));
         target.find('option').remove();
         hello('github').api('user/orgs').then(function (response) {
-            for(var i = 0; i < response.data.length; i++) {
-                var org = response.data[i];
-                hello('github').api('orgs/'+org.login+'/repos').then(function (response) {
-                    var group = $('<optgroup></optgroup>');
-                    group.attr('label', org.login.descConcat(org.description));
-                    for(var o = 0; o < response.data.length; o++) {
-                        var repo = response.data[o];
-                        var option = $('<option></option>');
-                        option.attr('value', repo.full_name.descConcat(repo.description) );
-                        group.append(option);
-                    }
-                    target.append(group);
-                }, function (e) {
-                    console.error(e);
-                });
-            }
+            container.trigger('got_github_user_orgs', response.data, target);
         }, function (e) {
             console.error(e);
         });
+    },
+    got_github_user_orgs: function (orgs, target) {
+        var container = $(this);
+        for(var i = 0; i < orgs.length; i++) {
+            hello('github').api('orgs/'+orgs[i].login+'/repos').then(function (response) {
+                container.trigger('got_repos_for_org', response.data, orgs[i], target);
+            }, function (e) {
+                console.error(e);
+            });
+        }
+    },
+    got_repos_for_org: function (repos, org, target) {
+        var container = $(this);
+        var group = $('<optgroup></optgroup>');
+        group.attr('label', org.login.descConcat(org.description));
+        for(var i = 0; i < repos.length; i++) {
+            var option = $('<option></option>');
+            option.attr('value', repos[i].full_name.descConcat(repos[i].description) );
+            group.append(option);
+        }
+        target.append(group);
     }
 });
 
