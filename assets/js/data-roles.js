@@ -191,7 +191,7 @@ $('[data-role="get-profile-github"] button').on({
             //alert('login');
             //btn.trigger('read');
         }).then(function (ret) {
-            btn.trigger('read');
+            $('[data-role="get-profile-github"] button').trigger('read');
         }, function (e) {
             btn.parent().find('input').first().val('');
             window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
@@ -202,7 +202,7 @@ $('[data-role="get-profile-github"] button').on({
         var input = btn.parent().find('input').first();
         hello('github').api('user').then(function (response) {
             input.val(response.url);
-            btn.parent().trigger('update_repos_list_available');
+            $('[data-role="get-profile-github"]').trigger('update_repos_list_available');
         }, function (e) {
             input.val('');
             window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
