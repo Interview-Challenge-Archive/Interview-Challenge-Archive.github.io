@@ -185,9 +185,10 @@ $('[data-role="get-profile-github"] button').on({
                 'user',
                 'read:org'
             ]
-        }, function () {
-            alert('login');
-            btn.trigger('read');
+        }, function (ret) {
+            console.log(ret);
+            //alert('login');
+            //btn.trigger('read');
         }).then(function () {
 
         }, function (e) {
