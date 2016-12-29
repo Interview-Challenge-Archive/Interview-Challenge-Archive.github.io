@@ -202,7 +202,7 @@ $('[data-role="get-profile-github"] button').on({
         var input = btn.parent().find('input').first();
         hello('github').api('user').then(function (response) {
             input.val(response.url);
-            $('[data-role="get-profile-github"]').trigger('update_repos_list_available');
+            $('[data-role="get-profile-github"]').trigger('update_repos_list_available', response);
         }, function (e) {
             input.val('');
             window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
@@ -211,11 +211,29 @@ $('[data-role="get-profile-github"] button').on({
 });
 
 $('[data-role="get-profile-github"]').on({
-    update_repos_list_available: function () {
+    update_repos_list_available: function (user) {
         var container = $(this);
         var target = $('#' + container.data('list-target'));
         target.find('option').remove();
         hello('github').api('user/orgs').then(function (response) {
+            hello('github').api('user/repos').then(function (response) {
+                if (response.data.length < 1) {
+                    return;
+                }
+                var group = $('<optgroup></optgroup>');
+                group.attr('label', user.login);
+                group.append(
+                    response.data.map(function (repo) {
+                        var option = $('<option>'+repo.full_name+'</option>');
+                        option.attr('value', repo.full_name );
+                        option.attr('title', repo.description);
+                        return option;
+                    })
+                );
+                target.append(group);
+            }, function (e) {
+                console.error(e);
+            });
             response.data.forEach(function (org) {
                 hello('github').api('orgs/'+org.login+'/repos').then(function (response) {
                     if (response.data.length < 1) {
