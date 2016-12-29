@@ -217,6 +217,9 @@ $('[data-role="get-profile-github"]').on({
         target.find('option').remove();
         hello('github').api('user/orgs').then(function (response) {
             hello('github').api('user/repos').then(function (response) {
+                response.data = response.data.filter(function (repo) {
+                   return repo.owner.login == user.login;
+                });
                 if (response.data.length < 1) {
                     return;
                 }
