@@ -184,7 +184,8 @@ $('[data-role="get-profile-github"] button').on({
             scope: [
                 'user',
                 'read:org'
-            ]
+            ],
+            redirect_url: window.jobtestvault.config.github.oauth.redirect_url
         }, function (ret) {
             console.log(ret);
             //alert('login');
