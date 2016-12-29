@@ -34,3 +34,10 @@ String.prototype.parseQuery = function () {
     }
     return ret;
 };
+
+String.prototype.descConcat = function(description) {
+    if (!description) {
+        return this;
+    }
+    return this + ' - ' + description;
+}

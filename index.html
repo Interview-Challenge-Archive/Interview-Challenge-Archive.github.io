@@ -270,13 +270,13 @@
                         <div class="field">
                             <input type="text" name="name" placeholder="Project name"/>
                         </div>
-                        <div class="field multiple" data-role="get-profile-github">
+                        <div class="field multiple" data-role="get-profile-github" data-list-target="repositories_list">
                             <input type="text" name="github_url" id="github_url" readonly
                                    placeholder="Get your profile url"/>
                             <button type="button" class="icon fa-github-alt">Login</button>
                         </div>
                         <div class="field multiple">
-                            <select name="repository">
+                            <select name="repository" id="repositories_list">
 
                             </select>
                         </div>

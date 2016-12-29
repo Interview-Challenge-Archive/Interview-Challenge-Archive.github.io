@@ -201,11 +201,35 @@ $('[data-role="get-profile-github"] button').on({
         var btn = $(this);
         var input = btn.parent().find('input').first();
         hello('github').api('user').then(function (response) {
-            window.jobtestvault.github = response;
             input.val(response.url);
+            btn.parent().trigger('update_repos_list_available');
         }, function (e) {
-            console.error(e);
             input.val('');
+            window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
+        });
+    }
+});
+
+$('[data-role="get-profile-github"]').on({
+    update_repos_list_available: function () {
+        var container = $(this);
+        var target = $('#' + container.data('list-target'));
+        target.find('option').remove();
+        hello('github').api('/user/orgs').then(function (response) {
+            for(var i = 0; i < response.length; i++) {
+                var org = response[i];
+                hello('github').api('/orgs/'+org.login+'/repos').then(function (response) {
+                    var group = $('<optgroup></optgroup>');
+                    group.attr('label', org.login.descConcat(org.description));
+                    for(var o = 0; o < response.length; o++) {
+                        var repo = response[o];
+                        var option = $('<option></option>');
+                        option.attr('value', repo.full_name.descConcat(repo.description) );
+                        group.append(option);
+                    }
+                    target.append(group);
+                });
+            }
         });
     }
 });
