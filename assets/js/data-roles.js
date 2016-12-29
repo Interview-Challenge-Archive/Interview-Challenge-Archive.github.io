@@ -131,7 +131,17 @@ $('form[data-role="search"] input').on({
 });
 
 $(function () {
+    hello.init({
+        github: window.jobtestvault.config.github.client.id
+    }, {
+        display: 'popup'
+    });
+
     var params = window.location.search.substring(1).parseQuery();
+    if (params.error_description) {
+        window.jobtestvault.showErrorDialog('Error', params.error_description, true);
+        delete params.error_description;
+    }
     for (var x in params) {
         $('form[data-role="search"] [name="' + x + '"]').val(params[x]);
     }
@@ -162,6 +172,36 @@ $('[data-role="get-profile-linkedin"] button').on({
             btn.parent().find('input').first().val(data.publicProfileUrl);
         }).error(function (err) {
             btn.parent().find('input').first().val('');
+        });
+    }
+});
+
+$('[data-role="get-profile-github"] button').on({
+    click: function () {
+        var btn = $(this);
+        hello('github').login('github', {
+            display: 'popup',
+            redirect_uri: window.location.href + '?action=auth',
+            scope: [
+                'user',
+                'read:org'
+            ]
+        }).then(function () {
+            btn.trigger('read');
+        }, function (e) {
+            console.error(e);
+            btn.parent().find('input').first().val('');
+        });
+    },
+    read: function () {
+        var btn = $(this);
+        var input = btn.parent().find('input').first();
+        hello('github').api('user').then(function (response) {
+            window.jobtestvault.github = response;
+            input.val(response.url);
+        }, function (e) {
+            console.error(e);
+            input.val('');
         });
     }
 });

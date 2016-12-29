@@ -265,10 +265,15 @@
                         <div class="field">
                             <input type="text" name="name" placeholder="Project name"/>
                         </div>
+                        <div class="field multiple" data-role="get-profile-github">
+                            <input type="text" name="github_url" id="github_url" readonly
+                                   placeholder="Get your profile url"/>
+                            <button type="button" class="icon fa-github-alt">Login</button>
+                        </div>
                         <div class="field multiple">
-                            <input type="text" name="repository" id="repository" readonly
-                                   placeholder="Select repository"/>
-                            <button type="button" class="icon fa-github-alt">Select</button>
+                            <select name="repository">
+
+                            </select>
                         </div>
                         <div class="field multiple" data-accept="image/png,image/jpeg,image/gif"
                              data-role="file-uploader"
@@ -360,8 +365,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"
         integrity="sha256-mYqjlBuTYmeoEFTjuPCrwns2stAp2HOJyXR5X2xjP70=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/oauth-io/0.6.1/oauth.min.js"
-        integrity="sha256-gcYwq9NO5vjZtUevXyDrWeAd6lzzHy/svAxTEJWUpNk=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.14.0/hello.all.min.js"
+        integrity="sha256-G6rFKcXAyDS3ngr96S8oK0qn8DlR0zI8k9IqCS+T3A0=" crossorigin="anonymous"></script>
 
 <script src="assets/js/basic.js"></script>
 <script src="assets/js/config.js"></script>
