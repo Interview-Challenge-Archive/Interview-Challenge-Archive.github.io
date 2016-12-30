@@ -147,7 +147,9 @@ $(function () {
     }
     $('form[data-role="search"] input:first-child').change();
 
-    var clipboard = new Clipboard($('[data-role="clipboard"]').get(0));
+    var clipboard = new Clipboard(
+        $('[data-role="clipboard"]').get(0)
+    );
     clipboard.on('success', function (e) {
         window.jobtestvault.showInfoDialog('Clipboard', 'The link was copied to the clipboard!', true);
         e.clearSelection();
@@ -311,7 +313,6 @@ $('form').on({
        $(this).find('[data-role="get-profile-github"]').each(function () {
            var target = $('#' + $(this).data('list-target'));
            target.find('option, optgroup').remove();
-           target.closest('.field').addClass('hidden');
        });
    }
 });
