@@ -156,6 +156,8 @@ $(function () {
     clipboard.on('error', function (e) {
         window.jobtestvault.showErrorDialog('Clipboard', "Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!", true);
     });
+
+    $('form[data-auto-no-empty-enable] .field:not(:first-child) :input').prop('disabled', true);
 });
 
 
@@ -217,6 +219,7 @@ $('[data-role="get-profile-github"]').on({
         var container = $(this);
         var target = $('#' + container.data('list-target'));
         target.find('option, optgroup').remove();
+        target.closest('.field').removeClass('hidden');
         hello('github').api('user/orgs').then(function (response) {
             hello('github').api('user/repos', 'get', {type: 'owner'}).then(function (response) {
                 response.data = response.data.filter(function (repo) {
@@ -302,4 +305,14 @@ $('.share a[data-role="popup"]').on({
         e.preventDefault();
         window.open($(this).attr('href'), "share_popup", "menubar=0,resizable=1,width=350,height=250");
     }
+});
+
+$('form').on({
+   reset: function () {
+       $(this).find('[data-role="get-profile-github"]').each(function () {
+           var target = $('#' + $(this).data('list-target'));
+           target.find('option, optgroup').remove();
+           target.closest('.field').addClass('hidden');
+       });
+   }
 });

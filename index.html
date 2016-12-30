@@ -266,19 +266,19 @@
             <div>
                 <section>
                     <h2>Fill the form</h2>
-                    <form method="post" action="#">
-                        <div class="field">
-                            <input type="text" name="name" placeholder="Project name"/>
-                        </div>
-                        <div class="field multiple" data-role="get-profile-github" data-list-target="repositories_list">
+                    <form method="post" action="#" data-auto-no-empty-enable>
+                        <div class="field multiple" data-role="get-profile-github">
                             <input type="text" name="github_url" id="github_url" readonly
                                    placeholder="Get your profile url"/>
                             <button type="button" class="icon fa-github-alt">Login</button>
                         </div>
-                        <div class="field multiple">
+                        <div class="field multiple hidden">
                             <select name="repository" id="repositories_list">
 
                             </select>
+                        </div>
+                        <div class="field">
+                            <input type="text" name="name" placeholder="Project name"/>
                         </div>
                         <div class="field multiple" data-accept="image/png,image/jpeg,image/gif"
                              data-role="file-uploader"
