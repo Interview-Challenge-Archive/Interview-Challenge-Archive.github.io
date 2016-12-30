@@ -157,7 +157,6 @@ $(function () {
         window.jobtestvault.showErrorDialog('Clipboard', "Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!", true);
     });
 
-    $('form[data-auto-no-empty-enable] .field:not(:first-child) :input').prop('disabled', true);
 });
 
 
