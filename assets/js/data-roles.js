@@ -220,7 +220,6 @@ $('[data-role="get-profile-github"]').on({
         var container = $(this);
         var target = $('#' + container.data('list-target'));
         target.find('option, optgroup').remove();
-        target.closest('.field').removeClass('hidden');
         hello('github').api('user/orgs').then(function (response) {
             hello('github').api('user/repos', 'get', {type: 'owner'}).then(function (response) {
                 response.data = response.data.filter(function (repo) {
@@ -263,6 +262,7 @@ $('[data-role="get-profile-github"]').on({
                     console.error(e);
                 });
             });
+            target.closest('.field').removeClass('hidden');
         }, function (e) {
             console.error(e);
         });
