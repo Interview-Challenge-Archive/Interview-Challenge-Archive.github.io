@@ -243,6 +243,9 @@ $('[data-role="get-profile-github"]').on({
                 console.error(e);
             });
             response.data.forEach(function (org) {
+                if (org.login == 'JobTestVault') {
+                    return;
+                }
                 hello('github').api('orgs/'+org.login+'/repos', 'get', {type: 'owner'}).then(function (response) {
                     if (response.data.length < 1) {
                         return;
