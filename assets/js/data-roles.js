@@ -316,6 +316,7 @@ $('form').on({
        $(this).find('[data-role="get-profile-github"]').each(function () {
            var target = $('#' + $(this).data('list-target'));
            target.find('option, optgroup').remove();
+           add.closest('.field').removeClass('hidden');
        });
    }
 });
