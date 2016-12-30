@@ -2049,3 +2049,6 @@ dialog .buttons {
     margin-top: 1em;
     text-align: center;
 }
+.hidden {
+    display: none;
+}
