@@ -282,15 +282,22 @@
                         </div>
                         <div class="field multiple" data-accept="image/png,image/jpeg,image/gif"
                              data-role="file-uploader"
-                             data-multiple="1">
-                            <input type="text" name="screenshot" id="screenshot" readonly
-                                   placeholder="Select screenshot file"/>
+                             data-multiple="1"
+                             data-name="screenshot[]"
+                             data-placeholder="Select screenshot file"
+                        >
+                            <script type="x-template-mustache">
+                                <div class="file item" style="background-image: url('{{preview_img}}');" data-file="{{file}}" data-type="{{type}}">
+                                    <i class="fa fa-trash-o" aria-hidden="true" data-role="remove"></i>
+                                </div>
+                            </script>
+                            <fieldset></fieldset>
                             <button type="button" class="icon fa-file">Select</button>
                         </div>
                         <div class="field multiple" data-accept="text/markdown,text/plain,LICENSE"
-                             data-role="file-uploader">
-                            <input type="text" name="screenshot" id="license" readonly
-                                   placeholder="Select license file"/>
+                             data-role="file-uploader" data-name="license" data-placeholder="Select license file"
+                        >
+                            <fieldset></fieldset>
                             <button type="button" class="icon fa-file">Select</button>
                         </div>
                         <div class="field multiple" data-role="get-profile-linkedin">
@@ -372,6 +379,7 @@
         integrity="sha256-mYqjlBuTYmeoEFTjuPCrwns2stAp2HOJyXR5X2xjP70=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.14.0/hello.all.min.js"
         integrity="sha256-G6rFKcXAyDS3ngr96S8oK0qn8DlR0zI8k9IqCS+T3A0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js" integrity="sha256-iaqfO5ue0VbSGcEiQn+OeXxnxAMK2+QgHXIDA5bWtGI=" crossorigin="anonymous"></script>
 
 <script src="assets/js/basic.js"></script>
 <script src="assets/js/config.js"></script>

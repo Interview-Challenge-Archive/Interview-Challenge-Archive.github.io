@@ -274,33 +274,62 @@ $('[data-role="get-profile-github"]').on({
 
 $('[data-role="file-uploader"] button').on({
     click: function () {
-        var btn = $(this);
-        if (!btn.data('uploader')) {
+        $(this).parent().trigger('dialog_show');
+    }
+});
+$('[data-role="file-uploader"]').on({
+    dialog_show: function () {
+        var self = $(this);
+        if (!self.data('uploader')) {
             var uploader = $('<input type="file">');
-            var input = btn.parent().find('input').first();
-            uploader.attr('name', input.attr('name') + '_file');
+            uploader.attr('name', self.data('name') + '_file');
             uploader.css('display', 'none');
-            uploader.prop('accept', btn.parent().data('accept'));
-            console.log(btn.parent().attr('data-multiple'));
-            uploader.attr('multiple', parseInt(btn.parent().data('multiple')) ? true : false);
+            uploader.prop('accept', self.data('accept'));
+            uploader.attr('multiple', parseInt(self.data('multiple')) ? true : false);
             uploader.on({
                 change: function () {
-                    var l = uploader.get(0).files.length;
-                    if (l == 0) {
-                        input.val('');
-                        return;
-                    }
-                    if (uploader.prop('multiple')) {
-                        input.val(l + ' item(s) selected')
-                    } else {
-                        input.val(uploader.get(0).files[0].name);
-                    }
+                    self.trigger('uploader_change');
                 }
             });
-            btn.parent().append(uploader);
-            btn.data('uploader', uploader);
+            self.append(uploader);
+            self.data('uploader', uploader);
         }
-        btn.data('uploader').click();
+        self.data('uploader').click();
+    },
+    uploader_change: function () {
+        var container = $(this);
+        var fieldset = container.find('fieldset');
+        var uploader = container.data('uploader');
+        var files = uploader.get(0).files;
+        var l = files.length;
+        if (l == 0) {
+            fieldset.html('<div class="empty">'+container.data('placeholder')+'</div>');
+            return;
+        }
+        if (uploader.prop('multiple')) {
+            fieldset.html('');
+            var item_template = container.find('script[type="x-template-mustache"]').first().html();
+            Mustache.parse(item_template);
+            var addItem = function (file) {
+                var reader  = new FileReader();
+                $(reader).on({
+                    load: function() {
+                        var item = $(Mustache.render(item_template, {
+                            type: file.type,
+                            preview_img: reader.result,
+                            file: file.name
+                        }));
+                        fieldset.append(item);
+                    }
+                });
+                reader.readAsDataURL(file);
+            };
+            for(var i = 0; i < l; i++) {
+                addItem(files[i]);
+            }
+        } else {
+            fieldset.html('<div class="empty">'+files[0].name+'</div>');
+        }
     }
 });
 

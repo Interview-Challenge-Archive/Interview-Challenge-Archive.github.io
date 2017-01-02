@@ -342,6 +342,7 @@ hr.major {
 input[type="submit"],
 input[type="reset"],
 input[type="button"],
+.field[data-role="file-uploader"] fieldset,
 button,
 .button {
     -moz-appearance: none;
@@ -374,6 +375,7 @@ button,
 input[type="submit"]:hover,
 input[type="reset"]:hover,
 input[type="button"]:hover,
+.field[data-role="file-uploader"] fieldset:hover,
 button:hover,
 .button:hover {
     box-shadow: inset 0 0 0 2px #34a58e;
@@ -383,6 +385,7 @@ button:hover,
 input[type="submit"]:hover:active,
 input[type="reset"]:hover:active,
 input[type="button"]:hover:active,
+.field[data-role="file-uploader"] fieldset:hover:active,
 button:hover:active,
 .button:hover:active {
     background-color: rgba(52, 165, 142, 0.15);
@@ -462,6 +465,7 @@ input[type="reset"].disabled,
 input[type="reset"]:disabled,
 input[type="button"].disabled,
 input[type="button"]:disabled,
+.field[data-role="file-uploader"] fieldset:disabled,
 button.disabled,
 button:disabled,
 .button.disabled,
@@ -525,6 +529,7 @@ input[type="email"],
 input[type="tel"],
 input[type="search"],
 input[type="url"],
+.field[data-role="file-uploader"] fieldset,
 select,
 textarea {
     -moz-appearance: none;
@@ -559,6 +564,7 @@ input[type="email"]:focus,
 input[type="tel"]:focus,
 input[type="search"]:focus,
 input[type="url"]:focus,
+.field[data-role="file-uploader"] fieldset:focus,
 select:focus,
 textarea:focus {
     box-shadow: inset 0 0 0 2px #34a58e;
@@ -2051,4 +2057,19 @@ dialog .buttons {
 }
 .hidden {
     display: none!important;
+}
+.field[data-role="file-uploader"] .file {
+    width: 5em;
+    height: 5em;
+    display: block;
+    float:left;
+    background-size: cover;
+    margin: 0.25em;
+}
+.field[data-role="file-uploader"] .file [data-role="remove"] {
+    float: right;
+    margin: 0.5em;
+}
+.field[data-role="file-uploader"] fieldset {
+    height: inherit;
 }
