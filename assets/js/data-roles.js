@@ -190,7 +190,6 @@ $('[data-role="get-profile-github"] button').on({
             ],
             redirect_uri: window.jobtestvault.config.github.oauth.redirect_url
         }, function (ret) {
-            //console.log(ret);
             //alert('login');
             //btn.trigger('read');
         }).then(function (ret) {
@@ -308,21 +307,87 @@ $('[data-role="file-uploader"]').on({
         }
         if (uploader.prop('multiple')) {
             fieldset.html('');
-            var item_template = container.find('script[type="x-template-mustache"]').first().html();
+            var item_template = container.find('script[type="x-template-mustache"][data-name="item"]').first().html();
+            var loading_template = container.find('script[type="x-template-mustache"][data-name="loading"]').first().html();
             Mustache.parse(item_template);
-            var addItem = function (file) {
-                var reader  = new FileReader();
-                $(reader).on({
-                    load: function() {
+            Mustache.parse(loading_template);
+            var rw, rh;
+            var default_loading = $(Mustache.render(loading_template));
+            var createLoader = function () {
+                var loading = default_loading.clone();
+                fieldset.append(loading);
+                return loading;
+            };
+            var createCanvas = function(width, height) {
+                var canvas = $('<canvas />');
+                canvas.attr('width', width);
+                canvas.attr('height', height);
+                console.log(canvas.get(0));
+                return canvas.get(0);
+            };
+            var doResize = function (image, w, h, func) {
+                var canvas = createCanvas(w, h);
+                pica.WW = true;
+                pica.WEBGL = true;
+                pica.resizeCanvas(image, canvas, {
+                    quality: 3,
+                    alpha: false,
+                    unsharpAmount: 75,
+                    unsharpRadius: 1.0,
+                    unsharpThreshold: 0
+                }, function (err) {
+                    func(
+                        canvas.toDataURL()
+                    );
+                });
+            };
+            var readFile = function (file, image) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    image.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            };
+            var createImage = function (loading, file, w, h, func) {
+                var image = new Image();
+                image.onload = function () {
+                    doResize(image, w, h, function (url) {
                         var item = $(Mustache.render(item_template, {
                             type: file.type,
-                            preview_img: reader.result,
+                            preview_img: url,
                             file: file.name
                         }));
-                        fieldset.append(item);
+                        loading.replaceWith(item);
+                        func();
+                    });
+                };
+                return image;
+            };
+            var queue = [];
+            var running = false;
+            var processNext = function () {
+                if (queue.length > 0) {
+                    running = true;
+                    var func = queue.shift();
+                    func();
+                } else {
+                    processNext = false;
+                }
+            };
+            var addItem = function (file) {
+                var loading = createLoader();
+                var interval = setInterval(function () {
+                    if (!loading.width() || !loading.height()) {
+                        return;
                     }
-                });
-                reader.readAsDataURL(file);
+                    clearInterval(interval);
+                    queue.push(function () {
+                        readFile(file, createImage(loading, file, loading.width(), loading.height(), processNext));
+                    });
+                    if (!running) {
+                        processNext();
+                    }
+                }, 250);
             };
             for(var i = 0; i < l; i++) {
                 addItem(files[i]);

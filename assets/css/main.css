@@ -2059,12 +2059,18 @@ dialog .buttons {
     display: none!important;
 }
 .field[data-role="file-uploader"] .file {
-    width: 5em;
-    height: 5em;
+    width: 8em;
+    height: 10em;
     display: block;
     float:left;
-    background-size: cover;
     margin: 0.25em;
+    border-style: solid;
+    border-width: 1px;
+    background-size: contain;
+    background-color: black;
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
 }
 .field[data-role="file-uploader"] .file [data-role="remove"] {
     float: right;
