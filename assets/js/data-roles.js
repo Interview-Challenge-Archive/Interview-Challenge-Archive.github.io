@@ -325,8 +325,23 @@ $('[data-role="file-uploader"]').on({
                 console.log(canvas.get(0));
                 return canvas.get(0);
             };
-            var doResize = function (image, w, h, func) {
-                var canvas = createCanvas(w, h);
+            var doResize = function (image, maxWidth, maxHeight, func) {
+                    var ratio = 0, rw, rh;
+                
+                    if(image.width > maxWidth){
+                        ratio = maxWidth / image.width;
+                        rw = maxWidth;
+                        rh = image.height * ratio;
+                    }
+
+                    // Check if current height is larger than max
+                    if(image.height > maxHeight){
+                        ratio = maxHeight / image.height; // get ratio for scaling image
+                        rw = image.width * ratio;
+                        rh = maxHeight;
+                    }
+                
+                var canvas = createCanvas(rw, rh);
                 pica.WW = true;
                 pica.WEBGL = true;
                 pica.resizeCanvas(image, canvas, {
