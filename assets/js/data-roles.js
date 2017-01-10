@@ -238,6 +238,9 @@ $('[data-role="get-profile-github"]').on({
                     })
                 );
                 target.append(group);
+                if (!target.val()) {
+                    target.val($("option:first", target).val());
+                }
             }, function (e) {
                 console.error(e);
             });
