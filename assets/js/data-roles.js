@@ -280,6 +280,13 @@ $('[data-role="file-uploader"] button').on({
         $(this).parent().trigger('dialog_show');
     }
 });
+$('[data-role="file-uploader"] [data-role="remove"]').on({
+    click: function () {
+        window.jobtestvault.confirm('Remove file?', 'Do you want to remove this file from upload?', ['Yes', 'No'], true, function (ret) {
+            console.log(ret);
+        });
+    }
+});
 $('[data-role="file-uploader"]').on({
     dialog_show: function () {
         var self = $(this);
