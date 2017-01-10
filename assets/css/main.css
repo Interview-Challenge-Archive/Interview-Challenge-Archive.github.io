@@ -2075,6 +2075,24 @@ dialog .buttons {
 .field[data-role="file-uploader"] .file [data-role="remove"] {
     float: right;
     margin: 0.5em;
+    border-style: solid;
+    border-width: 1px;
+    /* border-color: red; */
+    background-color: rgba(255,255,255,0.71);
+    border-radius: 50%;
+    padding: 0.25em;
+    text-align: center;
+    display: table;
+    height: 2em;
+    width: 2em;
+}
+.field[data-role="file-uploader"] .file [data-role="remove"]:hover {
+    background-color: rgba(255,255,255,0.91);
+}
+.field[data-role="file-uploader"] .file [data-role="remove"] i {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 .field[data-role="file-uploader"] fieldset {
     height: inherit;

@@ -284,25 +284,35 @@ $('[data-role="file-uploader"]').on({
     dialog_show: function () {
         var self = $(this);
         if (!self.data('uploader')) {
+            self.data('uploader', []);
+        }
+        var multiple = parseInt(self.data('multiple')) ? true : false;
+        if (self.data('uploader').length == 0 || multiple) {
             var uploader = $('<input type="file">');
-            uploader.attr('name', self.data('name') + '_file');
+            var name = self.data('name') + '_file';
+            if (multiple) {
+                name += "[]";
+            }
+            uploader.attr('name', name);
             uploader.css('display', 'none');
             uploader.prop('accept', self.data('accept'));
-            uploader.attr('multiple', parseInt(self.data('multiple')) ? true : false);
+            uploader.attr('multiple', multiple);
             uploader.on({
                 change: function () {
                     self.trigger('uploader_change');
                 }
             });
             self.append(uploader);
-            self.data('uploader', uploader);
+            var uploaders = self.data('uploader');
+            uploaders.push(uploader);
+            self.data('uploader', uploaders);
         }
-        self.data('uploader').click();
+        self.data('uploader').last().click();
     },
     uploader_change: function () {
         var container = $(this);
         var fieldset = container.find('fieldset');
-        var uploader = container.data('uploader');
+        var uploader = container.data('uploader').last();
         var files = uploader.get(0).files;
         var l = files.length;
         if (l == 0) {
@@ -310,7 +320,7 @@ $('[data-role="file-uploader"]').on({
             return;
         }
         if (uploader.prop('multiple')) {
-            fieldset.html('');
+            fieldset.find('.empty').remove();
             var item_template = container.find('script[type="x-template-mustache"][data-name="item"]').first().html();
             var loading_template = container.find('script[type="x-template-mustache"][data-name="loading"]').first().html();
             Mustache.parse(item_template);
@@ -326,7 +336,7 @@ $('[data-role="file-uploader"]').on({
                 var canvas = $('<canvas />');
                 canvas.attr('width', width);
                 canvas.attr('height', height);
-                console.log(canvas.get(0));
+                //console.log(canvas.get(0));
                 return canvas.get(0);
             };
             var doResize = function (image, maxWidth, maxHeight, func) {

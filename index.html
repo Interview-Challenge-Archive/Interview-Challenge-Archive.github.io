@@ -283,12 +283,12 @@
                         <div class="field multiple" data-accept="image/png,image/jpeg,image/gif"
                              data-role="file-uploader"
                              data-multiple="1"
-                             data-name="screenshot[]"
+                             data-name="screenshot"
                              data-placeholder="Select screenshot file"
                         >
                             <script type="x-template-mustache" data-name="item">
                                 <div class="file item" style="background-image: url('{{preview_img}}');" data-file="{{file}}" data-type="{{type}}">
-                                    <a class="fa fa-trash-o" aria-hidden="true" data-role="remove"></a>
+                                    <a data-role="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                 </div>
                             </script>
                             <script type="x-template-mustache" data-name="loading">
