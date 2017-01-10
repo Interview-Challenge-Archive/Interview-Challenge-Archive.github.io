@@ -13,6 +13,17 @@ String.prototype.lcfirst = function () {
     return val + this.substr(1);
 };
 
+String.prototype.ucfirst = function () {
+    if (this.length < 1) {
+        return this;
+    }
+    var val = this.substr(0, 1).toUpperCase();
+    if (this.length < 2) {
+        return val;
+    }
+    return val + this.substr(1);
+};
+
 String.prototype.extractParamNameFromDataName = function (prefix) {
     return this.substr(prefix.length).lcfirst();
 };
