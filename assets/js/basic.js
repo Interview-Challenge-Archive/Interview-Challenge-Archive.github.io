@@ -30,7 +30,7 @@ window.jobtestvault = {
                 dialog.get(0).close();
             }
         });
-        $('body').append(dialog);
+        $('body .panel.active:first').append(dialog);
         if (modal) {
             dialog.get(0).showModal();
         } else {

@@ -280,46 +280,51 @@ $('[data-role="file-uploader"] button').on({
         $(this).parent().trigger('dialog_show');
     }
 });
-$('[data-role="file-uploader"] [data-role="remove"]').on({
-    click: function () {
-        window.jobtestvault.confirm('Remove file?', 'Do you want to remove this file from upload?', ['Yes', 'No'], true, function (ret) {
-            console.log(ret);
+$('[data-role="file-uploader"]').on('click', '[data-role="remove"]', function () {
+        var item = $(this).closest('.item');
+        window.jobtestvault.confirm('Remove file?', 'Do you want to remove this file from upload?', ['Yes', 'No'], true, {
+            close: function (ret) {
+                if (ret == 'yes') {
+                    item.find('[data-role="remove"]').remove();
+                    item.animate({
+                        width: '1px',
+                        opacity: 0.25,
+                    }, 750, function () {
+                       item.remove();
+                    });
+                }
+            }
         });
-    }
 });
 $('[data-role="file-uploader"]').on({
     dialog_show: function () {
         var self = $(this);
-        if (!self.data('uploader')) {
-            self.data('uploader', []);
-        }
         var multiple = parseInt(self.data('multiple')) ? true : false;
-        if (self.data('uploader').length == 0 || multiple) {
-            var uploader = $('<input type="file">');
-            var name = self.data('name') + '_file';
-            if (multiple) {
-                name += "[]";
-            }
-            uploader.attr('name', name);
-            uploader.css('display', 'none');
-            uploader.prop('accept', self.data('accept'));
-            uploader.attr('multiple', multiple);
-            uploader.on({
-                change: function () {
-                    self.trigger('uploader_change');
-                }
-            });
-            self.append(uploader);
-            var uploaders = self.data('uploader');
-            uploaders.push(uploader);
-            self.data('uploader', uploaders);
+        var uploader = $('<input type="file">');
+        var name = '__' + self.data('name') + '_file';
+        var rname = self.data('name');
+        if (multiple) {
+            name += "[]";
+            rname += '[]';
         }
-        self.data('uploader').last().click();
+        uploader.attr('name', name);
+        uploader.data('name', rname);
+        uploader.css('display', 'none');
+        uploader.prop('accept', self.data('accept'));
+        uploader.attr('multiple', multiple);
+        uploader.on({
+            change: function () {
+                self.trigger('uploader_change');
+            }
+        });
+        self.append(uploader);
+        self.data('uploader', uploader);
+        self.data('uploader').click();
     },
     uploader_change: function () {
         var container = $(this);
         var fieldset = container.find('fieldset');
-        var uploader = container.data('uploader').last();
+        var uploader = container.data('uploader');
         var files = uploader.get(0).files;
         var l = files.length;
         if (l == 0) {
@@ -387,12 +392,24 @@ $('[data-role="file-uploader"]').on({
             var createImage = function (loading, file, w, h, func) {
                 var image = new Image();
                 image.onload = function () {
+                    var full_image = $('<input type="hidden" />');
+                    full_image.attr('name', uploader.data('name'));
+                    var full_image_url = this.toDataURL();
+                    full_image.val(full_image_url);
+                    var hash =sha1(full_image_url);
+                    if (container.find('.item[data-hash="' + hash + '"]').length > 0) {
+                        loading.remove();
+                        func();
+                        return;
+                    }
                     doResize(image, w, h, function (url) {
                         var item = $(Mustache.render(item_template, {
                             type: file.type,
                             preview_img: url,
                             file: file.name
                         }));
+                        item.append(full_image);
+                        item.attr('data-hash', hash);
                         loading.replaceWith(item);
                         func();
                     });
