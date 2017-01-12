@@ -2097,3 +2097,6 @@ dialog .buttons {
 .field[data-role="file-uploader"] fieldset {
     height: inherit;
 }
+.buttons button+button {
+    margin-left: 1em;
+}

@@ -159,6 +159,7 @@ $(function () {
         window.jobtestvault.showErrorDialog('Clipboard', "Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!", true);
     });
 
+    $('[data-role="file-uploader"]').trigger('empty');
 });
 
 
@@ -290,6 +291,10 @@ $('[data-role="file-uploader"]').on('click', '[data-role="remove"]', function ()
                         width: '1px',
                         opacity: 0.25,
                     }, 750, function () {
+                       var container = item.parent();
+                       if (container.find('.item').length < 2) {
+                           container.trigger('empty');
+                       }
                        item.remove();
                     });
                 }
@@ -321,14 +326,19 @@ $('[data-role="file-uploader"]').on({
         self.data('uploader', uploader);
         self.data('uploader').click();
     },
+    empty: function () {
+        var container = $(this);
+        var fieldset = container.find('fieldset');
+        fieldset.html('<div class="empty">'+container.data('placeholder')+'</div>');
+    },
     uploader_change: function () {
         var container = $(this);
         var fieldset = container.find('fieldset');
         var uploader = container.data('uploader');
         var files = uploader.get(0).files;
         var l = files.length;
-        if (l == 0) {
-            fieldset.html('<div class="empty">'+container.data('placeholder')+'</div>');
+        if (l == 0 && container.find('.item').length == 0) {
+            container.trigger('empty');
             return;
         }
         if (uploader.prop('multiple')) {
@@ -352,20 +362,19 @@ $('[data-role="file-uploader"]').on({
                 return canvas.get(0);
             };
             var doResize = function (image, maxWidth, maxHeight, func) {
-                    var ratio = 0, rw, rh;
-                
-                    if(image.width > maxWidth){
-                        ratio = maxWidth / image.width;
-                        rw = maxWidth;
-                        rh = image.height * ratio;
-                    }
+                var ratio = 0, rw, rh;
 
-                    // Check if current height is larger than max
-                    if(image.height > maxHeight){
-                        ratio = maxHeight / image.height; // get ratio for scaling image
-                        rw = image.width * ratio;
-                        rh = maxHeight;
-                    }
+                if (image.width > maxWidth) {
+                    ratio = maxWidth / image.width;
+                    rw = maxWidth;
+                    rh = image.height * ratio;
+                }
+
+                if (image.height > maxHeight) {
+                    ratio = maxHeight / image.height;
+                    rw = image.width * ratio;
+                    rh = maxHeight;
+                }
                 
                 var canvas = createCanvas(rw, rh);
                 pica.WW = true;
@@ -446,7 +455,7 @@ $('[data-role="file-uploader"]').on({
                 addItem(files[i]);
             }
         } else {
-            fieldset.html('<div class="empty">'+files[0].name+'</div>');
+            fieldset.html('<div class="inline">'+files[0].name+'</div>');
         }
     }
 });
