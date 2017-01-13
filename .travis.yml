@@ -1,4 +1,4 @@
 services:
  - nodejs
 language: node_js
-script: nodejs update.js
+script: node update.js
