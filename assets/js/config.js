@@ -1,3 +1,11 @@
+if (global) {
+    var window = global;
+}
+
+if (!window.jobtestvault) {
+    window.jobtestvault = {};
+}
+
 window.jobtestvault.config = {
     github: {
         token: '5af35c8e574c9791150f70dcba5166429768df77',
