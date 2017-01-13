@@ -44,10 +44,6 @@ check_update: false
 # What shell commands will be executed on provision?
 # ---------------------------------------------------------------------------------------
 provision: |
-  sudo fuser -cuk /var/lib/dpkg/lock
-  sudo rm -f /var/lib/dpkg/lock
-  sudo fuser -cuk /var/cache/apt/archives/lock
-  sudo rm -f /var/cache/apt/archives/lock
-  sudo apt-get -y -q update && sudo apt-get -y -q install mc lighttpd
+  sudo apt-get -y -q install mc lighttpd nodejs npm
   sudo rm -rf /var/www/html
   sudo ln -s /vagrant /var/www/html
