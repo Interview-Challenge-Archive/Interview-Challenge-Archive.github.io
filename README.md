@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/JobTestVault/jobtestvault.github.io.svg?branch=master)](https://travis-ci.org/JobTestVault/jobtestvault.github.io)
 
-# jobtestvault.github.io
+# jobtestvault @ github.io
 
 A [website](https://jobtestvault.github.io) for this JobTestVault system and it's main component. 
 
