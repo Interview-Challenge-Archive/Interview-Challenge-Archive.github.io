@@ -15,13 +15,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"
             integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
     <![endif]-->
-    <link rel="stylesheet" href="assets/css/main.css"/>
+    <link rel="stylesheet" href="compiled/main.css"/>
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="assets/css/ie9.css"/><![endif]-->
+    <link rel="stylesheet" href="compiled/ie9.css"/><![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.5/dialog-polyfill.min.css"
-          integrity="sha256-250Ma3qItsmSQOydFFcsUG+5+jaNv75xPAH1tdKE4Xs=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="compiled/ie8.css"/><![endif]-->
 </head>
 <body>
 
@@ -356,49 +354,15 @@
 
 </div>
 
-<!-- Polyfills -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled/html4+html5/native.history.js"
-        integrity="sha256-rRsRywU99OjLiQhy+kolBX1RSowneLa3RcWq9bP5hM0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.5/dialog-polyfill.min.js"
-        integrity="sha256-XXIbTfXiLeZSrzH1IwXvFtVineCEfV655ubId14zTEw=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Base64/1.0.0/base64.min.js"
-        integrity="sha256-B5gobbDceYNQQh5r9jjm+qBrtgEtFekAcQHu0mrsGM0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/console-polyfill/0.2.3/index.min.js"
-        integrity="sha256-cvk8nLSDech6zQmeJ3d373IkBf0/YwfFbsop0837oKk=" crossorigin="anonymous"></script>
-
 <!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"
         integrity="sha256-rsPUGdUPBXgalvIj4YKJrrUlmLXbOb6Cp7cdxn1qeUc=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.poptrox/2.5.1/jquery.poptrox.min.js"
         integrity="sha256-vTd7GTOBQ39N1EXsW3AMztVi8OPEq4mhXPUuQsIfyO0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"
-        integrity="sha256-3e+NvOq+D/yeJy1qrWpYkEUr6SlOCL5mHpc2nZfX74E=" crossorigin="anonymous"></script>
-<script src="assets/js/util.js"></script>
 <!--[if lte IE 8]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"
         integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
 <![endif]-->
-<script src="assets/js/main.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"
-        integrity="sha256-mYqjlBuTYmeoEFTjuPCrwns2stAp2HOJyXR5X2xjP70=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.14.0/hello.all.min.js"
-        integrity="sha256-G6rFKcXAyDS3ngr96S8oK0qn8DlR0zI8k9IqCS+T3A0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"
-        integrity="sha256-iaqfO5ue0VbSGcEiQn+OeXxnxAMK2+QgHXIDA5bWtGI=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pica/2.0.8/pica.min.js"
-        integrity="sha256-Es7BlgKYgaBrFOnGI2MC+ORZs8qwoDWwbNJUWnUAXaU=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.4.1/sha1.min.js"
-        integrity="sha256-0M/uiklf3Ug77Z/19i/RcblNHOA/PExjBYqbEqA0Uws=" crossorigin="anonymous"></script>
-
-<script src="assets/js/image.js"></script>
-<script src="assets/js/string.js"></script>
-<script src="assets/js/array.js"></script>
-
-<script src="assets/js/basic.js"></script>
-<script src="assets/js/config.js"></script>
-
-<script src="assets/js/data-roles.js"></script>
 
 <script type="text/javascript" src="https://platform.linkedin.com/in.js">
     api_key:   86r27rp7dsyn12
@@ -407,6 +371,9 @@
     onLoad: window.jobtestvault.onLoadLinkedIn
 </script>
 
+<script type="text/javascript" src="compiled/manifest.js"></script>
+<script type="text/javascript" src="compiled/vendor.js"></script>
+<script type="text/javascript" src="compiled/scripts.js"></script>
 
 </body>
 </html>

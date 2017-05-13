@@ -20,7 +20,6 @@ $('input[data-role="autocomplete"]').on({
             var i = 0, name, o_name = self.attr('name');
             while ($('[name="' + (name = o_name + "_" + (++i)) + '"]').length > 0);
             self.attr('id', name);
-            delete i, name, o_name;
         }
         var data_list_id = 'datalist_for_' + self.attr('id');
         if (!self.data('list')) {
