@@ -7,7 +7,7 @@
 </template>
 
 <script>
-   export default {
+    export default {
         props: {
             image: {
                 type: String,
@@ -21,5 +21,5 @@
                 type: String
             }
         }
-   }
+    }
 </script>
