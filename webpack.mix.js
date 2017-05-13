@@ -4,9 +4,9 @@ var path = require( 'path');
 
 function readdir_multiple(dirs) {
     var rez = [];
-    for(var i = 0; i < dirs.length; i++) {
+    for (var o = 0; o < dirs.length; o++) {
         try {
-            var files = readdir(__dirname + "/" + dirs[i]);
+            var files = readdir(__dirname + "/" + dirs[o]);
             for(var i = 0; i < files.length; i++) {
                 var ext = path.extname(files[i]).toLowerCase();
                 if (ext == '.js' || ext == '.jsx' || ext == '.vue') {
