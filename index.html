@@ -44,68 +44,7 @@
     </header>
 
     <!-- Main -->
-    <div id="main">
-        <article class="thumb">
-            <a href="images/fulls/01.jpg" class="image"><img src="images/thumbs/01.jpg" alt=""/></a>
-            <h2>Magna feugiat lorem</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/02.jpg" class="image"><img src="images/thumbs/02.jpg" alt=""/></a>
-            <h2>Nisl adipiscing</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/03.jpg" class="image"><img src="images/thumbs/03.jpg" alt=""/></a>
-            <h2>Tempus aliquam veroeros</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/04.jpg" class="image"><img src="images/thumbs/04.jpg" alt=""/></a>
-            <h2>Aliquam ipsum sed dolore</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/05.jpg" class="image"><img src="images/thumbs/05.jpg" alt=""/></a>
-            <h2>Cursis aliquam nisl</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/06.jpg" class="image"><img src="images/thumbs/06.jpg" alt=""/></a>
-            <h2>Sed consequat phasellus</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/07.jpg" class="image"><img src="images/thumbs/07.jpg" alt=""/></a>
-            <h2>Mauris id tellus arcu</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/08.jpg" class="image"><img src="images/thumbs/08.jpg" alt=""/></a>
-            <h2>Nunc vehicula id nulla</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/09.jpg" class="image"><img src="images/thumbs/09.jpg" alt=""/></a>
-            <h2>Neque et faucibus viverra</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/10.jpg" class="image"><img src="images/thumbs/10.jpg" alt=""/></a>
-            <h2>Mattis ante fermentum</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/11.jpg" class="image"><img src="images/thumbs/11.jpg" alt=""/></a>
-            <h2>Sed ac elementum arcu</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-        <article class="thumb">
-            <a href="images/fulls/12.jpg" class="image"><img src="images/thumbs/12.jpg" alt=""/></a>
-            <h2>Vehicula id nulla dignissim</h2>
-            <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
-        </article>
-    </div>
+    <projects ref="main"></projects>
 
     <!-- Footer -->
     <footer id="footer" class="panel">
@@ -129,25 +68,8 @@
             <div>
                 <section>
                     <h2>Share this website</h2>
-                    <ul class="icons share">
-                        <li>
-                            <a href="https://twitter.com/home?status=You%20should%20visit%20%23JobTestVault%20for%20some%20interesting%20job%20test%20examples!%20http%3A//bit.ly/2hfiU2n"
-                               class="icon fa-twitter" data-role="popup" title="Share on Twitter"><span class="label">Twitter</span></a>
-                        </li>
-                        <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//bit.ly/2hfiU2n"
-                               data-role="popup" class="icon fa-facebook" title="Share on Facebook"><span class="label">Facebook</span></a>
-                        </li>
-                        <li><a title="Share by e-mail"
-                               href="mailto:?&subject=Visit JobTestVault!&body=You%20should%20visit%20JobTestVault%20for%20some%20interesting%20job%20test%20examples!"
-                               class="icon fa-envelope"><span class="label">E-mail</span></a></li>
-                        <li>
-                            <a title="Share on Linkedin"
-                               href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A//bit.ly/2hfiU2n&title=Visit%20JobTestVault!&summary=You%20should%20visit%20%23JobTestVault%20for%20some%20interesting%20job%20test%20examples!&source="
-                               class="icon fa-linkedin" data-role="popup"><span class="label">LinkedIn</span></a></li>
-                        <li><a title="Share on Google+" allowtransparency="true" frameborder="0" scrolling="no"
-                               title="+1" href="https://plus.google.com/share?url=http%3A//bit.ly/2hfiU2n"
-                               class="icon fa-google-plus" data-role="popup"><span class="label">Google+</span></a></li>
-                    </ul>
+                    <share_links url="http://bit.ly/2hfiU2n"
+                                 message="You should visit JobTestVault for some interesting job tests examples too!"></share_links>
                 </section>
                 <p class="copyright">
                     &copy; Job Test Vault. Design: <a href="http://html5up.net">HTML5 UP</a>.
@@ -201,32 +123,11 @@
                 <section>
                     <h2>Generate a link</h2>
                     <p>Here you can get a link to share for current search:
-                    <div class="field multiple">
-                        <input type="text" readonly value="http://" id="search_url">
-                        <button class="icon fa-copy" data-role="clipboard" id="copy_url_to_clipboard"
-                                data-clipboard-target="#search_url">Copy
-                        </button>
-
-                    </div>
+                        <copy_to_clipboard_field value="http://" ref="search_url"></copy_to_clipboard_field>
                     </p>
                 </section>
                 <h2>Share a link</h2>
-                <ul class="icons share" id="search_share">
-                    <li><a title="Share on Twitter" data-href="https://twitter.com/home?status={message}%20{url}"
-                           class="icon fa-twitter" data-role="popup"><span class="label">Twitter</span></a></li>
-                    <li><a title="Share on Facebook" data-href="https://www.facebook.com/sharer/sharer.php?u={url}"
-                           data-role="popup" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-                    <li><a title="Share by email"
-                           data-href="mailto:?&subject=Visit%20JobTestVault!&body={message}%20{url}"
-                           class="icon fa-envelope"><span class="label">E-mail</span></a></li>
-                    <li>
-                        <a title="Share on Linkedin"
-                           data-href="https://www.linkedin.com/shareArticle?mini=true&url={url}&title=Visit%20JobTestVault!&summary={message}&source="
-                           class="icon fa-linkedin" data-role="popup"><span class="label">LinkedIn</span></a></li>
-                    <li><a title="Share on Google+" data-href="https://plus.google.com/share?url={url}"
-                           class="icon fa-google-plus" data-role="popup"><span
-                            class="label">Google+</span></a></li>
-                </ul>
+                <share_links ref="search_share"></share_links>
             </div>
         </div>
     </div>

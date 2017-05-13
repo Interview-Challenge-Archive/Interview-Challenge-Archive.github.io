@@ -146,18 +146,6 @@ $(function () {
     }
     $('form[data-role="search"] input:first-child').change();
 
-    var clipboard = new Clipboard(
-        $('[data-role="clipboard"]').get(0)
-    );
-    clipboard.on('success', function (e) {
-        window.jobtestvault.showInfoDialog('Clipboard', 'The link was copied to the clipboard!', true);
-        e.clearSelection();
-    });
-
-    clipboard.on('error', function (e) {
-        window.jobtestvault.showErrorDialog('Clipboard', "Your browser doesn't support copy to clipboard command. Try to use manual shortcuts!", true);
-    });
-
     $('[data-role="file-uploader"]').trigger('empty');
 });
 
