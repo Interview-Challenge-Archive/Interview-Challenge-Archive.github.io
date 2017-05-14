@@ -6,16 +6,15 @@
   "dependencies": {
     "clipboard": "^1.6.1",
     "console-polyfill": "^0.2.3",
-    "cross-env": "^5.0.0",
     "dialog-polyfill": "^0.4.7",
+    "es6-enum": "^1.1.0",
     "hellojs": "^1.14.1",
     "history.js": "^1.8.0",
+    "i18next": "^8.2.1",
     "js-base64": "^2.1.9",
     "js-sha1": "^0.4.1",
-    "laravel-mix": "^0.11.4",
     "mongodb": "^2.2.20",
     "pica": "^3.0.4",
-    "recursive-readdir-sync": "^1.0.6",
     "skel": "0.0.0",
     "vue": "^2.3.3"
   },
@@ -45,5 +44,10 @@
   "bugs": {
     "url": "https://github.com/JobTestVault/jobtestvault.github.io/issues"
   },
-  "homepage": "https://github.com/JobTestVault/jobtestvault.github.io#readme"
+  "homepage": "https://github.com/JobTestVault/jobtestvault.github.io#readme",
+  "devDependencies": {
+    "recursive-readdir-sync": "^1.0.6",
+    "laravel-mix": "^0.11.4",
+    "cross-env": "^5.0.0"
+  }
 }

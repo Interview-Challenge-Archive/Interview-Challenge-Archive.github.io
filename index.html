@@ -17,9 +17,11 @@
     <![endif]-->
     <link rel="stylesheet" href="compiled/main.css"/>
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="compiled/ie9.css"/><![endif]-->
+    <link rel="stylesheet" href="compiled/ie9.css"/>
+    <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="compiled/ie8.css"/><![endif]-->
+    <link rel="stylesheet" href="compiled/ie8.css"/>
+    <![endif]-->
 </head>
 <body>
 
@@ -166,11 +168,7 @@
                 <section>
                     <h2>Fill the form</h2>
                     <form method="post" action="#">
-                        <div class="field multiple" data-list-target="repositories_list" data-role="get-profile-github">
-                            <input type="text" name="github_url" id="github_url" readonly
-                                   placeholder="Get your profile url"/>
-                            <button type="button" class="icon fa-github-alt">Login</button>
-                        </div>
+                        <github_profile_field></github_profile_field>
                         <div class="field multiple hidden">
                             <select name="repository" id="repositories_list">
 

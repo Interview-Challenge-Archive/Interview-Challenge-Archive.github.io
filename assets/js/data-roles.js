@@ -167,41 +167,6 @@ $('[data-role="get-profile-linkedin"] button').on({
     }
 });
 
-$('[data-role="get-profile-github"] button').on({
-    click: function () {
-        var btn = $(this);
-        hello('github').login('github', {
-            display: 'popup',
-            scope: [
-                'user',
-                'read:org'
-            ],
-            redirect_uri: window.jobtestvault.config.github.oauth.redirect_url
-        }, function (ret) {
-            //alert('login');
-            //btn.trigger('read');
-        }).then(function (ret) {
-            $('[data-role="get-profile-github"] button').trigger('read');
-        }, function (e) {
-            btn.parent().find('input').first().val('');
-            window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
-        });
-    },
-    read: function () {
-        var btn = $(this);
-        var input = btn.parent().find('input').first();
-        hello('github').api('user').then(function (response) {
-            input.val(response.url);
-            window.jobtestvault.user || (window.jobtestvault.user = {});
-            window.jobtestvault.user.github = response;
-            $('[data-role="get-profile-github"]').trigger('update_repos_list_available');
-        }, function (e) {
-            input.val('');
-            window.jobtestvault.showErrorDialog('GitHub error', e.error.message.replace('+', ' '));
-        });
-    }
-});
-
 $('[data-role="get-profile-github"]').on({
     update_repos_list_available: function () {
         var container = $(this);

@@ -41,7 +41,9 @@ mix.extract([
     'pica',
     'hellojs',
     'clipboard',
-    'skel'
+    'skel',
+    'es6-enum',
+    'i18next'
 ], 'compiled/vendor.js');
 
 mix.sass(__dirname + '/assets/sass/main.scss', 'compiled/main.css');
