@@ -88,9 +88,13 @@
                     <form action="#" method="get" data-role="search" data-search-url-view="search_url"
                           data-share-links-zone="search_share">
                         <div class="field half first">
-                            <input type="search" name="country" placeholder="Country" data-role="autocomplete"
-                                   data-key="name" data-src="https://restcountries.eu/rest/v1/all" data-method="GET"
-                                   data-cache="1"/>
+                            <input_autocomplete
+                                    name="country"
+                                    placeholder="Country"
+                                    dataKey="name"
+                                    dataMethod="GET"
+                                    dataSource="https://restcountries.eu/rest/v1/all"
+                            />
                         </div>
                         <div class="field half">
                             <input type="search" name="company" placeholder="Company"/>
@@ -99,17 +103,21 @@
                             <input type="search" name="position" placeholder="Position"/>
                         </div>
                         <div class="field half">
-                            <input type="search" name="project_language" placeholder="Project language"
-                                   data-role="autocomplete"
-                                   data-key="English"
-                                   data-src="https://data.okfn.org/data/core/language-codes/r/language-codes-full.json"
-                                   data-method="GET" data-cache="1"/>
+                            <input_autocomplete
+                                    name="project_language"
+                                    placeholder="Project language"
+                                    dataKey="English"
+                                    dataSource="https://data.okfn.org/data/core/language-codes/r/language-codes-full.json"
+                                    dataMethod="GET"
+                            />
                         </div>
                         <div class="field half first">
-                            <input type="search" name="github_username" placeholder="GitHub Username"
-                                   data-role="autocomplete"
-                                   data-key="login" data-src="https://api.github.com/search/users"
-                                   data-dyn-param-q="this.val()"/>
+                            <input_autocomplete
+                                    name="github_username"
+                                    placeholder="GitHub Username"
+                                    dataKey="login"
+                                    :dataSource="'https://api.github.com/search/users?q=' + value"
+                            />
                         </div>
                         <div class="field half">
                             <input type="search" name="project_name" placeholder="Project name"/>
@@ -175,7 +183,8 @@
                             </select>
                         </div>
                         <div class="field">
-                            <input type="text" name="name" placeholder="Project name" data-role="auto-name" data-src="repositories_list" />
+                            <auto_name_field type="text" name="name" placeholder="Project name"
+                                             linkedId="repositories_list"/>
                         </div>
                         <div class="field multiple" data-accept="image/png,image/jpeg,image/gif"
                              data-role="file-uploader"
@@ -208,9 +217,12 @@
                             <button type="button" class="icon fa-linkedin">Login</button>
                         </div>
                         <div class="field half first">
-                            <input type="search" name="country" placeholder="Country" data-role="autocomplete"
-                                   data-key="name" data-src="https://restcountries.eu/rest/v1/all" data-method="GET"
-                                   data-cache="1"/>
+                            <input_autocomplete
+                                    name="country"
+                                    placeholder="Country"
+                                    dataSource="https://restcountries.eu/rest/v1/all"
+                                    dataMethod="GET"
+                            />
                         </div>
                         <div class="field half">
                             <input type="search" name="company" placeholder="Company"/>
@@ -219,11 +231,13 @@
                             <input type="search" name="position" placeholder="Position"/>
                         </div>
                         <div class="field half">
-                            <input type="search" name="project_language" placeholder="Project language"
-                                   data-role="autocomplete"
-                                   data-key="English"
-                                   data-src="https://data.okfn.org/data/core/language-codes/r/language-codes-full.json"
-                                   data-method="GET" data-cache="1"/>
+                            <input_autocomplete
+                                    name="project_language"
+                                    placeholder="Project language"
+                                    dataSource="https://data.okfn.org/data/core/language-codes/r/language-codes-full.json"
+                                    dataMethod="GET"
+                                    dataKey="English"
+                            />
                         </div>
                         <div class="field first half">
                             <select name="result_from_employer">

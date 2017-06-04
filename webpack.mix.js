@@ -43,7 +43,8 @@ mix.extract([
     'clipboard',
     'skel',
     'es6-enum',
-    'i18next'
+    'i18next',
+    'vue-resource'
 ], 'compiled/vendor.js');
 
 mix.sass(__dirname + '/assets/sass/main.scss', 'compiled/main.css');
