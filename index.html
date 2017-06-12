@@ -186,35 +186,22 @@
                             <auto_name_field type="text" name="name" placeholder="Project name"
                                              linkedId="repositories_list"/>
                         </div>
-                        <div class="field multiple" data-accept="image/png,image/jpeg,image/gif"
-                             data-role="file-uploader"
-                             data-multiple="1"
-                             data-name="screenshot"
-                             data-placeholder="Select screenshot file"
-                        >
-                            <script type="x-template-mustache" data-name="item">
-                                <div class="file item" style="background-image: url('{{preview_img}}');" data-file="{{file}}" data-type="{{type}}">
-                                    <a data-role="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                </div>
-                            </script>
-                            <script type="x-template-mustache" data-name="loading">
-                                <div class="file item loading">
-                                    <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-                                </div>
-                            </script>
-                            <fieldset></fieldset>
-                            <button type="button" class="icon fa-file">Select</button>
-                        </div>
-                        <div class="field multiple" data-accept="text/markdown,text/plain,LICENSE"
-                             data-role="file-uploader" data-name="license" data-placeholder="Select license file"
-                        >
-                            <fieldset></fieldset>
-                            <button type="button" class="icon fa-file">Select</button>
-                        </div>
+                        <file_uploader
+                                accept="image/png,image/jpeg,image/gif"
+                                class="field"
+                                name="screenshot[]"
+                                :multiple="true"
+                                placeholder="Select screenshot file(s)"
+                        />
+                        <file_uploader
+                                class="field"
+                                accept="text/markdown,text/plain,LICENSE"
+                                name="license[]"
+                                :multiple="false"
+                                placeholder="Select license file"
+                        />
                         <div class="field multiple" data-role="get-profile-linkedin">
-                            <input type="text" name="linkedin" id="linkedin" readonly
-                                   placeholder="Get your profile url"/>
-                            <button type="button" class="icon fa-linkedin">Login</button>
+                            <linkedin_profile_field name="linkedin" api_key="86r27rp7dsyn12"/>
                         </div>
                         <div class="field half first">
                             <input_autocomplete
@@ -276,13 +263,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"
         integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
 <![endif]-->
-
-<script type="text/javascript" src="https://platform.linkedin.com/in.js">
-    api_key:   86r27rp7dsyn12
-    authorize: true
-    lang:  en_US
-    onLoad: window.jobtestvault.onLoadLinkedIn
-</script>
 
 <script type="text/javascript" src="compiled/manifest.js"></script>
 <script type="text/javascript" src="compiled/vendor.js"></script>
