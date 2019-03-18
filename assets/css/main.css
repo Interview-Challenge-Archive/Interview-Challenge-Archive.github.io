@@ -1033,7 +1033,7 @@ table.alt tfoot {
     -webkit-transition: opacity 0.2s ease-in-out;
     -ms-transition: opacity 0.2s ease-in-out;
     transition: opacity 0.2s ease-in-out;
-    background-image: url("images/close.svg");
+    background-image: url("../images/close.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: 3em;
@@ -1142,7 +1142,7 @@ table.alt tfoot {
     -webkit-transition: opacity 0.2s ease-in-out;
     -ms-transition: opacity 0.2s ease-in-out;
     transition: opacity 0.2s ease-in-out;
-    background-image: url("images/close.svg");
+    background-image: url("../images/close.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: 3em;
@@ -1161,7 +1161,7 @@ table.alt tfoot {
     -webkit-transition: opacity 0.2s ease-in-out;
     -ms-transition: opacity 0.2s ease-in-out;
     transition: opacity 0.2s ease-in-out;
-    background-image: url("images/arrow.svg");
+    background-image: url("../images/arrow.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: 5em;
@@ -1215,7 +1215,7 @@ table.alt tfoot {
     -webkit-animation: spinner 1s infinite linear !important;
     -ms-animation: spinner 1s infinite linear !important;
     animation: spinner 1s infinite linear !important;
-    background-image: url("images/spinner.svg");
+    background-image: url("../images/spinner.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -1351,7 +1351,7 @@ body.modal-active #wrapper:after {
     -webkit-transition: top 0.75s ease-in-out, opacity 0.35s ease-out, visibility 0.35s;
     -ms-transition: top 0.75s ease-in-out, opacity 0.35s ease-out, visibility 0.35s;
     transition: top 0.75s ease-in-out, opacity 0.35s ease-out, visibility 0.35s;
-    background-image: url("images/spinner.svg");
+    background-image: url("../images/spinner.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -2035,7 +2035,7 @@ dialog .closer {
     -webkit-transition: opacity 0.2s ease-in-out;
     -ms-transition: opacity 0.2s ease-in-out;
     transition: opacity 0.2s ease-in-out;
-    background-image: url(images/close.svg);
+    background-image: url(../images/close.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 3em;
