@@ -3,7 +3,7 @@
         <input type="text" name="linkedin" readonly
                :placeholder="placeholder" value="value" :name="name"/>
         <button type="button" ref="button" class="icon fa-linkedin" @click="onLoginClick">Login</button>
-        <script type="text/javascript" src="//platform.linkedin.com/in.js">
+        <!-- <script type="text/javascript" src="//platform.linkedin.com/in.js">
             api_key:   {
                 {
                     api_key
@@ -20,7 +20,7 @@
                     onLoginClick
                 }
             }
-        </script>
+        </script> -->
     </div>
 </template>
 

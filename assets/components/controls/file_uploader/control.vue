@@ -7,7 +7,7 @@
             {{placeholder}}
         </div>
         <div v-if="!empty">
-            <item v-for="(file, index) in files" v-key="index" :name="name" :source="file.source" :file="file.file"
+            <item :file="file.file" :key="index" :name="name" :source="file.source" v-for="(file, index) in files"
                   :type="file.type" @remove="onRemoveItem"></item>
         </div>
     </div>

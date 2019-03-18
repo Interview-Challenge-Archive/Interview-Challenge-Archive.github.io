@@ -10,8 +10,6 @@
 </template>
 
 <script>
-    import pica from 'pica';
-
     export default {
         data: () => {
             preview_img: ''
@@ -20,7 +18,7 @@
             resize_mode: false
         },
         components: {
-            loading: require(__dirname + '/../control.vue')
+            loading: require('./control.vue').default
         },
         props: {
             type: {
@@ -88,21 +86,21 @@
 
                 var self = this;
 
-                pica.WW = true;
-                pica.WEBGL = true;
-                pica.resizeCanvas(
-                    this.$refs.original_img,
-                    this.$refs.resized_canvas,
-                    {
-                        quality: 3,
-                        alpha: false,
-                        unsharpAmount: 75,
-                        unsharpRadius: 1.0,
-                        unsharpThreshold: 0
-                    }, function (err) {
-                        self.preview_img = self.$refs.resized_canvas.toDataURL();
-                        self.resize_mode = false;
-                    });
+                /* pica.WW = true;
+                 pica.WEBGL = true;
+                 pica.resizeCanvas(
+                     this.$refs.original_img,
+                     this.$refs.resized_canvas,
+                     {
+                         quality: 3,
+                         alpha: false,
+                         unsharpAmount: 75,
+                         unsharpRadius: 1.0,
+                         unsharpThreshold: 0
+                     }, function (err) {
+                         self.preview_img = self.$refs.resized_canvas.toDataURL();
+                         self.resize_mode = false;
+                     });*/
             }
         }
     }
