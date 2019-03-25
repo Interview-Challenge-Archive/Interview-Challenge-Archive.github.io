@@ -1,18 +1,16 @@
 import VueRouter from 'vue-router';
 
-let loadView = (view) => () => import(/* webpackChunkName: "views/[request]" */ `../views/${view}.vue`)
-
 const router = new VueRouter({
     mode: 'history',
     routes: [
         {
             path: '/',
             name: 'homepage',
-            component: loadView('default'),
+            component: require('../views/default').default,
             children: [
                 {
                     path: ':id',
-                    component: loadView('item'),
+                    component: require('../views/item').default,
                     name: 'item'
                 }
             ],
@@ -21,7 +19,7 @@ const router = new VueRouter({
         {
             path: '*',
             name: '404',
-            //component: loadView(404),
+            component: require('../views/404').default,
             meta: {}
         }
     ]

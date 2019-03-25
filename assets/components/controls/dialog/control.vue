@@ -23,7 +23,6 @@
 </template>
 
 <script>
-    import 'dialog-polyfill';
     import Enum from "es6-enum";
 
     const DialogType = Enum('INFO', 'ERROR', 'CUSTOM');

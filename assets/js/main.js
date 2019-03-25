@@ -1,24 +1,41 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
-import VueRouter from 'vue-router';
 
-import '../sass/main.scss';
-import '~/font-awesome/scss/font-awesome.scss';
-import '~/source-sans-pro/source-sans-pro.css';
+import Vuex from 'vuex';
+import vuexI18n from 'vuex-i18n';
+import {loadTranslations} from "./loaders";
+import VueRouter from 'vue-router';
+import {Button, Collapse, Dropdown, Link, Nav, Navbar} from 'shards-vue/src/components';
 
 Vue.use(Vuex);
+Vue.use(vuexI18n.plugin, new Vuex.Store());
+Vue.i18n.fallback('en-US');
+loadTranslations('en-US').then(
+    data => Vue.i18n.add('en-US', data.default)
+);
+if (typeof LANGUAGES_DATA[navigator.language] !== 'undefined') {
+    Vue.i18n.set(navigator.language);
+    loadTranslations(navigator.language).then(
+        data => Vue.i18n.add(navigator.language, data.default)
+    );
+} else {
+    Vue.i18n.set('en-US');
+}
+
 Vue.use(VueRouter);
 
-(new Vue({
+Vue.use(Nav);
+Vue.use(Navbar);
+Vue.use(Link);
+Vue.use(Dropdown);
+Vue.use(Collapse);
+Vue.use(Button);
+
+let app = new Vue({
+    el: '#wrapper',
     store: require('./store.js').default,
     router: require('./router.js').default,
+    name: 'app',
     components: {
-        share_links: import('../components/controls/share_links/control.vue'),
-        input_autocomplete: import('../components/controls/input_autocomplete/control.vue'),
-        copy_to_clipboard_field: import('../components/controls/copy_to_clipboard_field/control.vue'),
-        auto_name_field: import('../components/controls/auto_name_field/control.vue'),
-        github_profile_field: import('../components/controls/github_profile_field/control.vue'),
-        file_uploader: import('../components/controls/file_uploader/control.vue'),
-        linkedin_profile_field: import('../components/controls/linkedin_profile_field/control.vue'),
+        menubar: require('../components/controls/menubar/control').default
     }
-})).$mount('#wrapper');
+});

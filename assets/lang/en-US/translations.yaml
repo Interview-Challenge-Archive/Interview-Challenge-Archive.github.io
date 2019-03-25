@@ -1,0 +1,8 @@
+components:
+  panels:
+    about:
+      menu-title: About
+    search:
+      menu-title: Search
+    submit:
+      menu-title: Submit
