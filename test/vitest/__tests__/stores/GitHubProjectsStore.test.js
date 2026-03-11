@@ -1,9 +1,12 @@
 import { createPinia, setActivePinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import { createApp, nextTick } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 
 describe('useGitHubProjectsStore', () => {
   beforeEach(() => {
+    window.localStorage.clear()
     setActivePinia(createPinia())
     vi.useFakeTimers()
   })
@@ -33,5 +36,24 @@ describe('useGitHubProjectsStore', () => {
 
     expect(store.projectByRoute('MEKDROP', 'SYSTEM-DESIGN-VAULT')?.id).toBe('system-design-vault')
     expect(store.projectByRoute('missing', 'project')).toBeNull()
+  })
+
+  it('does not persist state through the Pinia persisted state plugin', async () => {
+    const setItemSpy = vi.spyOn(window.localStorage, 'setItem')
+    const app = createApp({})
+    const pinia = createPinia()
+
+    pinia.use(piniaPluginPersistedstate)
+    app.use(pinia)
+    setActivePinia(pinia)
+
+    const store = useGitHubProjectsStore(pinia)
+    const loadPromise = store.loadInitialItems()
+
+    await vi.advanceTimersByTimeAsync(420)
+    await loadPromise
+    await nextTick()
+
+    expect(setItemSpy).not.toHaveBeenCalled()
   })
 })
