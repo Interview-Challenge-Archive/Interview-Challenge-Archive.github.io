@@ -3,6 +3,10 @@ name: Tests
 on:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.event.pull_request.head.ref || github.event.workflow_run.head_branch || github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
