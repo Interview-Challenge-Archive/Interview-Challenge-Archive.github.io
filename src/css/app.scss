@@ -1,0 +1,35 @@
+// app global css in SCSS form
+
+:root {
+  --app-font-family: 'Source Sans Pro', Helvetica, sans-serif;
+}
+
+html,
+body,
+#q-app {
+  font-family: var(--app-font-family);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.q-btn .q-btn__content {
+  text-transform: uppercase;
+}
+
+.bottom-dock__panels .text-h5,
+.dock-page__title {
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 280ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}

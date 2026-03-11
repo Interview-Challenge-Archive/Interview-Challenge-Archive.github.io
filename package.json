@@ -1,64 +1,47 @@
 {
-  "name": "jobtestvault-website",
-  "version": "1.0.0",
-  "description": "Node.js stuff for JobTestVault website",
-  "main": "update.js",
-  "dependencies": {
-    "axios": "^0.18.0",
-    "bootstrap": "^4.3.1",
-    "clipboard": "^2.0.4",
-    "emoji-flags": "^1.2.0",
-    "es6-enum": "^1.1.0",
-    "flag-icon-css": "^3.3.0",
-    "hellojs": "^1.14.1",
-    "js-base64": "^2.1.9",
-    "js-sha1": "^0.6.0",
-    "mongodb": "^3.1.13",
-    "shards-vue": "^1.0.7",
-    "vue": "^2.3.3",
-    "vue-router": "^3.0.2",
-    "vuex": "^3.1.0",
-    "vuex-i18n": "^1.11.0",
-    "yaml": "^1.4.0"
-  },
+  "name": "interview-challenge-archive",
+  "version": "0.0.1",
+  "description": "Interview Challenge Archive SPA",
+  "productName": "Interview Challenge Archive",
+  "author": "Raimondas Rimkevičius (aka MekDrop) <github@mekdrop.name>",
+  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "npm run development",
-    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch-poll": "npm run watch -- --watch-poll",
-    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "prod": "npm run production",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{js,cjs,mjs,vue}\"",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "postinstall": "quasar prepare",
+    "test:unit": "vitest",
+    "test:unit:ci": "vitest run"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JobTestVault/jobtestvault.github.io.git"
+  "dependencies": {
+    "@quasar/extras": "^1.16.4",
+    "pinia": "^3.0.1",
+    "quasar": "^2.16.0",
+    "vue": "^3.5.22",
+    "vue-i18n": "^11.0.0",
+    "vue-router": "^5.0.0"
   },
-  "keywords": [
-    "jobtestvault",
-    "job",
-    "test",
-    "vault",
-    "website"
-  ],
-  "author": "Raimondas Rimkevičius <github@mekdrop.name>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/JobTestVault/jobtestvault.github.io/issues"
-  },
-  "homepage": "https://github.com/JobTestVault/jobtestvault.github.io#readme",
   "devDependencies": {
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "cross-env": "^5.0.0",
-    "express": "^4.16.4",
-    "font-awesome": "^4.7.0",
-    "laravel-mix": "^4.0.15",
-    "resolve-url-loader": "^2.3.1",
-    "sass": "^1.17.3",
-    "sass-loader": "^7.1.0",
-    "source-sans-pro": "^2.45.0",
-    "vue-template-compiler": "^2.6.9",
-    "yml-loader": "^2.1.0"
+    "@eslint/js": "^9.14.0",
+    "@intlify/unplugin-vue-i18n": "^4.0.0",
+    "@quasar/app-vite": "^2.1.0",
+    "@quasar/quasar-app-extension-testing-unit-vitest": "^0.4.0",
+    "autoprefixer": "^10.4.2",
+    "eslint": "^9.14.0",
+    "eslint-plugin-vue": "^10.4.0",
+    "globals": "^16.4.0",
+    "postcss": "^8.4.14",
+    "vite-plugin-checker": "^0.11.0",
+    "vue-eslint-parser": "^10.2.0",
+    "@vue/test-utils": "^2.4.1",
+    "vitest": "^0.34.0"
+  },
+  "engines": {
+    "node": "^28 || ^26 || ^24 || ^22 || ^20",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1",
+    "pnpm": ">= 10.0.0"
   }
 }
