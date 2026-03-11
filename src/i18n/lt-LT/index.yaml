@@ -1,0 +1,140 @@
+app:
+  title: Job Test Vault
+  subtitle: Quasar SPA pradžia su maršrutizavimu, Pinia ir vertimais
+nav:
+  home: Pradžia
+  about: Apie
+home:
+  loadingMore: Kraunami kiti projektai
+language: Kalba
+dock:
+  search:
+    label: Search
+    title: Paieška saugykloje
+    description: Ieškokite išsaugotų interviu užrašų, programavimo užduočių ir įmonių testų.
+    fieldLabel: Paieškos užklausa
+    hint: 'Pavyzdys: frontend, Vue, system design'
+    queryFieldLabel: Užklausa
+    queryHint: 'Ieško projektų pavadinimuose ir aprašymuose'
+    labelsFieldLabel: Žymos
+    labelsHint: 'Pasirinkite vieną ar kelias žymas'
+    resetAction: Atstatyti
+    action: Ieškoti
+  submit:
+    label: Submit
+    title: Pateikti naują įrašą
+    description: Užfiksuokite visą istoriją apie repo, užduotį ar atrankos projektą, kad būtų aiškūs darbas, technologijos ir rezultatas.
+    helper: Surinkite projekto pagrindus, techninį kontekstą, įmonės reakciją ir tai, ar procesas baigėsi darbo pasiūlymu.
+    sections:
+      basics: Projekto pagrindai
+      technical: Techninė apimtis
+      process: Procesas ir rezultatas
+      notes: Išsamūs užrašai
+    fields:
+      entryTitle:
+        label: Įrašo pavadinimas
+        hint: Suteikite trumpą, lengvai randamą pavadinimą.
+      company:
+        label: Įmonė
+        hint: Kas paskyrė ar įkvėpė šį projektą?
+      role:
+        label: Rolė / pozicija
+        hint: Su kokia pozicija buvo susijusi ši užduotis?
+      sourceUrl:
+        label: Šaltinio nuoroda
+        hint: Nuoroda į repo, užduoties aprašą arba darbo skelbimą.
+      stage:
+        label: Atrankos etapas
+        hint: Kuriame proceso etape pasirodė ši užduotis?
+      languages:
+        label: Kalbos
+        hint: Pridėkite vieną ar daugiau projekte naudotų kalbų.
+      stack:
+        label: Framework'ai, įrankiai ir bibliotekos
+        hint: Pažymėkite pagrindinį stack'ą, servisus ar tooling'ą.
+      taskType:
+        label: Užduoties tipas
+        hint: Kokio pobūdžio buvo ši užduotis?
+      difficulty:
+        label: Sudėtingumas
+        hint: Pažymėkite, kiek sudėtingas atrodė darbas.
+      timeLimit:
+        label: Terminas arba numatytos pastangos
+        hint: Įrašykite deadline'ą, laiko limitą ar valandų įvertį.
+      submittedAt:
+        label: Pateikimo data
+        hint: Kada darbą išsiuntėte arba užbaigėte?
+      reaction:
+        label: Įmonės reakcija
+        hint: Kaip įmonė sureagavo peržiūrėjusi darbą?
+      taskSummary:
+        label: Užduoties santrauka
+        hint: Paprastai aprašykite užduotį, feature request'ą ar iššūkį.
+      deliverables:
+        label: Rezultatai ir ribojimai
+        hint: Išvardykite reikalaujamas funkcijas, lūkesčius ar apribojimus.
+      feedback:
+        label: Gautas grįžtamasis ryšys
+        hint: Išsaugokite recruiterio ar interviuotojo komentarus, net jei jie trumpi.
+      lessons:
+        label: Išmoktos pamokos
+        hint: Ką kitą kartą patobulintumėte, pakartotumėte ar stebėtumėte?
+      notes:
+        label: Papildomi užrašai
+        hint: Pridėkite nuorodas, follow-up klausimus, atlygio pastabas ar kitą naudingą informaciją.
+    flags:
+      submitted:
+        label: Pateikiau darbą atgal įmonei
+      publicRepo:
+        label: Repo galima viešai dalintis
+      nda:
+        label: Taikomi NDA arba konfidencialumo ribojimai
+    offer:
+      label: Darbo pasiūlymo rezultatas
+      hint: Ar šis procesas baigėsi pasiūlymu?
+      options:
+        pending: Procesas dar vyksta
+        yes: Taip, gavau pasiūlymą
+        no: Pasiūlymo negavau
+        withdrawn: Pats pasitraukiau iš proceso
+        notApplicable: Tai nebuvo atrankos procesas
+    stageOptions:
+      applied: Aplikacija / pradinis atrankos etapas
+      recruiterScreen: Pokalbis su recruiteriu
+      takeHome: Namų užduotis
+      technicalInterview: Techninis interviu
+      finalRound: Finalinis etapas / onsite
+      selfDirected: Asmeninis ar tyrimo projektas
+    taskTypeOptions:
+      takeHome: Namų užduotis
+      liveCoding: Live coding
+      systemDesign: Sistemos dizainas
+      bugFix: Bug fix
+      featureBuild: Feature kūrimas
+      research: Tyrimas arba analizė
+    difficultyOptions:
+      lightweight: Lengvas
+      moderate: Vidutinis
+      demanding: Sudėtingas
+    reactionOptions:
+      noResponse: Dar negauta atsakymo
+      followUp: Gauti follow-up klausimai
+      nextRound: Perėjau į kitą etapą
+      positiveFeedback: Tik pozityvus feedback'as
+      rejected: Atmesta po peržiūros
+    action: Ruošti pateikimą
+  login:
+    label: Login
+    title: Prisijungimas prie paskyros
+    description: Pasiekite išsaugotus pateikimus, mėgstamiausius ir savo veiklą.
+    email: El. paštas
+    password: Slaptažodis
+    action: Prisijungti
+  about:
+    label: About
+    title: Apie Job Test Vault
+    description: Job Test Vault padeda kaupti, tvarkyti ir peržiūrėti interviu bei atrankų užduočių medžiagą.
+    details: Naudokite apatinę navigaciją, kad pereitumėte tarp atskirų paieškos, pateikimo, prisijungimo ir informacijos puslapių.
+about:
+  title: Apie šį pradinį projektą
+  description: Naudokite šį projektą kaip švarų pagrindą JobTestVault vieno puslapio programai.

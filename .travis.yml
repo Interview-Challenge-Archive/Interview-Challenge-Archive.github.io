@@ -1,4 +1,0 @@
-services:
- - nodejs
-language: node_js
-script: node update.js

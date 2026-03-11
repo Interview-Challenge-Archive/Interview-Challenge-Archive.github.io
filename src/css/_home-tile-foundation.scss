@@ -1,0 +1,37 @@
+@mixin tile-surface($min-height, $background-size: 140%) {
+  position: relative;
+  overflow: hidden;
+  min-height: $min-height;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: $background-size;
+  pointer-events: none;
+}
+
+@mixin tile-blurred-background(
+  $inset: -24px,
+  $background-size: cover,
+  $filter: blur(34px) saturate(1.15),
+  $transform: scale(1.08)
+) {
+  content: '';
+  position: absolute;
+  inset: $inset;
+  background-image: var(--tile-background);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: $background-size;
+  filter: $filter;
+  transform: $transform;
+}
+
+@mixin tile-overlay($background, $box-shadow: null) {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: $background;
+
+  @if $box-shadow != null {
+    box-shadow: $box-shadow;
+  }
+}

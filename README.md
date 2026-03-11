@@ -1,11 +1,32 @@
-[![Build Status](https://travis-ci.org/JobTestVault/jobtestvault.github.io.svg?branch=master)](https://travis-ci.org/JobTestVault/jobtestvault.github.io)
+# Interview Challenge Archive
 
-# jobtestvault @ github.io
+Interview Challenge Archive SPA
 
-A [website](https://jobtestvault.github.io) for this JobTestVault system and it's main component. 
+## Install the dependencies
+```bash
+yarn
+# or
+npm install
+```
 
-## Some stuff to read
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+```bash
+quasar dev
+```
 
-* [Theme Readme](README-THEME.txt)
-* [License for website](LICENSE-WEBSITE.txt)
-* [License for theme](LICENSE-THEME.txt)
+
+### Lint the files
+```bash
+yarn lint
+# or
+npm run lint
+```
+
+
+### Build the app for production
+```bash
+quasar build
+```
+
+### Customize the configuration
+See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
