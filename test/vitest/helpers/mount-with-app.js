@@ -6,6 +6,26 @@ const messages = {
   'en-US': {
     app: { title: 'Interview Challenge Archive' },
     home: { loadingMore: 'Loading more projects' },
+    maintenance: {
+      eyebrow: 'Maintenance mode',
+      title: 'We’re polishing the experience',
+      description: 'The archive is temporarily unavailable while we ship UI refinements and feature updates. Everything should be back online shortly.',
+      preview: {
+        kicker: 'Archive update',
+        title: 'Fresh tiles. Same vault.',
+        description: 'Layout polish and maintenance handling are being shipped without changing the overall feel.',
+        tiles: {
+          curated: {
+            title: 'Curated entries',
+            subtitle: 'Poster-style browsing stays intact.'
+          },
+          search: {
+            title: 'Search + labels',
+            subtitle: 'The archive structure remains familiar.'
+          }
+        }
+      }
+    },
     dock: {
       search: {
         label: 'Search', title: 'Search the vault',
@@ -149,26 +169,49 @@ const messages = {
         details: 'Use the bottom navigation to move between dedicated search, submission, login, and information pages.'
       }
     }
+  },
+  'lt-LT': {
+    app: { title: 'Job Test Vault' },
+    maintenance: {
+      eyebrow: 'Techninė priežiūra',
+      title: 'Tobuliname naudojimo patirtį',
+      description: 'Saugykla laikinai nepasiekiama, kol diegiame dizaino patobulinimus ir funkcinius atnaujinimus. Netrukus viskas turėtų vėl veikti.',
+      preview: {
+        kicker: 'Saugyklos atnaujinimas',
+        title: 'Atnaujintos kortelės. Ta pati saugykla.',
+        description: 'Tvarkome išdėstymą ir priežiūros logiką nekeisdami bendro produkto jausmo.',
+        tiles: {
+          curated: {
+            title: 'Atrinkti įrašai',
+            subtitle: 'Poster tipo naršymas išlieka toks pats.'
+          },
+          search: {
+            title: 'Paieška + žymos',
+            subtitle: 'Saugyklos struktūra lieka pažįstama.'
+          }
+        }
+      }
+    }
   }
 }
 
-function createTestI18n () {
+function createTestI18n (locale = 'en-US') {
   return createI18n({
     legacy: false,
-    locale: 'en-US',
+    locale,
     fallbackLocale: 'en-US',
     messages
   })
 }
 
 export function mountWithApp (component, options = {}) {
-  const { pinia = createPinia(), global = {}, ...mountOptions } = options
+  const { pinia = createPinia(), global = {}, locale = 'en-US', ...mountOptions } = options
 
   return mount(component, {
     ...mountOptions,
     global: {
       ...global,
-      plugins: [pinia, createTestI18n(), ...(global.plugins ?? [])]
+      plugins: [pinia, createTestI18n(locale), ...(global.plugins ?? [])]
     }
   })
 }
