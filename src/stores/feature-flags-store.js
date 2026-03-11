@@ -2,6 +2,10 @@ import { computed, onScopeDispose, ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ProviderEvents } from '@openfeature/web-sdk'
 
+export const LOCAL_STORAGE_FEATURE_FLAGS_KEY = 'feature-flags-overrides'
+
+const isFeatureFlagsCacheEnabled = import.meta.env.DEV || import.meta.env.MODE === 'test'
+
 function requireFeatureFlagsClient (featureFlagsClient) {
   if (!featureFlagsClient) {
     throw new Error(
@@ -15,6 +19,8 @@ function requireFeatureFlagsClient (featureFlagsClient) {
 export const useFeatureFlagsStore = defineStore('feature-flags', () => {
   let featureFlagsClient = null
   const evaluationRevision = ref(0)
+  const cachedFlags = ref({})
+  const fetchingEnabled = ref(!isFeatureFlagsCacheEnabled)
   const refreshFlags = () => {
     evaluationRevision.value += 1
   }
@@ -48,31 +54,51 @@ export const useFeatureFlagsStore = defineStore('feature-flags', () => {
     detachClientHandlers()
   })
 
-  function getBooleanFlag (flagName, defaultValue = false) {
-    return requireFeatureFlagsClient(featureFlagsClient).getBooleanValue(flagName, defaultValue)
+  function getFlag (flagName, defaultValue = false) {
+    if (!fetchingEnabled.value) {
+      const cachedFlag = cachedFlags.value[flagName]
+
+      if (typeof cachedFlag === 'boolean') {
+        return cachedFlag
+      }
+    }
+
+    const value = requireFeatureFlagsClient(featureFlagsClient).getBooleanValue(flagName, defaultValue)
+
+    if (typeof value === 'boolean') {
+      if (cachedFlags.value[flagName] !== value) {
+        cachedFlags.value = {
+          ...cachedFlags.value,
+          [flagName]: value
+        }
+      }
+
+      return value
+    }
+
+    return defaultValue
   }
 
   const siteEnabled = computed(() => {
     evaluationRevision.value
 
-    return getBooleanFlag('site_enabled', true)
+    return getFlag('site_enabled', true)
   })
 
-  function getFlag (flagName, defaultValue = false) {
-    return getBooleanFlag(flagName, defaultValue)
-  }
-
-  function isEnabled (flagName, defaultValue = false) {
-    return getBooleanFlag(flagName, defaultValue)
-  }
-
   return {
+    cachedFlags,
+    fetchingEnabled,
     siteEnabled,
     setFeatureFlagsClient,
-    getFlag,
-    getBooleanFlag,
-    isEnabled
+    getFlag
   }
+}, {
+  persist: isFeatureFlagsCacheEnabled
+    ? {
+        key: LOCAL_STORAGE_FEATURE_FLAGS_KEY,
+        pick: ['cachedFlags', 'fetchingEnabled']
+      }
+    : false
 })
 
 if (import.meta.hot) {
