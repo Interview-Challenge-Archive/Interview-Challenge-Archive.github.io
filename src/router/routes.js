@@ -1,5 +1,11 @@
 const routes = [
   {
+    path: '/maintenance',
+    name: 'site-maintenance',
+    component: () => import('pages/SiteMaintenancePage.vue')
+  },
+
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [

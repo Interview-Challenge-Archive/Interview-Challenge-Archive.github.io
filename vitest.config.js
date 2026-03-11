@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
+import yaml from '@rollup/plugin-yaml';
 import jsconfigPaths from 'vite-jsconfig-paths';
 import { fileURLToPath, URL } from 'node:url';
 
@@ -8,6 +9,7 @@ import { fileURLToPath, URL } from 'node:url';
 export default defineConfig({
   resolve: {
     alias: {
+      '#q-app/wrappers': fileURLToPath(new URL('./node_modules/@quasar/app-vite/exports/wrappers/wrappers.js', import.meta.url)),
       src: fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
@@ -28,6 +30,7 @@ export default defineConfig({
     quasar({
       sassVariables: 'src/css/quasar.variables.scss',
     }),
+    yaml({ include: '**/src/config/feature-flags.yml' }),
     jsconfigPaths(),
   ],
 });

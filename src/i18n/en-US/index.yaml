@@ -6,6 +6,21 @@ nav:
   about: About
 home:
   loadingMore: Loading more projects
+maintenance:
+  eyebrow: Maintenance mode
+  title: We’re polishing the experience
+  description: The archive is temporarily unavailable while we ship UI refinements and feature updates. Everything should be back online shortly.
+  preview:
+    kicker: Archive update
+    title: Fresh tiles. Same vault.
+    description: Layout polish and maintenance handling are being shipped without changing the overall feel.
+    tiles:
+      curated:
+        title: Curated entries
+        subtitle: Poster-style browsing stays intact.
+      search:
+        title: Search + labels
+        subtitle: The archive structure remains familiar.
 language: Language
 dock:
   search:

@@ -150,6 +150,8 @@ export const useGitHubProjectsStore = defineStore('github-projects', () => {
     loadInitialItems,
     loadMoreItems
   }
+}, {
+  persist: false
 })
 
 if (import.meta.hot) {
