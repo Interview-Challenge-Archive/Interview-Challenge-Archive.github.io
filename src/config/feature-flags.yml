@@ -1,0 +1,7 @@
+# Local OpenFeature in-memory flag configuration for the SPA.
+site_enabled:
+  disabled: false
+  variants:
+    enabled: true
+    disabled: false
+  defaultVariant: disabled

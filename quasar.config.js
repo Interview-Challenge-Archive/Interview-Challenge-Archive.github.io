@@ -2,6 +2,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from '#q-app/wrappers'
+import yaml from '@rollup/plugin-yaml'
 import { fileURLToPath } from 'node:url'
 
 const i18nIncludePath = `${fileURLToPath(new URL('./src/i18n', import.meta.url)).replaceAll('\\', '/')}/**/*.{json,json5,yaml,yml}`
@@ -15,6 +16,8 @@ export default defineConfig((ctx) => {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
+      'open-feature',
+      'maintenance',
       'i18n'
     ],
 
@@ -64,6 +67,8 @@ export default defineConfig((ctx) => {
       // viteVuePluginOptions: {},
 
       vitePlugins: [
+        yaml({ include: '**/src/config/feature-flags.yml' }),
+
         ['@intlify/unplugin-vue-i18n/vite', {
           // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
           // compositionOnly: false,
@@ -80,10 +85,11 @@ export default defineConfig((ctx) => {
 
         ['vite-plugin-checker', {
           eslint: {
-            lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
+            lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{js,cjs,mjs,vue}"',
             useFlatConfig: true
           }
-        }, { server: false }]
+        }, { server: false }],
+
       ]
     },
 
