@@ -18,7 +18,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-@use '../css/home-tile-foundation' as tile;
+@use '../../css/home-tile-foundation' as tile;
 
 .decorative-placeholder-tile {
   @include tile.tile-surface(0);

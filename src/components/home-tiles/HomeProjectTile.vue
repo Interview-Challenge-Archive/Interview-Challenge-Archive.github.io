@@ -55,7 +55,7 @@ function emitSelect () {
 </script>
 
 <style scoped lang="scss">
-@use '../css/home-tile-foundation' as tile;
+@use '../../css/home-tile-foundation' as tile;
 
 .home-project-tile {
   @include tile.tile-surface(clamp(280px, 34vh, 420px), cover);

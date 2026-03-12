@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import LoadingSkeletonTile from 'src/components/LoadingSkeletonTile.vue'
+import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 describe('LoadingSkeletonTile', () => {

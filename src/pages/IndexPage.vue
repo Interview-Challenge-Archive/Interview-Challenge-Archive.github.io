@@ -53,9 +53,9 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import DecorativePlaceholderTile from 'src/components/DecorativePlaceholderTile.vue'
-import HomeProjectTile from 'src/components/HomeProjectTile.vue'
-import LoadingSkeletonTile from 'src/components/LoadingSkeletonTile.vue'
+import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
+import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
+import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 
 const route = useRoute()

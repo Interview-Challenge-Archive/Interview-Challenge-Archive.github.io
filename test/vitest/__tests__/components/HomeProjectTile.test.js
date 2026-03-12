@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import HomeProjectTile from 'src/components/HomeProjectTile.vue'
+import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 describe('HomeProjectTile', () => {
