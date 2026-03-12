@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import LoadingSkeletonTile from 'src/components/LoadingSkeletonTile.vue'
+import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 describe('LoadingSkeletonTile', () => {
@@ -9,6 +9,7 @@ describe('LoadingSkeletonTile', () => {
       props: { backgroundImage }
     })
 
+    expect(wrapper.classes()).toContain('q-card')
     expect(wrapper.attributes('aria-hidden')).toBe('true')
     expect(wrapper.attributes('style')).toContain(backgroundImage)
     expect(wrapper.findAll('.q-skeleton')).toHaveLength(4)

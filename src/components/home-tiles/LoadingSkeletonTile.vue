@@ -1,5 +1,7 @@
 <template>
-  <article
+  <q-card
+    flat
+    square
     class="loading-skeleton-tile"
     :style="{ '--tile-background': backgroundImage, backgroundImage }"
     aria-hidden="true"
@@ -10,7 +12,7 @@
       <q-skeleton dark type="text" class="loading-skeleton-tile__line loading-skeleton-tile__line--subtitle" />
       <q-skeleton dark type="text" class="loading-skeleton-tile__line loading-skeleton-tile__line--subtitle-short" />
     </div>
-  </article>
+  </q-card>
 </template>
 
 <script setup>
@@ -23,7 +25,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-@use '../css/home-tile-foundation' as tile;
+@use '../../css/home-tile-foundation' as tile;
 
 .loading-skeleton-tile {
   @include tile.tile-surface(clamp(280px, 34vh, 420px));

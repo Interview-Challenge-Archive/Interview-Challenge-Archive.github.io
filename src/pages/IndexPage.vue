@@ -1,21 +1,17 @@
 <template>
   <q-page ref="pageRef" class="index-page">
     <section ref="tilesGridRef" class="home-tiles home-tiles--content">
-      <button
+      <HomeProjectTile
         v-for="tile in displayedTiles"
         :key="tile.id"
-        type="button"
-        class="home-tile home-tile--action"
+        :project-path="tile.projectPath"
+        :title="tile.title"
+        :subtitle="tile.subtitle"
         :aria-label="`Open ${tile.title}`"
-        :style="{ backgroundImage: tile.backgroundImage, 'view-transition-name': tile.transitionName }"
-        @click="openProject(tile)"
-      >
-        <div class="home-tile__content">
-          <div class="home-tile__meta">{{ tile.projectPath }}</div>
-          <div class="home-tile__title">{{ tile.title }}</div>
-          <div class="home-tile__subtitle">{{ tile.subtitle }}</div>
-        </div>
-      </button>
+        :background-image="tile.backgroundImage"
+        :transition-name="tile.transitionName"
+        @select="openProject(tile)"
+      />
 
       <DecorativePlaceholderTile
         v-for="tile in trailingDecorativePlaceholderTiles"
@@ -57,8 +53,9 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import DecorativePlaceholderTile from 'src/components/DecorativePlaceholderTile.vue'
-import LoadingSkeletonTile from 'src/components/LoadingSkeletonTile.vue'
+import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
+import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
+import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 
 const route = useRoute()
@@ -403,84 +400,6 @@ onBeforeUnmount(() => {
     }
   }
 
-  &-tile {
-    position: relative;
-    overflow: hidden;
-    min-height: clamp(280px, 34vh, 420px);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    &--action {
-      width: 100%;
-      padding: 0;
-      border: 0;
-      appearance: none;
-      cursor: pointer;
-      text-align: left;
-      background-color: rgba($grey-1, 0);
-
-      &:hover .home-tile__content,
-      &:focus-visible .home-tile__content {
-        transform: translateY(-2px);
-        text-shadow: 0 10px 24px rgba($dark-page, 0.42);
-      }
-
-      &:focus-visible {
-        outline: 2px solid rgba($grey-1, 0.95);
-        outline-offset: -6px;
-      }
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba($dark-page, 0) 34%, rgba($dark-page, 0.7) 100%);
-    }
-
-    &__content {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-      padding: 18px 20px;
-      color: $grey-1;
-      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.24s ease;
-    }
-
-    &__meta {
-      margin-bottom: 8px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba($grey-1, 0.72);
-    }
-
-    &__title {
-      font-size: clamp(1.25rem, 1.6vw, 1.75rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    &__subtitle {
-      margin-top: 4px;
-      max-width: 26rem;
-      font-size: 0.98rem;
-      line-height: 1.4;
-      color: rgba($grey-1, 0.86);
-    }
-
-    @media (max-width: 680px) {
-      min-height: 240px;
-
-      &__content {
-        padding: 16px;
-      }
-    }
-  }
 }
 </style>
 

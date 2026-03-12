@@ -24,10 +24,11 @@ describe('IndexPage', () => {
     }
 
     const wrapper = mountWithApp(IndexPage)
-    const tileButtons = wrapper.findAll('button.home-tile--action')
-    const tileTitles = tileButtons.map((button) => button.text())
+    const tileCards = wrapper.findAll('.home-tile--action')
+    const tileTitles = tileCards.map((tile) => tile.text())
 
     expect(tileTitles).toHaveLength(1)
+    expect(tileCards[0].classes()).toContain('q-card')
     expect(tileTitles[0]).toContain('Frontend interview tracks')
     expect(wrapper.text()).not.toContain('System design vault')
     expect(wrapper.text()).not.toContain('Coding challenge sets')

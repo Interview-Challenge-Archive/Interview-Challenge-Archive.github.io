@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import DecorativePlaceholderTile from 'src/components/DecorativePlaceholderTile.vue'
+import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 describe('DecorativePlaceholderTile', () => {
@@ -9,7 +9,7 @@ describe('DecorativePlaceholderTile', () => {
       props: { backgroundImage }
     })
 
-    expect(wrapper.element.tagName).toBe('ARTICLE')
+    expect(wrapper.classes()).toContain('q-card')
     expect(wrapper.attributes('aria-hidden')).toBe('true')
     expect(wrapper.attributes('style')).toContain('--tile-background')
     expect(wrapper.attributes('style')).toContain(backgroundImage)
