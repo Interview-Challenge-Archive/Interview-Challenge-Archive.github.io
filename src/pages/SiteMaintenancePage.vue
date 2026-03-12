@@ -39,7 +39,6 @@
 </template>
 
 <script setup>
-import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -58,7 +57,7 @@ const featureTileBackground = [
 const previewTiles = [
   {
     id: 'curated',
-    component: DecorativePlaceholderTile,
+    component: LoadingSkeletonTile,
     glowStartX: '24%',
     glowStartY: '26%',
     glowEndX: '58%',
@@ -82,7 +81,7 @@ const previewTiles = [
   },
   {
     id: 'search',
-    component: DecorativePlaceholderTile,
+    component: LoadingSkeletonTile,
     glowStartX: '28%',
     glowStartY: '22%',
     glowEndX: '54%',
@@ -255,6 +254,10 @@ function previewTileStyle (tile) {
 
     > :first-child.loading-skeleton-tile {
       min-height: clamp(240px, 34vh, 360px);
+
+      :deep(.loading-skeleton-tile__content) {
+        animation: maintenance-skeleton-drift 4.6s ease-in-out infinite;
+      }
     }
 
     &-grid {
@@ -274,6 +277,7 @@ function previewTileStyle (tile) {
       :deep(.loading-skeleton-tile__content) {
         gap: 10px;
         padding: 16px;
+        animation: maintenance-skeleton-drift 4.2s ease-in-out infinite;
       }
 
       :deep(.loading-skeleton-tile__line--meta) {
@@ -295,14 +299,26 @@ function previewTileStyle (tile) {
 
       > :nth-child(2) {
         animation-delay: -6s;
+
+        :deep(.loading-skeleton-tile__content) {
+          animation-delay: -0.8s;
+        }
       }
 
       > :nth-child(3) {
         animation-delay: -12s;
+
+        :deep(.loading-skeleton-tile__content) {
+          animation-delay: -1.6s;
+        }
       }
 
       > :nth-child(4) {
         animation-delay: -18s;
+
+        :deep(.loading-skeleton-tile__content) {
+          animation-delay: -2.4s;
+        }
       }
     }
 
@@ -330,6 +346,17 @@ function previewTileStyle (tile) {
   to {
     --tile-glow-x: var(--tile-glow-end-x, 62%);
     --tile-glow-y: var(--tile-glow-end-y, 48%);
+  }
+}
+
+@keyframes maintenance-skeleton-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 0);
   }
 }
 
@@ -378,6 +405,12 @@ function previewTileStyle (tile) {
     &__preview > :first-child,
     &__preview-grid > * {
       animation: none !important;
+    }
+
+    &__preview {
+      :deep(.loading-skeleton-tile__content) {
+        animation: none !important;
+      }
     }
   }
 }
