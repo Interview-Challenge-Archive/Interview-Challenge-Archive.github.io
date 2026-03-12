@@ -12,45 +12,25 @@
       </header>
 
       <q-card flat class="site-maintenance__panel">
-        <q-card-section class="site-maintenance__copy">
-          <div class="site-maintenance__eyebrow">{{ t('maintenance.eyebrow') }}</div>
-          <h1 class="site-maintenance__title">{{ t('maintenance.title') }}</h1>
-          <p class="site-maintenance__description">{{ t('maintenance.description') }}</p>
-        </q-card-section>
+        <section class="site-maintenance__copy">
+          <p>{{ t('maintenance.eyebrow') }}</p>
+          <h1>{{ t('maintenance.title') }}</h1>
+          <p>{{ t('maintenance.description') }}</p>
+        </section>
 
         <div class="site-maintenance__preview" aria-hidden="true">
-          <article class="site-maintenance__preview-feature" :style="featureTileStyle">
-            <div class="site-maintenance__preview-skeleton site-maintenance__preview-skeleton--feature">
-              <span class="site-maintenance__preview-line site-maintenance__preview-line--short" />
-              <span class="site-maintenance__preview-line site-maintenance__preview-line--hero" />
-              <span class="site-maintenance__preview-line site-maintenance__preview-line--title" />
-              <span class="site-maintenance__preview-line" />
-              <span class="site-maintenance__preview-line site-maintenance__preview-line--medium" />
-            </div>
-          </article>
+          <LoadingSkeletonTile
+            :background-image="featureTileBackground"
+          />
 
           <div class="site-maintenance__preview-grid">
-            <article
+            <component
               v-for="tile in previewTiles"
               :key="tile.id"
-              class="site-maintenance__preview-tile"
-              :style="{
-                '--tile-background': tile.backgroundImage,
-                '--tile-glow-start-x': tile.glowStartX,
-                '--tile-glow-start-y': tile.glowStartY,
-                '--tile-glow-x': tile.glowStartX,
-                '--tile-glow-y': tile.glowStartY,
-                '--tile-glow-end-x': tile.glowEndX,
-                '--tile-glow-end-y': tile.glowEndY,
-                backgroundImage: tile.backgroundImage
-              }"
-            >
-              <div class="site-maintenance__preview-skeleton">
-                <span class="site-maintenance__preview-line site-maintenance__preview-line--short" />
-                <span class="site-maintenance__preview-line site-maintenance__preview-line--title" />
-                <span class="site-maintenance__preview-line" />
-              </div>
-            </article>
+              :is="tile.component"
+              :background-image="tile.backgroundImage"
+              :style="previewTileStyle(tile)"
+            />
           </div>
         </div>
       </q-card>
@@ -59,6 +39,8 @@
 </template>
 
 <script setup>
+import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
+import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
@@ -73,14 +55,10 @@ const featureTileBackground = [
   'linear-gradient(145deg, rgba(48, 61, 91, 0.34) 0%, rgba(20, 26, 40, 0.96) 100%)'
 ].join(', ')
 
-const featureTileStyle = {
-  '--tile-background': featureTileBackground,
-  backgroundImage: featureTileBackground
-}
-
 const previewTiles = [
   {
     id: 'curated',
+    component: DecorativePlaceholderTile,
     glowStartX: '24%',
     glowStartY: '26%',
     glowEndX: '58%',
@@ -92,6 +70,7 @@ const previewTiles = [
   },
   {
     id: 'loading',
+    component: LoadingSkeletonTile,
     glowStartX: '72%',
     glowStartY: '24%',
     glowEndX: '46%',
@@ -103,6 +82,7 @@ const previewTiles = [
   },
   {
     id: 'search',
+    component: DecorativePlaceholderTile,
     glowStartX: '28%',
     glowStartY: '22%',
     glowEndX: '54%',
@@ -114,6 +94,7 @@ const previewTiles = [
   },
   {
     id: 'updating',
+    component: LoadingSkeletonTile,
     glowStartX: '78%',
     glowStartY: '26%',
     glowEndX: '48%',
@@ -124,11 +105,20 @@ const previewTiles = [
     ].join(', ')
   }
 ]
+
+function previewTileStyle (tile) {
+  return {
+    '--tile-glow-start-x': tile.glowStartX,
+    '--tile-glow-start-y': tile.glowStartY,
+    '--tile-glow-x': tile.glowStartX,
+    '--tile-glow-y': tile.glowStartY,
+    '--tile-glow-end-x': tile.glowEndX,
+    '--tile-glow-end-y': tile.glowEndY
+  }
+}
 </script>
 
 <style scoped lang="scss">
-@use '../css/home-tile-foundation' as tile;
-
 @property --tile-glow-x {
   syntax: '<percentage>';
   inherits: false;
@@ -222,33 +212,33 @@ const previewTiles = [
     padding: clamp(28px, 5vw, 56px);
     border-right: 1px solid rgba($dark-page, 0.07);
     color: $dark-page;
-  }
 
-  &__eyebrow {
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
+    > p {
+      margin: 0;
+    }
 
-  &__eyebrow {
-    color: rgba($dark-page, 0.52);
-  }
+    > p:first-child {
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba($dark-page, 0.52);
+    }
 
-  &__title {
-    margin: 0;
-    max-width: 11ch;
-    font-size: clamp(2.3rem, 6vw, 4.6rem);
-    line-height: 0.96;
-    letter-spacing: -0.05em;
-  }
+    > h1 {
+      margin: 0;
+      max-width: 11ch;
+      font-size: clamp(2.3rem, 6vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
 
-  &__description {
-    max-width: 40rem;
-    margin: 0;
-    font-size: clamp(1.02rem, 1.6vw, 1.16rem);
-    line-height: 1.72;
-    color: rgba($dark-page, 0.74);
+    > p:last-child {
+      max-width: 40rem;
+      font-size: clamp(1.02rem, 1.6vw, 1.16rem);
+      line-height: 1.72;
+      color: rgba($dark-page, 0.74);
+    }
   }
 
   &__preview {
@@ -257,138 +247,65 @@ const previewTiles = [
     padding: clamp(20px, 3vw, 28px);
     background: linear-gradient(180deg, rgba($grey-2, 0.14) 0%, rgba($blue-grey-1, 0.28) 100%);
 
-    &-feature,
-    &-tile {
+    > :first-child,
+    &-grid > * {
       border: 1px solid rgba($grey-1, 0.42);
       box-shadow: 0 24px 48px rgba($dark-page, 0.14);
     }
 
-    &-feature {
-      @include tile.tile-surface(clamp(240px, 34vh, 360px));
-
-      &::before {
-        @include tile.tile-blurred-background(
-          -18px,
-          cover,
-          blur(28px) saturate(1.14),
-          scale(1.05)
-        );
-      }
-
-      &::after {
-        @include tile.tile-overlay(
-          (
-            linear-gradient(135deg, rgba($grey-1, 0.12) 0%, rgba($grey-1, 0) 40%),
-            repeating-linear-gradient(
-              -45deg,
-              rgba($grey-1, 0.06) 0 15px,
-              rgba($grey-1, 0) 15px 30px
-            ),
-            linear-gradient(180deg, rgba($dark-page, 0.04) 0%, rgba($dark-page, 0.76) 100%)
-          )
-        );
-      }
-    }
-
-    &-skeleton {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1;
-      padding: 18px 20px;
+    > :first-child.loading-skeleton-tile {
+      min-height: clamp(240px, 34vh, 360px);
     }
 
     &-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
-    }
 
-    &-tile {
-      @include tile.tile-surface(clamp(140px, 17vh, 176px));
-      animation: tile-background-scroll 24s ease-in-out infinite alternate;
-
-      &::before {
-        @include tile.tile-blurred-background(
-          -20px,
-          cover,
-          blur(30px) saturate(1.12),
-          scale(1.08)
-        );
+      > * {
+        animation: tile-background-scroll 24s ease-in-out infinite alternate;
       }
 
-      &::after {
-        @include tile.tile-overlay(
-          linear-gradient(180deg, rgba($dark-page, 0.02) 0%, rgba($dark-page, 0.72) 100%)
-        );
+      > *.loading-skeleton-tile,
+      > *.decorative-placeholder-tile {
+        min-height: clamp(140px, 17vh, 176px);
       }
 
-      &:nth-child(2) {
+      :deep(.loading-skeleton-tile__content) {
+        gap: 10px;
+        padding: 16px;
+      }
+
+      :deep(.loading-skeleton-tile__line--meta) {
+        max-width: 92px;
+      }
+
+      :deep(.loading-skeleton-tile__line--title) {
+        max-width: 148px;
+        height: 18px;
+      }
+
+      :deep(.loading-skeleton-tile__line--subtitle) {
+        max-width: 176px;
+      }
+
+      :deep(.loading-skeleton-tile__line--subtitle-short) {
+        max-width: 124px;
+      }
+
+      > :nth-child(2) {
         animation-delay: -6s;
       }
 
-      &:nth-child(3) {
+      > :nth-child(3) {
         animation-delay: -12s;
       }
 
-      &:nth-child(4) {
+      > :nth-child(4) {
         animation-delay: -18s;
       }
     }
 
-    &-skeleton {
-      display: grid;
-      gap: 10px;
-      align-content: end;
-
-      &--feature {
-        gap: 12px;
-        padding: 22px 24px;
-      }
-    }
-
-    &-line {
-      display: block;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        rgba($grey-1, 0.16),
-        rgba($grey-1, 0.34),
-        rgba($grey-1, 0.16)
-      );
-      background-size: 220% 100%;
-      animation: shimmer 2.8s linear infinite;
-
-      &--short {
-        width: 34%;
-      }
-
-      &--title {
-        width: 72%;
-        height: 16px;
-      }
-
-      &--hero {
-        width: 58%;
-        height: 26px;
-      }
-
-      &--medium {
-        width: 64%;
-      }
-    }
-  }
-}
-
-@keyframes shimmer {
-  from {
-    background-position: 200% 0;
-  }
-
-  to {
-    background-position: -20% 0;
   }
 }
 
@@ -450,12 +367,6 @@ const previewTiles = [
       &-grid {
         grid-template-columns: 1fr;
       }
-
-      &-feature-copy,
-      &-tile-copy,
-      &-skeleton {
-        padding: 16px;
-      }
     }
   }
 }
@@ -464,9 +375,8 @@ const previewTiles = [
   .site-maintenance {
     &__wash,
     &__panel,
-    &__preview-feature,
-    &__preview-tile,
-    &__preview-line {
+    &__preview > :first-child,
+    &__preview-grid > * {
       animation: none !important;
     }
   }
