@@ -9,6 +9,7 @@ describe('LoadingSkeletonTile', () => {
       props: { backgroundImage }
     })
 
+    expect(wrapper.classes()).toContain('q-card')
     expect(wrapper.attributes('aria-hidden')).toBe('true')
     expect(wrapper.attributes('style')).toContain(backgroundImage)
     expect(wrapper.findAll('.q-skeleton')).toHaveLength(4)

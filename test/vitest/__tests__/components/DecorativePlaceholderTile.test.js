@@ -9,7 +9,7 @@ describe('DecorativePlaceholderTile', () => {
       props: { backgroundImage }
     })
 
-    expect(wrapper.element.tagName).toBe('ARTICLE')
+    expect(wrapper.classes()).toContain('q-card')
     expect(wrapper.attributes('aria-hidden')).toBe('true')
     expect(wrapper.attributes('style')).toContain('--tile-background')
     expect(wrapper.attributes('style')).toContain(backgroundImage)

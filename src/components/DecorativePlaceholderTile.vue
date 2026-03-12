@@ -1,5 +1,7 @@
 <template>
-  <article
+  <q-card
+    flat
+    square
     class="decorative-placeholder-tile"
     :style="{ '--tile-background': backgroundImage, backgroundImage }"
     aria-hidden="true"
