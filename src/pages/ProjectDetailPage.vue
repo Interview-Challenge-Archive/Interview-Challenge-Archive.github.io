@@ -73,13 +73,16 @@
         </section>
       </div>
     </div>
+
+    <ErrorNotFound v-else />
   </q-page>
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
+import ErrorNotFound from './ErrorNotFound.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -87,16 +90,40 @@ const githubProjectsStore = useGitHubProjectsStore()
 
 const project = computed(() => githubProjectsStore.projectByRoute(route.params.owner, route.params.repo))
 
-// Redirect to 404 page if project not found
-watch(
-  project,
-  (newProject) => {
-    if (!newProject) {
-      router.replace({ path: '/not-found' })
+function prefersReducedMotion () {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+async function goBack () {
+  const navigateBack = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back()
+      return
     }
-  },
-  { immediate: true }
-)
+
+    return router.push({ name: 'home' })
+  }
+
+  if (
+    typeof document !== 'undefined'
+    && typeof document.startViewTransition === 'function'
+    && !prefersReducedMotion()
+  ) {
+    document.startViewTransition(() => navigateBack())
+    return
+  }
+
+  await navigateBack()
+}
+
+async function openLabel (label) {
+  await router.push({
+    name: 'home',
+    query: {
+      label
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -221,18 +248,6 @@ watch(
 .project-detail__paragraph {
   margin-top: 18px;
   color: rgba($dark-page, 0.76);
-}
-
-.project-detail__missing {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.project-detail__missing-card {
-  width: min(100%, 720px);
-  background: rgba($grey-1, 0.82);
-  border-color: rgba($dark-page, 0.08);
-  box-shadow: 0 14px 40px rgba($dark-page, 0.05);
 }
 
 @keyframes project-poster-settle {
