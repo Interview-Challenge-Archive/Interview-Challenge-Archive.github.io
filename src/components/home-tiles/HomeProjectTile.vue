@@ -12,7 +12,7 @@
     @keydown.space.prevent="emitSelect"
   >
     <div class="home-project-tile__content home-tile__content">
-      <div class="home-project-tile__meta home-tile__meta">{{ projectPath }}</div>
+      <div class="home-project-tile__meta home-tile__meta text-uppercase">{{ projectPath }}</div>
       <div class="home-project-tile__title home-tile__title">{{ title }}</div>
       <div class="home-project-tile__subtitle home-tile__subtitle">{{ subtitle }}</div>
     </div>
@@ -97,7 +97,6 @@ function emitSelect () {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
     color: rgba($grey-1, 0.72);
   }
 

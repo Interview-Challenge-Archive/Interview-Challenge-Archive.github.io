@@ -18,7 +18,7 @@
             />
 
             <div class="project-detail__poster-copy">
-              <div class="project-detail__poster-label">{{ project.projectPath }}</div>
+              <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
               <div class="project-detail__poster-title">{{ project.title }}</div>
             </div>
           </div>
@@ -200,7 +200,6 @@ async function openLabel (label) {
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.18em;
-  text-transform: uppercase;
 }
 
 .project-detail__poster-label {

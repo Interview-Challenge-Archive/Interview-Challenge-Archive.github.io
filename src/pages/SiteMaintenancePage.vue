@@ -13,7 +13,7 @@
 
       <q-card flat class="site-maintenance__panel">
         <section class="site-maintenance__copy">
-          <p>{{ t('maintenance.eyebrow') }}</p>
+          <p class="text-uppercase">{{ t('maintenance.eyebrow') }}</p>
           <h1>{{ t('maintenance.title') }}</h1>
           <p>{{ t('maintenance.description') }}</p>
         </section>
@@ -220,7 +220,6 @@ function previewTileStyle (tile) {
       font-size: 0.76rem;
       font-weight: 700;
       letter-spacing: 0.18em;
-      text-transform: uppercase;
       color: rgba($dark-page, 0.52);
     }
 

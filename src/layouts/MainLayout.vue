@@ -95,7 +95,7 @@
               :aria-pressed="selectedDockTab === tab.name ? 'true' : 'false'"
               @click="toggleTab(tab.name)"
             >
-              <span class="bottom-dock__tab-label">{{ tab.label }}</span>
+              <span class="bottom-dock__tab-label text-uppercase">{{ tab.label }}</span>
             </q-btn>
           </div>
         </div>
@@ -133,7 +133,7 @@
             no-caps
             align="left"
             :ripple="false"
-            class="mobile-dock-menu__item text-left"
+            class="mobile-dock-menu__item text-left text-uppercase"
             :class="{ 'mobile-dock-menu__item--active': selectedDockTab === tab.name }"
             @click="selectDockTab(tab.name)"
           >
@@ -500,7 +500,6 @@ function closeActiveTab () {
 }
 
 .bottom-dock__tab-label {
-  text-transform: uppercase;
   letter-spacing: -0.01em;
 }
 
@@ -542,7 +541,6 @@ function closeActiveTab () {
 
   &__item {
     justify-content: flex-start;
-    text-transform: uppercase;
     min-height: 64px;
     padding: 0 18px;
     border: 1px solid rgba($grey-1, 0.55);

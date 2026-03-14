@@ -17,15 +17,6 @@ textarea {
   font: inherit;
 }
 
-.q-btn .q-btn__content {
-  text-transform: uppercase;
-}
-
-.bottom-dock__panels .text-h5,
-.dock-page__title {
-  text-transform: uppercase;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root),
   ::view-transition-new(root) {

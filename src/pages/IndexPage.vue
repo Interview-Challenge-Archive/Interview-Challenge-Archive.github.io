@@ -41,7 +41,7 @@
 
     <div v-if="showLoadMoreIndicator" class="home-load-more" aria-live="polite">
       <q-spinner-dots size="32px" color="white" />
-      <span class="home-load-more__label">{{ t('home.loadingMore') }}</span>
+      <span class="home-load-more__label text-uppercase">{{ t('home.loadingMore') }}</span>
     </div>
 
     <div ref="loadMoreSentinelRef" class="home-tiles__sentinel" aria-hidden="true" />
@@ -368,7 +368,6 @@ onBeforeUnmount(() => {
     font-size: 0.92rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     color: rgba($grey-1, 0.92);
   }
 }
