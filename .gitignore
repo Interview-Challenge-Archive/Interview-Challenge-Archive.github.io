@@ -32,5 +32,8 @@ yarn-error.log*
 # local .env files
 .env.local*
 
-# Stakpak session files
-.stakpak/session*
+# Stakpak directory
+.stakpak
+
+# AI directory
+.ai
