@@ -1,6 +1,6 @@
 <template>
   <q-page class="project-detail-page">
-    <div v-if="project" class="project-detail">
+    <div class="project-detail">
       <div class="project-detail__layout">
         <aside class="project-detail__sidebar">
           <div
@@ -73,8 +73,6 @@
         </section>
       </div>
     </div>
-
-    <ErrorNotFound v-else />
   </q-page>
 </template>
 
@@ -82,7 +80,6 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
-import ErrorNotFound from './ErrorNotFound.vue'
 
 const route = useRoute()
 const router = useRouter()
