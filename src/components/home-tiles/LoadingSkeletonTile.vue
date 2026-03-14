@@ -6,7 +6,7 @@
     :style="{ '--tile-background': backgroundImage, backgroundImage }"
     aria-hidden="true"
   >
-    <div class="loading-skeleton-tile__content">
+    <div class="loading-skeleton-tile__content absolute-position">
       <q-skeleton dark type="text" class="loading-skeleton-tile__line loading-skeleton-tile__line--meta" />
       <q-skeleton dark type="rect" class="loading-skeleton-tile__line loading-skeleton-tile__line--title" />
       <q-skeleton dark type="text" class="loading-skeleton-tile__line loading-skeleton-tile__line--subtitle" />
@@ -39,7 +39,6 @@ defineProps({
   }
 
   &__content {
-    position: absolute;
     right: 0;
     bottom: 0;
     left: 0;
@@ -53,7 +52,6 @@ defineProps({
   }
 
   &__line {
-    position: relative;
     z-index: 1;
 
     &--meta {

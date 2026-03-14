@@ -156,7 +156,6 @@ async function openLabel (label) {
 }
 
 .project-detail__poster {
-  position: relative;
   display: flex;
   align-items: flex-end;
   min-height: clamp(340px, 56vh, 560px);
@@ -170,7 +169,6 @@ async function openLabel (label) {
 }
 
 .project-detail__back-btn {
-  position: absolute;
   top: 16px;
   left: 16px;
   z-index: 2;
@@ -183,13 +181,11 @@ async function openLabel (label) {
 
 .project-detail__poster::after {
   content: '';
-  position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba($dark-page, 0.08) 0%, rgba($dark-page, 0.78) 100%);
 }
 
 .project-detail__poster-copy {
-  position: relative;
   z-index: 1;
   padding: 24px;
   color: $grey-1;

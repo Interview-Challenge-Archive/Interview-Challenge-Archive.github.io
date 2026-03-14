@@ -1,5 +1,4 @@
 @mixin tile-surface($min-height, $background-size: 140%) {
-  position: relative;
   overflow: hidden;
   min-height: $min-height;
   background-position: center;
@@ -15,7 +14,6 @@
   $transform: scale(1.08)
 ) {
   content: '';
-  position: absolute;
   inset: $inset;
   background-image: var(--tile-background);
   background-position: center;
@@ -27,7 +25,6 @@
 
 @mixin tile-overlay($background, $box-shadow: null) {
   content: '';
-  position: absolute;
   inset: 0;
   background: $background;
 
