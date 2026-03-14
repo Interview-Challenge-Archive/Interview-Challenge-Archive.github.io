@@ -73,23 +73,11 @@
         </section>
       </div>
     </div>
-
-    <div v-else class="project-detail__missing">
-      <q-card flat bordered class="project-detail__missing-card">
-        <q-card-section>
-          <div class="text-h5 q-mb-sm">Project not found</div>
-          <div class="text-body1 text-grey-7 q-mb-lg">
-            This GitHub-style project page does not have matching data in the current store yet.
-          </div>
-          <q-btn color="dark" no-caps label="Back to projects" @click="router.push({ name: 'home' })" />
-        </q-card-section>
-      </q-card>
-    </div>
   </q-page>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 
@@ -99,40 +87,16 @@ const githubProjectsStore = useGitHubProjectsStore()
 
 const project = computed(() => githubProjectsStore.projectByRoute(route.params.owner, route.params.repo))
 
-function prefersReducedMotion () {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
-
-async function goBack () {
-  const navigateBack = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back()
-      return
+// Redirect to 404 page if project not found
+watch(
+  project,
+  (newProject) => {
+    if (!newProject) {
+      router.replace({ path: '/not-found' })
     }
-
-    return router.push({ name: 'home' })
-  }
-
-  if (
-    typeof document !== 'undefined'
-    && typeof document.startViewTransition === 'function'
-    && !prefersReducedMotion()
-  ) {
-    document.startViewTransition(() => navigateBack())
-    return
-  }
-
-  await navigateBack()
-}
-
-async function openLabel (label) {
-  await router.push({
-    name: 'home',
-    query: {
-      label
-    }
-  })
-}
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped lang="scss">
