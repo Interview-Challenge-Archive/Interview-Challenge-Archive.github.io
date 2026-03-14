@@ -333,7 +333,6 @@ onBeforeUnmount(() => {
   --home-placeholder-palette-5-accent: #{rgba($dark-page, 0.2)};
   --home-placeholder-clear: #{rgba($grey-1, 0)};
   --home-placeholder-depth: #{rgba($dark-page, 0.58)};
-  position: relative;
   padding: 0 !important;
 }
 

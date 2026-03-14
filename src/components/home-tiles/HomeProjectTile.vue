@@ -11,7 +11,7 @@
     @keydown.enter.prevent="emitSelect"
     @keydown.space.prevent="emitSelect"
   >
-    <div class="home-project-tile__content home-tile__content">
+    <div class="home-project-tile__content home-tile__content absolute-position">
       <div class="home-project-tile__meta home-tile__meta text-uppercase">{{ projectPath }}</div>
       <div class="home-project-tile__title home-tile__title">{{ title }}</div>
       <div class="home-project-tile__subtitle home-tile__subtitle">{{ subtitle }}</div>
@@ -82,7 +82,6 @@ function emitSelect () {
   }
 
   &__content {
-    position: absolute;
     right: 0;
     bottom: 0;
     left: 0;

@@ -1,11 +1,11 @@
 <template>
   <q-layout view="lHh lpr lFf" class="bottom-layout">
-    <q-page-container class="bottom-layout__content">
+    <q-page-container class="bottom-layout__content relative-position">
       <router-view />
     </q-page-container>
 
     <div
-      class="bottom-layout__glass"
+      class="bottom-layout__glass fixed-position"
       :class="{ 'bottom-layout__glass--visible': isTabOpen }"
       :aria-hidden="isTabOpen ? 'false' : 'true'"
       aria-label="Close open tab"
@@ -18,7 +18,7 @@
 
     <q-footer
       bordered
-      class="bg-white text-dark bottom-dock"
+      class="bg-white text-dark bottom-dock fixed-position"
       :class="{ 'bottom-dock--expanded': isExpanded }"
     >
       <div
@@ -266,7 +266,6 @@ function closeActiveTab () {
 }
 
 .bottom-layout__content {
-  position: relative;
   z-index: 1;
 }
 
@@ -440,7 +439,6 @@ function closeActiveTab () {
 }
 
 .bottom-dock__tab {
-  position: relative;
   overflow: hidden;
   align-self: stretch;
   min-height: 100%;
@@ -455,7 +453,6 @@ function closeActiveTab () {
 .bottom-dock__tab::before,
 .bottom-dock__tab::after {
   content: '';
-  position: absolute;
   inset: 0;
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
@@ -495,7 +492,6 @@ function closeActiveTab () {
 }
 
 .bottom-dock__tab :deep(.q-btn__content) {
-  position: relative;
   z-index: 1;
 }
 

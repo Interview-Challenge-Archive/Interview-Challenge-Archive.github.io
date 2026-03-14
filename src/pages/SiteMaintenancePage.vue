@@ -131,7 +131,6 @@ function previewTileStyle (tile) {
 }
 
 .site-maintenance {
-  position: relative;
   overflow: hidden;
   min-height: 100vh;
   padding: clamp(20px, 4vw, 40px);
@@ -141,7 +140,6 @@ function previewTileStyle (tile) {
 
   &__backdrop,
   &__wash {
-    position: absolute;
     inset: 0;
     pointer-events: none;
   }
@@ -164,8 +162,6 @@ function previewTileStyle (tile) {
   }
 
   &__inner {
-    position: relative;
-    z-index: 1;
     width: min(1180px, 100%);
     margin: 0 auto;
     display: grid;
