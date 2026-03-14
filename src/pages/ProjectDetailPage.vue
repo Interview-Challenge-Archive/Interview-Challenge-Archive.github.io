@@ -1,78 +1,84 @@
 <template>
   <q-page class="project-detail-page">
-    <div class="project-detail">
-      <div class="project-detail__layout">
-        <aside class="project-detail__sidebar">
-          <div
-            class="project-detail__poster"
-            :style="{ backgroundImage: project.backgroundImage, 'view-transition-name': project.transitionName }"
-          >
+    <template v-if="project">
+      <div class="project-detail">
+        <div class="project-detail__layout">
+          <aside class="project-detail__sidebar">
+            <div
+              class="project-detail__poster"
+              :style="{ backgroundImage: project.backgroundImage, 'view-transition-name': project.transitionName }"
+            >
+              <q-btn
+                flat
+                round
+                dense
+                icon="arrow_back"
+                aria-label="Go back"
+                class="project-detail__back-btn"
+                @click="goBack"
+              />
+
+              <div class="project-detail__poster-copy">
+                <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
+                <div class="project-detail__poster-title">{{ project.title }}</div>
+              </div>
+            </div>
+
             <q-btn
-              flat
-              round
-              dense
-              icon="arrow_back"
-              aria-label="Go back"
-              class="project-detail__back-btn"
-              @click="goBack"
+              class="project-detail__github-btn"
+              outline
+              no-caps
+              color="dark"
+              icon-right="open_in_new"
+              label="Open on GitHub"
+              :href="project.githubUrl"
+              target="_blank"
+              rel="noreferrer"
             />
 
-            <div class="project-detail__poster-copy">
-              <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
-              <div class="project-detail__poster-title">{{ project.title }}</div>
+            <div class="project-detail__pill-row project-detail__pill-row--sidebar">
+              <q-chip
+                clickable
+                square
+                outline
+                color="grey-8"
+                text-color="grey-9"
+                class="project-detail__tag-chip"
+                @click="openLabel(project.primaryLanguage)"
+              >
+                {{ project.primaryLanguage }}
+              </q-chip>
+              <q-chip
+                v-for="tag in project.tags"
+                :key="tag"
+                clickable
+                square
+                outline
+                color="grey-8"
+                text-color="grey-9"
+                class="project-detail__tag-chip"
+                @click="openLabel(tag)"
+              >
+                {{ tag }}
+              </q-chip>
             </div>
-          </div>
+          </aside>
 
-          <q-btn
-            class="project-detail__github-btn"
-            outline
-            no-caps
-            color="dark"
-            icon-right="open_in_new"
-            label="Open on GitHub"
-            :href="project.githubUrl"
-            target="_blank"
-            rel="noreferrer"
-          />
+          <section class="project-detail__body">
+            <p class="project-detail__subtitle">{{ project.subtitle }}</p>
 
-          <div class="project-detail__pill-row project-detail__pill-row--sidebar">
-            <q-chip
-              clickable
-              square
-              outline
-              color="grey-8"
-              text-color="grey-9"
-              class="project-detail__tag-chip"
-              @click="openLabel(project.primaryLanguage)"
-            >
-              {{ project.primaryLanguage }}
-            </q-chip>
-            <q-chip
-              v-for="tag in project.tags"
-              :key="tag"
-              clickable
-              square
-              outline
-              color="grey-8"
-              text-color="grey-9"
-              class="project-detail__tag-chip"
-              @click="openLabel(tag)"
-            >
-              {{ tag }}
-            </q-chip>
-          </div>
-        </aside>
-
-        <section class="project-detail__body">
-          <p class="project-detail__subtitle">{{ project.subtitle }}</p>
-
-          <p class="project-detail__description">{{ project.description }}</p>
-          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph">
-            {{ paragraph }}
-          </p>
-        </section>
+            <p class="project-detail__description">{{ project.description }}</p>
+            <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph">
+              {{ paragraph }}
+            </p>
+          </section>
+        </div>
       </div>
-    </div>
+    </template>
+
+    <template v-else>
+      <ErrorNotFound />
+    </template>
   </q-page>
 </template>
 
@@ -80,6 +86,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
+import ErrorNotFound from './ErrorNotFound.vue'
 
 const route = useRoute()
 const router = useRouter()
