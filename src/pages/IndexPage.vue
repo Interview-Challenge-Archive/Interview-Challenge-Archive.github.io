@@ -1,42 +1,28 @@
 <template>
   <q-page ref="pageRef" class="index-page">
-    <section ref="tilesGridRef" class="home-tiles home-tiles--content">
-      <HomeProjectTile
-        v-for="tile in displayedTiles"
-        :key="tile.id"
-        :project-path="tile.projectPath"
-        :title="tile.title"
-        :subtitle="tile.subtitle"
-        :aria-label="`Open ${tile.title}`"
-        :background-image="tile.backgroundImage"
-        :transition-name="tile.transitionName"
-        @select="openProject(tile)"
-      />
+    <section ref="tilesGridRef" class="home-tiles">
+      <template v-for="tile in renderedTiles" :key="tile.id">
+        <HomeProjectTile
+          v-if="tile.type === 'project'"
+          :project-path="tile.projectPath"
+          :title="tile.title"
+          :subtitle="tile.subtitle"
+          :aria-label="`Open ${tile.title}`"
+          :background-image="tile.backgroundImage"
+          :transition-name="tile.transitionName"
+          @select="openProject(tile)"
+        />
 
-      <DecorativePlaceholderTile
-        v-for="tile in trailingDecorativePlaceholderTiles"
-        :key="tile.id"
-        :background-image="tile.backgroundImage"
-      />
+        <LoadingSkeletonTile
+          v-else-if="tile.type === 'loading'"
+          :background-image="tile.backgroundImage"
+        />
 
-      <LoadingSkeletonTile
-        v-for="tile in loadingSkeletonTiles"
-        :key="tile.id"
-        :background-image="tile.backgroundImage"
-      />
-    </section>
-
-    <section
-      v-if="showDecorativePlaceholderLayer"
-      class="home-tiles home-tiles--placeholder-layer"
-      :style="decorativePlaceholderLayerStyle"
-      aria-hidden="true"
-    >
-      <DecorativePlaceholderTile
-        v-for="tile in decorativePlaceholderTiles"
-        :key="tile.id"
-        :background-image="tile.backgroundImage"
-      />
+        <DecorativePlaceholderTile
+          v-else
+          :background-image="tile.backgroundImage"
+        />
+      </template>
     </section>
 
     <div v-if="showLoadMoreIndicator" class="home-load-more" aria-live="polite">
@@ -68,11 +54,9 @@ const pageRef = ref(null)
 const tilesGridRef = ref(null)
 const loadMoreSentinelRef = ref(null)
 const pageWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
-const pageHeight = ref(typeof window === 'undefined' ? 900 : window.innerHeight)
 const viewportHeight = ref(typeof window === 'undefined' ? 900 : window.innerHeight)
 const renderedColumnCount = ref(0)
-const tilesGridTop = ref(0)
-const tilesGridHeight = ref(0)
+const tilesGridViewportTop = ref(0)
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
@@ -105,18 +89,22 @@ const updatePageMetrics = () => {
   const pageElement = getPageElement()
   const tilesGridElement = getTilesGridElement()
 
-  pageWidth.value = pageElement?.clientWidth || window.innerWidth
-  pageHeight.value = pageElement?.clientHeight || window.innerHeight
+  pageWidth.value = tilesGridElement?.clientWidth || pageElement?.clientWidth || window.innerWidth
   viewportHeight.value = window.innerHeight
 
   if (tilesGridElement) {
     const gridTemplateColumns = window.getComputedStyle(tilesGridElement).gridTemplateColumns
-    const columns = gridTemplateColumns.split(' ').filter(Boolean)
+    const columns = gridTemplateColumns === 'none'
+      ? []
+      : gridTemplateColumns.split(' ').filter(Boolean)
 
-    renderedColumnCount.value = columns.length || 1
-    tilesGridTop.value = tilesGridElement.offsetTop
-    tilesGridHeight.value = tilesGridElement.offsetHeight
+    renderedColumnCount.value = columns.length || Math.max(1, Math.floor(pageWidth.value / 460))
+    tilesGridViewportTop.value = Math.max(0, tilesGridElement.getBoundingClientRect().top)
+    return
   }
+
+  renderedColumnCount.value = Math.max(1, Math.floor(pageWidth.value / 460))
+  tilesGridViewportTop.value = 0
 }
 
 let pageResizeObserver
@@ -164,6 +152,8 @@ const displayedTiles = computed(() => {
 
 const visibleColumnCount = computed(() => renderedColumnCount.value || Math.max(1, Math.floor(pageWidth.value / 460)))
 const tileHeight = computed(() => (pageWidth.value <= 680 ? 240 : clamp(viewportHeight.value * 0.34, 280, 420)))
+const minimumVisibleRowCount = computed(() => Math.max(1, Math.ceil((viewportHeight.value - tilesGridViewportTop.value) / tileHeight.value)))
+const minimumTileCount = computed(() => minimumVisibleRowCount.value * visibleColumnCount.value)
 const loadingSkeletonCount = computed(() => {
   if (hasActiveSearch.value || !isLoading.value) {
     return 0
@@ -179,41 +169,34 @@ const loadingSkeletonTiles = computed(() => Array.from({ length: loadingSkeleton
   backgroundImage: buildPlaceholderBackground(index),
   isPlaceholder: true
 })))
-const trailingDecorativePlaceholderCount = computed(() => {
-  if (isLoading.value || !displayedTiles.value.length || (!hasActiveSearch.value && hasMore.value)) {
-    return 0
-  }
-
-  const remainder = displayedTiles.value.length % visibleColumnCount.value
-
-  return remainder === 0 ? 0 : visibleColumnCount.value - remainder
-})
-const trailingDecorativePlaceholderTiles = computed(() => Array.from({ length: trailingDecorativePlaceholderCount.value }, (_, index) => ({
-  id: `trailing-placeholder-${displayedTiles.value.length}-${index}`,
-  backgroundImage: buildPlaceholderBackground(displayedTiles.value.length + index),
-  isPlaceholder: true
-})))
+const contentTileCount = computed(() => displayedTiles.value.length + loadingSkeletonTiles.value.length)
 const showLoadMoreIndicator = computed(() => !hasActiveSearch.value && isLoading.value && displayedTiles.value.length > 0)
-const decorativePlaceholderTop = computed(() => tilesGridTop.value + tilesGridHeight.value)
-const remainingHeight = computed(() => Math.max(0, pageHeight.value - decorativePlaceholderTop.value))
-const decorativePlaceholderRowCount = computed(() => {
-  if (isLoading.value || (!hasActiveSearch.value && hasMore.value) || !displayedTiles.value.length || !remainingHeight.value) {
+const decorativePlaceholderCount = computed(() => {
+  if (isLoading.value || (!hasActiveSearch.value && hasMore.value)) {
     return 0
   }
 
-  return Math.max(1, Math.ceil(remainingHeight.value / tileHeight.value))
+  return Math.max(0, minimumTileCount.value - contentTileCount.value)
 })
-const decorativePlaceholderCount = computed(() => decorativePlaceholderRowCount.value * visibleColumnCount.value)
 const decorativePlaceholderTiles = computed(() => Array.from({ length: decorativePlaceholderCount.value }, (_, index) => ({
-  id: `decorative-placeholder-${index}`,
-  backgroundImage: buildPlaceholderBackground(index),
+  id: `decorative-placeholder-${contentTileCount.value}-${index}`,
+  backgroundImage: buildPlaceholderBackground(contentTileCount.value + index),
   isPlaceholder: true
 })))
-const decorativePlaceholderLayerStyle = computed(() => ({
-  top: `${decorativePlaceholderTop.value}px`,
-  gridTemplateRows: `repeat(${decorativePlaceholderRowCount.value}, minmax(0, 1fr))`
-}))
-const showDecorativePlaceholderLayer = computed(() => decorativePlaceholderTiles.value.length > 0)
+const renderedTiles = computed(() => ([
+  ...displayedTiles.value.map((tile) => ({
+    ...tile,
+    type: 'project'
+  })),
+  ...loadingSkeletonTiles.value.map((tile) => ({
+    ...tile,
+    type: 'loading'
+  })),
+  ...decorativePlaceholderTiles.value.map((tile) => ({
+    ...tile,
+    type: 'decorative'
+  }))
+]))
 
 function isSentinelNearViewport () {
   if (typeof window === 'undefined' || !loadMoreSentinelRef.value) {
@@ -378,21 +361,6 @@ onBeforeUnmount(() => {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr));
     gap: 0;
-
-    &--content {
-      position: relative;
-      z-index: 1;
-    }
-
-    &--placeholder-layer {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
 
     &__sentinel {
       width: 100%;

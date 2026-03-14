@@ -21,7 +21,7 @@ defineProps({
 @use '../../css/home-tile-foundation' as tile;
 
 .decorative-placeholder-tile {
-  @include tile.tile-surface(0);
+  @include tile.tile-surface(clamp(280px, 34vh, 420px));
   opacity: 0.68;
   filter: saturate(0.62) brightness(0.92);
 
@@ -42,6 +42,10 @@ defineProps({
       ),
       inset 0 0 0 1px rgba($grey-1, 0.12)
     );
+  }
+
+  @media (max-width: 680px) {
+    min-height: 240px;
   }
 }
 </style>
