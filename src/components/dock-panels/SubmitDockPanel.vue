@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h5 q-mb-sm">{{ t('dock.submit.title') }}</div>
+    <div class="text-h5 text-uppercase q-mb-sm">{{ t('dock.submit.title') }}</div>
     <div class="text-body1 text-grey-7">{{ t('dock.submit.description') }}</div>
     <div class="text-caption text-grey-7 q-mt-sm q-mb-lg">{{ t('dock.submit.helper') }}</div>
 
