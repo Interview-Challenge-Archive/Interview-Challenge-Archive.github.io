@@ -18,6 +18,7 @@ describe('HomeProjectTile', () => {
     expect(wrapper.classes()).toContain('q-card')
     expect(wrapper.attributes('role')).toBe('button')
     expect(wrapper.attributes('tabindex')).toBe('0')
+    expect(wrapper.find('.home-project-tile__content').classes()).toContain('absolute-bottom')
     expect(wrapper.text()).toContain('mekdrop/demo-project')
     expect(wrapper.text()).toContain('Demo project')
 
