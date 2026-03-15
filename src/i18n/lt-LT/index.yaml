@@ -11,6 +11,11 @@ maintenance:
   title: Tobuliname naudojimo patirtį
   description: Saugykla laikinai nepasiekiama, kol diegiame dizaino patobulinimus ir funkcinius atnaujinimus. Netrukus viskas turėtų vėl veikti.
   preview:
+notfound:
+  eyebrow: Puslapis nerastas
+  description: Puslapis, kurio ieškote, neegzistuoja arba buvo perkeltas. Grįžkite į pagrindinį puslapį, kad tęstumėte naršymą.
+  action: Grįžti į pradžią
+  preview:
     kicker: Saugyklos atnaujinimas
     title: Atnaujintos kortelės. Ta pati saugykla.
     description: Tvarkome išdėstymą ir priežiūros logiką nekeisdami bendro produkto jausmo.

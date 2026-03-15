@@ -73,23 +73,11 @@
         </section>
       </div>
     </div>
-
-    <div v-else class="project-detail__missing">
-      <q-card flat bordered class="project-detail__missing-card">
-        <q-card-section>
-          <div class="text-h5 q-mb-sm">Project not found</div>
-          <div class="text-body1 text-grey-7 q-mb-lg">
-            This GitHub-style project page does not have matching data in the current store yet.
-          </div>
-          <q-btn color="dark" no-caps label="Back to projects" @click="router.push({ name: 'home' })" />
-        </q-card-section>
-      </q-card>
-    </div>
   </q-page>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 
@@ -98,6 +86,28 @@ const router = useRouter()
 const githubProjectsStore = useGitHubProjectsStore()
 
 const project = computed(() => githubProjectsStore.projectByRoute(route.params.owner, route.params.repo))
+
+// Check if project exists and redirect to 404 if not
+async function checkProjectAndRedirect () {
+  // Ensure store is loaded
+  await githubProjectsStore.ensureItemsLoaded()
+
+  if (!project.value) {
+    router.replace({ name: 'not-found', query: { path: route.fullPath } })
+  }
+}
+
+// Check on mount and when route changes
+onMounted(() => {
+  checkProjectAndRedirect()
+})
+
+watch(
+  () => route.fullPath,
+  () => {
+    checkProjectAndRedirect()
+  }
+)
 
 function prefersReducedMotion () {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -257,18 +267,6 @@ async function openLabel (label) {
 .project-detail__paragraph {
   margin-top: 18px;
   color: rgba($dark-page, 0.76);
-}
-
-.project-detail__missing {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.project-detail__missing-card {
-  width: min(100%, 720px);
-  background: rgba($grey-1, 0.82);
-  border-color: rgba($dark-page, 0.08);
-  box-shadow: 0 14px 40px rgba($dark-page, 0.05);
 }
 
 @keyframes project-poster-settle {

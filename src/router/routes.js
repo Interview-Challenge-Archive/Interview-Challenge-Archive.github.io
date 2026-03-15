@@ -17,7 +17,8 @@ const routes = [
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: '/:catchAll(.*)*',
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
     component: () => import('pages/ErrorNotFound.vue')
   }
 ]

@@ -8,8 +8,13 @@ home:
   loadingMore: Loading more projects
 maintenance:
   eyebrow: Maintenance mode
-  title: We’re polishing the experience
+  title: We're polishing the experience
   description: The archive is temporarily unavailable while we ship UI refinements and feature updates. Everything should be back online shortly.
+  preview:
+notfound:
+  eyebrow: Page not found
+  description: The page you're looking for doesn't exist or has been moved. Return to the homepage to continue browsing.
+  action: Go Home
   preview:
     kicker: Archive update
     title: Fresh tiles. Same vault.
