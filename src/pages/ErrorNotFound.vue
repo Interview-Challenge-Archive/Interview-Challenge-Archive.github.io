@@ -52,6 +52,8 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -59,7 +61,15 @@ defineOptions({
   name: 'ErrorNotFound'
 })
 
+const route = useRoute()
 const { t } = useI18n()
+
+// Restore original URL after component mounts
+onMounted(() => {
+  if (route.query.path) {
+    window.history.replaceState({}, '', route.query.path)
+  }
+})
 
 const featureTileBackground = [
   'radial-gradient(circle at 18% 18%, rgba(101, 194, 255, 0.84) 0%, rgba(101, 194, 255, 0) 40%)',

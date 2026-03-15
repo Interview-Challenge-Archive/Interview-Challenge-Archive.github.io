@@ -8,7 +8,7 @@ const messages = {
     home: { loadingMore: 'Loading more projects' },
     maintenance: {
       eyebrow: 'Maintenance mode',
-      title: 'We’re polishing the experience',
+      title: 'We are polishing the experience',
       description: 'The archive is temporarily unavailable while we ship UI refinements and feature updates. Everything should be back online shortly.',
       preview: {
         kicker: 'Archive update',
@@ -25,6 +25,11 @@ const messages = {
           }
         }
       }
+    },
+    notfound: {
+      eyebrow: 'Page not found',
+      description: 'The page you are looking for does not exist or has been moved. Return to the homepage to continue browsing.',
+      action: 'Go Home'
     },
     dock: {
       search: {

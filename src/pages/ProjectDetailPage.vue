@@ -1,6 +1,6 @@
 <template>
   <q-page class="project-detail-page">
-    <div class="project-detail">
+    <div v-if="project" class="project-detail">
       <div class="project-detail__layout">
         <aside class="project-detail__sidebar">
           <div
