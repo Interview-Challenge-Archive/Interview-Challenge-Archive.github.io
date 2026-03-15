@@ -3,8 +3,10 @@
     <div v-if="project" class="project-detail">
       <div class="project-detail__layout">
         <aside class="project-detail__sidebar">
-          <div
-            class="project-detail__poster"
+          <q-card
+            flat
+            square
+            class="project-detail__poster relative-position"
             :style="{ backgroundImage: project.backgroundImage, 'view-transition-name': project.transitionName }"
           >
             <q-btn
@@ -13,15 +15,17 @@
               dense
               icon="arrow_back"
               aria-label="Go back"
-              class="project-detail__back-btn"
+              class="project-detail__back-btn absolute-top-left"
               @click="goBack"
             />
 
-            <div class="project-detail__poster-copy">
+            <div class="project-detail__poster-overlay absolute-full" aria-hidden="true" />
+
+            <div class="project-detail__poster-copy absolute-bottom">
               <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
               <div class="project-detail__poster-title">{{ project.title }}</div>
             </div>
-          </div>
+          </q-card>
 
           <q-btn
             class="project-detail__github-btn"
@@ -166,8 +170,6 @@ async function openLabel (label) {
 }
 
 .project-detail__poster {
-  display: flex;
-  align-items: flex-end;
   min-height: clamp(340px, 56vh, 560px);
   overflow: hidden;
   background-position: center;
@@ -176,6 +178,12 @@ async function openLabel (label) {
   border: 1px solid rgba($grey-1, 0.42);
   box-shadow: 0 28px 60px rgba($dark-page, 0.16);
   animation: project-poster-settle 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-detail__poster-overlay {
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba($dark-page, 0.08) 0%, rgba($dark-page, 0.78) 100%);
 }
 
 .project-detail__back-btn {
@@ -187,12 +195,6 @@ async function openLabel (label) {
   border: 1px solid rgba($grey-1, 0.22);
   backdrop-filter: blur(12px) saturate(1.08);
   -webkit-backdrop-filter: blur(12px) saturate(1.08);
-}
-
-.project-detail__poster::after {
-  content: '';
-  inset: 0;
-  background: linear-gradient(180deg, rgba($dark-page, 0.08) 0%, rgba($dark-page, 0.78) 100%);
 }
 
 .project-detail__poster-copy {

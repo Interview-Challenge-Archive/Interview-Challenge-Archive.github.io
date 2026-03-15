@@ -95,4 +95,15 @@ describe('ProjectDetailPage', () => {
     // Should render project content
     expect(wrapper.html()).toContain('Frontend interview tracks')
   })
+
+  it('uses q-card utility classes to anchor the project poster controls and copy', () => {
+    const wrapper = mountWithApp(ProjectDetailPage)
+    const poster = wrapper.find('.project-detail__poster')
+
+    expect(poster.classes()).toContain('q-card')
+    expect(poster.classes()).toContain('relative-position')
+    expect(wrapper.find('.project-detail__back-btn').classes()).toContain('absolute-top-left')
+    expect(wrapper.find('.project-detail__poster-overlay').classes()).toContain('absolute-full')
+    expect(wrapper.find('.project-detail__poster-copy').classes()).toContain('absolute-bottom')
+  })
 })
