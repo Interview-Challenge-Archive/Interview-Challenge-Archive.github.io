@@ -1,98 +1,113 @@
 <template>
   <q-page class="project-detail-page">
-    <template v-if="project">
-      <div class="project-detail">
-        <div class="project-detail__layout">
-          <aside class="project-detail__sidebar">
-            <div
-              class="project-detail__poster"
-              :style="{ backgroundImage: project.backgroundImage, 'view-transition-name': project.transitionName }"
-            >
-              <q-btn
-                flat
-                round
-                dense
-                icon="arrow_back"
-                aria-label="Go back"
-                class="project-detail__back-btn"
-                @click="goBack"
-              />
-
-              <div class="project-detail__poster-copy">
-                <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
-                <div class="project-detail__poster-title">{{ project.title }}</div>
-              </div>
-            </div>
-
+    <div class="project-detail">
+      <div class="project-detail__layout">
+        <aside class="project-detail__sidebar">
+          <div
+            class="project-detail__poster"
+            :style="{ backgroundImage: project.backgroundImage, 'view-transition-name': project.transitionName }"
+          >
             <q-btn
-              class="project-detail__github-btn"
-              outline
-              no-caps
-              color="dark"
-              icon-right="open_in_new"
-              label="Open on GitHub"
-              :href="project.githubUrl"
-              target="_blank"
-              rel="noreferrer"
+              flat
+              round
+              dense
+              icon="arrow_back"
+              aria-label="Go back"
+              class="project-detail__back-btn"
+              @click="goBack"
             />
 
-            <div class="project-detail__pill-row project-detail__pill-row--sidebar">
-              <q-chip
-                clickable
-                square
-                outline
-                color="grey-8"
-                text-color="grey-9"
-                class="project-detail__tag-chip"
-                @click="openLabel(project.primaryLanguage)"
-              >
-                {{ project.primaryLanguage }}
-              </q-chip>
-              <q-chip
-                v-for="tag in project.tags"
-                :key="tag"
-                clickable
-                square
-                outline
-                color="grey-8"
-                text-color="grey-9"
-                class="project-detail__tag-chip"
-                @click="openLabel(tag)"
-              >
-                {{ tag }}
-              </q-chip>
+            <div class="project-detail__poster-copy">
+              <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
+              <div class="project-detail__poster-title">{{ project.title }}</div>
             </div>
-          </aside>
+          </div>
 
-          <section class="project-detail__body">
-            <p class="project-detail__subtitle">{{ project.subtitle }}</p>
+          <q-btn
+            class="project-detail__github-btn"
+            outline
+            no-caps
+            color="dark"
+            icon-right="open_in_new"
+            label="Open on GitHub"
+            :href="project.githubUrl"
+            target="_blank"
+            rel="noreferrer"
+          />
 
-            <p class="project-detail__description">{{ project.description }}</p>
-            <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph">
-              {{ paragraph }}
-            </p>
-          </section>
-        </div>
+          <div class="project-detail__pill-row project-detail__pill-row--sidebar">
+            <q-chip
+              clickable
+              square
+              outline
+              color="grey-8"
+              text-color="grey-9"
+              class="project-detail__tag-chip"
+              @click="openLabel(project.primaryLanguage)"
+            >
+              {{ project.primaryLanguage }}
+            </q-chip>
+            <q-chip
+              v-for="tag in project.tags"
+              :key="tag"
+              clickable
+              square
+              outline
+              color="grey-8"
+              text-color="grey-9"
+              class="project-detail__tag-chip"
+              @click="openLabel(tag)"
+            >
+              {{ tag }}
+            </q-chip>
+          </div>
+        </aside>
+
+        <section class="project-detail__body">
+          <p class="project-detail__subtitle">{{ project.subtitle }}</p>
+
+          <p class="project-detail__description">{{ project.description }}</p>
+          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph">
+            {{ paragraph }}
+          </p>
+        </section>
       </div>
-    </template>
-
-    <template v-else>
-      <ErrorNotFound />
-    </template>
+    </div>
   </q-page>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
-import ErrorNotFound from './ErrorNotFound.vue'
 
 const route = useRoute()
 const router = useRouter()
 const githubProjectsStore = useGitHubProjectsStore()
 
 const project = computed(() => githubProjectsStore.projectByRoute(route.params.owner, route.params.repo))
+
+// Check if project exists and redirect to 404 if not
+async function checkProjectAndRedirect () {
+  // Ensure store is loaded
+  await githubProjectsStore.ensureItemsLoaded()
+
+  if (!project.value) {
+    router.replace({ name: 'not-found', query: { path: route.fullPath } })
+  }
+}
+
+// Check on mount and when route changes
+onMounted(() => {
+  checkProjectAndRedirect()
+})
+
+watch(
+  () => route.fullPath,
+  () => {
+    checkProjectAndRedirect()
+  }
+)
 
 function prefersReducedMotion () {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
