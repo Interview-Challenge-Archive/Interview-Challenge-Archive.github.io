@@ -30,7 +30,7 @@
       <span class="home-load-more__label text-uppercase">{{ t('home.loadingMore') }}</span>
     </div>
 
-    <div ref="loadMoreSentinelRef" class="home-tiles__sentinel" aria-hidden="true" />
+    <div v-if="!isLastRowDecorative" ref="loadMoreSentinelRef" class="home-tiles__sentinel" aria-hidden="true" />
   </q-page>
 </template>
 
@@ -152,7 +152,11 @@ const displayedTiles = computed(() => {
 
 const visibleColumnCount = computed(() => renderedColumnCount.value || Math.max(1, Math.floor(pageWidth.value / 460)))
 const tileHeight = computed(() => (pageWidth.value <= 680 ? 240 : clamp(viewportHeight.value * 0.34, 280, 420)))
-const minimumVisibleRowCount = computed(() => Math.max(1, Math.ceil((viewportHeight.value - tilesGridViewportTop.value) / tileHeight.value)))
+const availableViewportHeight = computed(() => {
+  const dockHeight = 64
+  return viewportHeight.value - tilesGridViewportTop.value - dockHeight
+})
+const minimumVisibleRowCount = computed(() => Math.max(1, Math.ceil(availableViewportHeight.value / tileHeight.value)))
 const minimumTileCount = computed(() => minimumVisibleRowCount.value * visibleColumnCount.value)
 const loadingSkeletonCount = computed(() => {
   if (hasActiveSearch.value || !isLoading.value) {
@@ -170,12 +174,28 @@ const loadingSkeletonTiles = computed(() => Array.from({ length: loadingSkeleton
   isPlaceholder: true
 })))
 const contentTileCount = computed(() => displayedTiles.value.length + loadingSkeletonTiles.value.length)
+const contentRowCount = computed(() => {
+  if (visibleColumnCount.value <= 0) {
+    return 0
+  }
+
+  return Math.ceil(contentTileCount.value / visibleColumnCount.value)
+})
+const contentHeightActual = computed(() => contentRowCount.value * tileHeight.value)
+const shouldScrollForContent = computed(() => contentHeightActual.value > availableViewportHeight.value + 1)
+
 const showLoadMoreIndicator = computed(() => !hasActiveSearch.value && isLoading.value && displayedTiles.value.length > 0)
 const decorativePlaceholderCount = computed(() => {
   if (isLoading.value || (!hasActiveSearch.value && hasMore.value)) {
     return 0
   }
 
+  if (shouldScrollForContent.value) {
+    // If scrolling is needed for real content, only add placeholders to complete the last row
+    return (visibleColumnCount.value - (contentTileCount.value % visibleColumnCount.value)) % visibleColumnCount.value
+  }
+
+  // Otherwise, fill the viewport up to the minimum tile count
   return Math.max(0, minimumTileCount.value - contentTileCount.value)
 })
 const decorativePlaceholderTiles = computed(() => Array.from({ length: decorativePlaceholderCount.value }, (_, index) => ({
@@ -197,6 +217,39 @@ const renderedTiles = computed(() => ([
     type: 'decorative'
   }))
 ]))
+
+const isLastRowDecorative = computed(() => {
+  if (renderedTiles.value.length === 0 || visibleColumnCount.value <= 0) {
+    return false
+  }
+
+  const tiles = renderedTiles.value
+  const cols = visibleColumnCount.value
+  const totalTiles = tiles.length
+  const lastRowStartIndex = Math.floor((totalTiles - 1) / cols) * cols
+  const lastRowTiles = tiles.slice(lastRowStartIndex)
+
+  // Condition 1: The last rendered row is entirely decorative placeholders
+  const isLastRowEntirelyDecorative = lastRowTiles.length > 0 && lastRowTiles.every((tile) => tile.type === 'decorative')
+
+  if (!isLastRowEntirelyDecorative) {
+    return false
+  }
+
+  // Condition 2: All non-decorative tiles (projects/loading) must fit in the viewport.
+  // We don't want to hide the scrollbar if it's needed to see actual content.
+  const lastRealRelativeIndex = [...tiles].reverse().findIndex((tile) => tile.type !== 'decorative')
+  if (lastRealRelativeIndex === -1) {
+    return true // Only decorative tiles exist
+  }
+
+  const lastRealIndex = tiles.length - 1 - lastRealRelativeIndex
+  const lastRealRowIndex = Math.floor(lastRealIndex / cols)
+  const contentHeight = (lastRealRowIndex + 1) * tileHeight.value
+
+  // Hide scrollbar only if the content height fits within the available viewport height
+  return contentHeight <= availableViewportHeight.value + 1 // Add 1px buffer for subpixel rendering
+})
 
 function isSentinelNearViewport () {
   if (typeof window === 'undefined' || !loadMoreSentinelRef.value) {
@@ -307,10 +360,24 @@ watch(hasActiveSearch, (hasFilter, hadFilter) => {
   }
 })
 
+watch(isLastRowDecorative, (val) => {
+  if (typeof document !== 'undefined') {
+    if (val) {
+      document.body.classList.add('no-scroll')
+    } else {
+      document.body.classList.remove('no-scroll')
+    }
+  }
+}, { immediate: true })
+
 onBeforeUnmount(() => {
   pageResizeObserver?.disconnect()
   loadMoreObserver?.disconnect()
   window.removeEventListener('resize', updatePageMetrics)
+
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('no-scroll')
+  }
 })
 </script>
 
@@ -334,6 +401,7 @@ onBeforeUnmount(() => {
   --home-placeholder-clear: #{rgba($grey-1, 0)};
   --home-placeholder-depth: #{rgba($dark-page, 0.58)};
   padding: 0 !important;
+  transition: opacity 0.3s ease;
 }
 
 .home-load-more {
