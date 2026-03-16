@@ -57,8 +57,7 @@ export default [
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
 
-      // require empty line after super() call
-      'constructor-super': ['error', { 'callStatement': 'newline' }]
+      'constructor-super': 'error'
     }
   },
 
