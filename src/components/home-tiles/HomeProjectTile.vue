@@ -11,10 +11,10 @@
     @keydown.enter.prevent="emitSelect"
     @keydown.space.prevent="emitSelect"
   >
-    <div class="home-project-tile__content home-tile__content absolute-bottom">
-      <div class="home-project-tile__meta home-tile__meta text-uppercase">{{ projectPath }}</div>
-      <div class="home-project-tile__title home-tile__title">{{ title }}</div>
-      <div class="home-project-tile__subtitle home-tile__subtitle">{{ subtitle }}</div>
+    <div class="home-project-tile__content home-tile__content absolute-bottom text-grey-1">
+      <div class="home-project-tile__meta home-tile__meta text-uppercase text-grey-4">{{ projectPath }}</div>
+      <div class="home-project-tile__title home-tile__title text-grey-1">{{ title }}</div>
+      <div class="home-project-tile__subtitle home-tile__subtitle text-grey-3">{{ subtitle }}</div>
     </div>
   </q-card>
 </template>
@@ -63,7 +63,6 @@ function emitSelect () {
   padding: 0;
   cursor: pointer;
   text-align: left;
-  background-color: rgba($grey-1, 0);
   pointer-events: auto;
 
   &:hover .home-project-tile__content,
@@ -87,7 +86,6 @@ function emitSelect () {
     left: 0;
     z-index: 1;
     padding: 18px 20px;
-    color: $grey-1;
     transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.24s ease;
   }
 
@@ -96,7 +94,6 @@ function emitSelect () {
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.18em;
-    color: rgba($grey-1, 0.72);
   }
 
   &__title {
@@ -110,7 +107,6 @@ function emitSelect () {
     max-width: 26rem;
     font-size: 0.98rem;
     line-height: 1.4;
-    color: rgba($grey-1, 0.86);
   }
 
   @media (max-width: 680px) {

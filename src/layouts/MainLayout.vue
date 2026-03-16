@@ -34,7 +34,8 @@
             dense
             icon="close"
             aria-label="Close open tab"
-            class="bottom-dock__panel-close"
+            class="bottom-dock__panel-close bg-grey-2"
+            text-color="dark"
             @click="closeActiveTab"
           />
         </div>
@@ -63,10 +64,10 @@
       </div>
 
       <div class="bottom-dock__bar">
-        <router-link to="/" class="bottom-dock__title text-subtitle1 text-weight-medium">
+        <router-link to="/" class="bottom-dock__title text-subtitle1 text-weight-medium text-dark">
           <span class="brand-lockup">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
-            <span class="brand-lockup__label">{{ t('app.title') }}</span>
+            <span class="brand-lockup__label text-dark">{{ t('app.title') }}</span>
           </span>
         </router-link>
 
@@ -77,11 +78,12 @@
           dense
           icon="menu"
           aria-label="Open dock menu"
-          class="bottom-dock__menu-button"
+          class="bottom-dock__menu-button bg-grey-2"
+          text-color="dark"
           @click="mobileMenuOpen = true"
         />
 
-        <div v-else class="bottom-dock__tabs-surface">
+        <div v-else class="bottom-dock__tabs-surface bg-grey-1">
           <div class="row items-center bottom-dock__tabs">
             <q-btn
               v-for="tab in dockTabs"
@@ -90,8 +92,8 @@
               no-caps
               dense
               :ripple="false"
-              class="bottom-dock__tab text-weight-medium"
-              :class="{ 'bottom-dock__tab--active': selectedDockTab === tab.name }"
+              class="bottom-dock__tab text-weight-medium text-grey-7"
+              :class="{ 'bottom-dock__tab--active text-dark': selectedDockTab === tab.name }"
               :aria-pressed="selectedDockTab === tab.name ? 'true' : 'false'"
               @click="toggleTab(tab.name)"
             >
@@ -120,7 +122,8 @@
             dense
             icon="close"
             aria-label="Close dock menu"
-            class="mobile-dock-menu__close"
+            class="mobile-dock-menu__close bg-grey-2"
+            text-color="dark"
             @click="mobileMenuOpen = false"
           />
         </div>
@@ -133,8 +136,8 @@
             no-caps
             align="left"
             :ripple="false"
-            class="mobile-dock-menu__item text-left text-uppercase"
-            :class="{ 'mobile-dock-menu__item--active': selectedDockTab === tab.name }"
+            class="mobile-dock-menu__item text-left text-uppercase text-dark"
+            :class="{ 'mobile-dock-menu__item--active bg-grey-3': selectedDockTab === tab.name }"
             @click="selectDockTab(tab.name)"
           >
             <span>{{ tab.label }}</span>
@@ -157,7 +160,8 @@
             dense
             icon="arrow_back"
             aria-label="Close dock panel"
-            class="mobile-dock-panel__back"
+            class="mobile-dock-panel__back bg-grey-2"
+            text-color="dark"
             @click="mobilePanelOpen = false"
           />
 
@@ -300,7 +304,6 @@ function closeActiveTab () {
   left: 0;
   z-index: 2000;
   overflow: visible;
-  background: rgba($grey-2, 0.74);
   backdrop-filter: blur(22px) saturate(1.2);
   border-top-color: rgba($dark-page, 0.08);
   box-shadow: 0 -8px 30px rgba($dark-page, 0.05);
@@ -308,7 +311,6 @@ function closeActiveTab () {
 }
 
 .bottom-dock--expanded {
-  background: rgba($grey-1, 0.84);
   border-top-color: rgba($dark-page, 0.1);
   box-shadow: 0 -18px 44px rgba($dark-page, 0.08);
 }
@@ -367,8 +369,6 @@ function closeActiveTab () {
 
 .bottom-dock__panel-close {
   pointer-events: auto;
-  color: rgba($dark-page, 0.86);
-  background: rgba($grey-1, 0.64);
   border: 1px solid rgba($grey-1, 0.7);
   backdrop-filter: blur(12px) saturate(1.08);
 }
@@ -389,7 +389,6 @@ function closeActiveTab () {
 .bottom-dock__title {
   display: inline-flex;
   align-items: center;
-  color: rgba($dark-page, 0.9);
   letter-spacing: -0.01em;
   text-decoration: none;
 }
@@ -412,8 +411,6 @@ function closeActiveTab () {
 }
 
 .bottom-dock__menu-button {
-  color: rgba($dark-page, 0.86);
-  background: rgba($grey-1, 0.38);
   border: 1px solid rgba($grey-1, 0.6);
 }
 
@@ -424,7 +421,6 @@ function closeActiveTab () {
   padding: 3px;
   border: 1px solid rgba($grey-1, 0.65);
   border-radius: 0;
-  background: rgba($grey-1, 0.44);
   box-shadow:
     inset 0 1px 0 rgba($grey-1, 0.5),
     0 8px 22px rgba($dark-page, 0.05);
@@ -445,7 +441,6 @@ function closeActiveTab () {
   padding: 0 18px;
   border: 1px solid rgba($dark-page, 0);
   border-radius: 0;
-  color: rgba($dark-page, 0.64);
   transform: translateY(0);
   transition: transform 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
@@ -473,10 +468,6 @@ function closeActiveTab () {
   transform: scale(0.98);
 }
 
-.bottom-dock__tab:hover {
-  color: rgba($dark-page, 0.86);
-}
-
 .bottom-dock__tab:hover::before {
   opacity: 0.7;
   transform: scale(1);
@@ -497,10 +488,6 @@ function closeActiveTab () {
 
 .bottom-dock__tab-label {
   letter-spacing: -0.01em;
-}
-
-.bottom-dock__tab--active {
-  color: rgba($dark-page, 0.96);
 }
 
 .bottom-dock__tab--active::before,
@@ -525,11 +512,6 @@ function closeActiveTab () {
     margin-bottom: 24px;
   }
 
-  &__close {
-    color: rgba($dark-page, 0.86);
-    background: rgba($grey-1, 0.46);
-  }
-
   &__items {
     display: grid;
     gap: 12px;
@@ -541,13 +523,10 @@ function closeActiveTab () {
     padding: 0 18px;
     border: 1px solid rgba($grey-1, 0.55);
     border-radius: 0;
-    background: rgba($grey-1, 0.42);
-    color: rgba($dark-page, 0.86);
     font-size: 1rem;
     letter-spacing: -0.01em;
 
     &--active {
-      background: rgba($grey-1, 0.82);
       box-shadow: 0 8px 24px rgba($dark-page, 0.06);
     }
   }
@@ -568,11 +547,6 @@ function closeActiveTab () {
   padding: 14px 16px;
   border-bottom: 1px solid rgba($dark-page, 0.06);
   backdrop-filter: blur(18px) saturate(1.1);
-}
-
-.mobile-dock-panel__back {
-  color: rgba($dark-page, 0.86);
-  background: rgba($grey-1, 0.48);
 }
 
 .mobile-dock-panel__body {

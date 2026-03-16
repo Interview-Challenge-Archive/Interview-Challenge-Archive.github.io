@@ -5,19 +5,19 @@
 
     <div class="error-not-found__inner">
       <header class="error-not-found__header">
-        <div class="error-not-found__brand text-subtitle1 text-weight-medium">
+        <div class="error-not-found__brand text-subtitle1 text-weight-medium text-dark">
           <img src="favicon.svg" alt="" class="error-not-found__brand-icon" aria-hidden="true">
-          <span>{{ t('app.title') }}</span>
+          <span class="text-dark">{{ t('app.title') }}</span>
         </div>
       </header>
 
       <q-card flat class="error-not-found__panel">
-        <section class="error-not-found__copy">
-          <p class="text-uppercase">{{ t('notfound.eyebrow') }}</p>
+        <section class="error-not-found__copy text-dark">
+          <p class="text-uppercase text-grey-7">{{ t('notfound.eyebrow') }}</p>
           <h1 class="text-h1">
             <span class="error-not-found__code">404</span>
           </h1>
-          <p>{{ t('notfound.description') }}</p>
+          <p class="text-grey-8">{{ t('notfound.description') }}</p>
 
           <q-btn
             class="error-not-found__action"
@@ -217,7 +217,6 @@ function previewTileStyle (tile) {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    color: rgba($dark-page, 0.88);
     letter-spacing: -0.01em;
 
     &-icon {
@@ -245,7 +244,6 @@ function previewTileStyle (tile) {
     gap: 12px;
     padding: clamp(24px, 4vw, 40px);
     border-right: 1px solid rgba($dark-page, 0.07);
-    color: $dark-page;
 
     > p {
       margin: 0;
@@ -255,14 +253,12 @@ function previewTileStyle (tile) {
       font-size: 0.76rem;
       font-weight: 700;
       letter-spacing: 0.18em;
-      color: rgba($dark-page, 0.52);
     }
 
     > p:last-child {
       max-width: 28rem;
       font-size: clamp(1rem, 1.4vw, 1.1rem);
       line-height: 1.6;
-      color: rgba($dark-page, 0.74);
     }
 
     .error-not-found__code {

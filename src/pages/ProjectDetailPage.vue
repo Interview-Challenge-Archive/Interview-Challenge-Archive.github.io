@@ -15,15 +15,16 @@
               dense
               icon="arrow_back"
               aria-label="Go back"
-              class="project-detail__back-btn absolute-top-left"
+              class="project-detail__back-btn absolute-top-left bg-dark"
+              text-color="grey-1"
               @click="goBack"
             />
 
             <div class="project-detail__poster-overlay absolute-full" aria-hidden="true" />
 
-            <div class="project-detail__poster-copy absolute-bottom">
-              <div class="project-detail__poster-label text-uppercase">{{ project.projectPath }}</div>
-              <div class="project-detail__poster-title">{{ project.title }}</div>
+            <div class="project-detail__poster-copy absolute-bottom text-grey-1">
+              <div class="project-detail__poster-label text-uppercase text-grey-4">{{ project.projectPath }}</div>
+              <div class="project-detail__poster-title text-grey-1">{{ project.title }}</div>
             </div>
           </q-card>
 
@@ -67,11 +68,11 @@
           </div>
         </aside>
 
-        <section class="project-detail__body">
-          <p class="project-detail__subtitle">{{ project.subtitle }}</p>
+        <section class="project-detail__body text-dark">
+          <p class="project-detail__subtitle text-grey-8">{{ project.subtitle }}</p>
 
-          <p class="project-detail__description">{{ project.description }}</p>
-          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph">
+          <p class="project-detail__description text-dark">{{ project.description }}</p>
+          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph text-grey-8">
             {{ paragraph }}
           </p>
         </section>
@@ -213,8 +214,6 @@ async function openLabel (label) {
     top: 16px;
     left: 16px;
     z-index: 2;
-    color: $grey-1;
-    background: rgba($dark-page, 0.34);
     border: 1px solid rgba($grey-1, 0.22);
     backdrop-filter: blur(12px) saturate(1.08);
     -webkit-backdrop-filter: blur(12px) saturate(1.08);
@@ -223,7 +222,6 @@ async function openLabel (label) {
   &__poster-copy {
     z-index: 1;
     padding: 24px;
-    color: $grey-1;
   }
 
   &__poster-label,
@@ -231,10 +229,6 @@ async function openLabel (label) {
     font-size: 0.76rem;
     font-weight: 700;
     letter-spacing: 0.18em;
-  }
-
-  &__poster-label {
-    color: rgba($grey-1, 0.72);
   }
 
   &__poster-title {
@@ -254,16 +248,11 @@ async function openLabel (label) {
     min-height: 52px;
   }
 
-  &__eyebrow {
-    color: rgba($dark-page, 0.48);
-  }
-
   &__subtitle {
     max-width: 54rem;
     margin: 0;
     font-size: clamp(1.1rem, 1.8vw, 1.45rem);
     line-height: 1.45;
-    color: rgba($dark-page, 0.72);
   }
 
   &__pill-row {
@@ -282,7 +271,6 @@ async function openLabel (label) {
     margin: 0;
     font-size: clamp(1.08rem, 1.5vw, 1.24rem);
     line-height: 1.75;
-    color: rgba($dark-page, 0.9);
   }
 
   &__tag-chip {
@@ -291,7 +279,6 @@ async function openLabel (label) {
 
   &__paragraph {
     margin-top: 18px;
-    color: rgba($dark-page, 0.76);
   }
 }
 
