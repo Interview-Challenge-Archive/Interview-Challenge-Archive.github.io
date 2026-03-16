@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hexToRgb } from '../../../src/utils/colors.js'
+import { hexToRgb } from 'src/utils/colors.js'
 
 describe('hexToRgb', () => {
   it('converts 3-digit hex to RGB', () => {

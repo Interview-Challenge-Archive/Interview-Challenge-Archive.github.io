@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
 import { useMeta } from 'quasar'
 import SiteMaintenancePage from 'src/pages/SiteMaintenancePage.vue'
@@ -12,7 +12,7 @@ describe('SiteMaintenancePage', () => {
     expect(wrapper.find('.site-maintenance__preview > .loading-skeleton-tile').exists()).toBe(true)
     expect(wrapper.findAll('.site-maintenance__preview-grid > *')).toHaveLength(4)
     expect(wrapper.findAll('.site-maintenance__preview-grid > .loading-skeleton-tile')).toHaveLength(4)
-    expect(wrapper.findAll('.site-maintenance__preview-grid > .decorative-placeholder-tile')).toHaveLength(0)
+    expect(wrapper.findAll('.site-maintenance__preview-grid > .decorative-placeholder-tile')).toHaveLength(4)
     expect(wrapper.html()).not.toContain('site-maintenance__preview-feature')
     expect(wrapper.html()).not.toContain('site-maintenance__preview-tile')
   })

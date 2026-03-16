@@ -34,14 +34,14 @@ const props = defineProps({
 const generatePalette = (index) => {
   const quasarColors = colorConfig.placeholders.available_colors
   const opacityConfig = colorConfig.placeholders.opacity
-  
+
   const colorCount = quasarColors.length
   const primaryColor = quasarColors[index % colorCount]
   const secondaryColor = quasarColors[(index + 2) % colorCount]
-  
+
   const primaryRgb = getQuasarColorRgb(primaryColor)
   const secondaryRgb = getQuasarColorRgb(secondaryColor)
-  
+
   return {
     primary: `rgba(${primaryRgb.join(', ')}, ${opacityConfig.primary.base + (index % 3) * opacityConfig.primary.variation})`,
     secondary: `rgba(${secondaryRgb.join(', ')}, ${opacityConfig.secondary.base + (index % 4) * opacityConfig.secondary.variation})`,
@@ -53,17 +53,17 @@ const paletteIndex = computed(() => {
   if (props.fixedIndex !== null) {
     return props.fixedIndex
   }
-  
+
   if (props.useRandomIndex) {
     return Math.floor(Math.random() * colorConfig.placeholders.available_colors.length)
   }
-  
+
   return 0
 })
 
 const computedBackgroundImage = computed(() => {
   const palette = generatePalette(paletteIndex.value)
-  
+
   return [
     `radial-gradient(circle at 20% 20%, ${palette.primary} 0%, ${colorConfig.placeholders.clear_color} 52%)`,
     `radial-gradient(circle at 78% 32%, ${palette.secondary} 0%, ${colorConfig.placeholders.clear_color} 48%)`,

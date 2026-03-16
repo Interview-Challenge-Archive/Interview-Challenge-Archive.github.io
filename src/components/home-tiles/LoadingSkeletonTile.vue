@@ -1,6 +1,7 @@
 <template>
-  <DecorativePlaceholderTile 
-    :is-loading="true" 
+  <DecorativePlaceholderTile
+    class="loading-skeleton-tile"
+    :is-loading="true"
     :use-random-index="false"
     :fixed-index="skeletonIndex"
   >
