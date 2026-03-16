@@ -1,5 +1,5 @@
 <template>
-  <q-page class="project-detail-page">
+  <q-page class="project-detail-page q-pa-md q-pb-xl">
     <div v-if="project" class="project-detail">
       <div class="project-detail__layout">
         <aside class="project-detail__sidebar">
@@ -149,14 +149,10 @@ async function openLabel (label) {
 
 <style scoped lang="scss">
 .project-detail-page {
-  padding: 24px 20px 112px;
-
   @media (max-width: 900px) {
-    padding-inline: 16px;
   }
 
   @media (max-width: 640px) {
-    padding-bottom: 96px;
   }
 }
 

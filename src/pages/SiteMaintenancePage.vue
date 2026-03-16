@@ -1,5 +1,5 @@
 <template>
-  <section class="site-maintenance">
+  <section class="site-maintenance q-pa-md">
     <div class="site-maintenance__backdrop" aria-hidden="true" />
     <div class="site-maintenance__wash" aria-hidden="true" />
 
@@ -12,13 +12,13 @@
       </header>
 
       <q-card flat class="site-maintenance__panel">
-        <section class="site-maintenance__copy text-dark">
+        <section class="site-maintenance__copy text-dark q-pa-lg">
           <p class="text-uppercase text-grey-7 q-ma-none">{{ t('maintenance.eyebrow') }}</p>
           <h1 class="text-dark q-ma-none">{{ t('maintenance.title') }}</h1>
           <p class="text-grey-8 q-ma-none">{{ t('maintenance.description') }}</p>
         </section>
 
-        <div class="site-maintenance__preview" aria-hidden="true">
+        <div class="site-maintenance__preview q-pa-md" aria-hidden="true">
           <LoadingSkeletonTile
             :background-image="featureTileBackground"
           />
@@ -149,7 +149,6 @@ function previewTileStyle (tile) {
 .site-maintenance {
   overflow: hidden;
   min-height: 100vh;
-  padding: clamp(20px, 4vw, 40px);
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.92), rgba($grey-2, 0) 36%),
     linear-gradient(180deg, $grey-2 0%, $blue-grey-1 100%);
@@ -218,7 +217,6 @@ function previewTileStyle (tile) {
     display: grid;
     align-content: start;
     gap: 24px;
-    padding: clamp(28px, 5vw, 56px);
     border-right: 1px solid rgba($dark-page, 0.07);
 
     > p:first-child {
@@ -244,7 +242,6 @@ function previewTileStyle (tile) {
   &__preview {
     display: grid;
     gap: 16px;
-    padding: clamp(20px, 3vw, 28px);
     background: linear-gradient(180deg, rgba($grey-2, 0.14) 0%, rgba($blue-grey-1, 0.28) 100%);
 
     > :first-child,
@@ -277,7 +274,6 @@ function previewTileStyle (tile) {
 
       :deep(.loading-skeleton-tile__content) {
         gap: 10px;
-        padding: 16px;
         animation: maintenance-skeleton-drift 4.2s ease-in-out infinite;
       }
 

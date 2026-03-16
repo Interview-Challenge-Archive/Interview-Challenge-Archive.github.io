@@ -1,5 +1,5 @@
 <template>
-  <section class="error-not-found">
+  <section class="error-not-found q-pa-md">
     <div class="error-not-found__backdrop" aria-hidden="true" />
     <div class="error-not-found__wash" aria-hidden="true" />
 
@@ -12,7 +12,7 @@
       </header>
 
       <q-card flat class="error-not-found__panel">
-        <section class="error-not-found__copy text-dark">
+        <section class="error-not-found__copy text-dark q-pa-md">
           <p class="text-uppercase text-grey-7 q-ma-none">{{ t('notfound.eyebrow') }}</p>
           <h1 class="text-h1 q-ma-none">
             <span class="error-not-found__code">404</span>
@@ -30,7 +30,7 @@
         </section>
 
         <div class="error-not-found__visual" aria-hidden="true">
-          <div class="error-not-found__preview">
+          <div class="error-not-found__preview q-pa-md">
             <LoadingSkeletonTile
               :background-image="featureTileBackground"
             />
@@ -172,7 +172,6 @@ function previewTileStyle (tile) {
 .error-not-found {
   overflow: hidden;
   min-height: 100vh;
-  padding: clamp(20px, 4vw, 40px);
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.92), rgba($grey-2, 0) 36%),
     linear-gradient(180deg, $grey-2 0%, $blue-grey-1 100%);
@@ -241,7 +240,6 @@ function previewTileStyle (tile) {
     display: grid;
     align-content: start;
     gap: 12px;
-    padding: clamp(24px, 4vw, 40px);
     border-right: 1px solid rgba($dark-page, 0.07);
 
     > p:first-child {
@@ -283,7 +281,6 @@ function previewTileStyle (tile) {
   &__preview {
     display: grid;
     gap: 16px;
-    padding: clamp(20px, 3vw, 28px);
     background: linear-gradient(180deg, rgba($grey-2, 0.14) 0%, rgba($blue-grey-1, 0.28) 100%);
 
     > :first-child,
@@ -316,7 +313,6 @@ function previewTileStyle (tile) {
 
       :deep(.loading-skeleton-tile__content) {
         gap: 10px;
-        padding: 16px;
         animation: notfound-skeleton-drift 4.2s ease-in-out infinite;
       }
 
