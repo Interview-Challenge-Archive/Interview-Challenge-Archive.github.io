@@ -111,7 +111,7 @@
       transition-hide="slide-down"
     >
       <q-card class="mobile-dock-menu">
-        <div class="mobile-dock-menu__header">
+        <div class="mobile-dock-menu__header q-mb-md">
           <div class="brand-lockup text-subtitle1 text-weight-medium">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
             <span class="brand-lockup__label">{{ t('app.title') }}</span>
@@ -507,7 +507,6 @@ function closeActiveTab () {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 24px;
   }
 
   &__items {

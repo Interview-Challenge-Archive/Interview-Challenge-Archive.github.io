@@ -40,7 +40,7 @@
             rel="noreferrer"
           />
 
-          <div class="project-detail__pill-row project-detail__pill-row--sidebar">
+          <div class="project-detail__pill-row project-detail__pill-row--sidebar q-mt-xs">
             <q-chip
               clickable
               square
@@ -256,10 +256,6 @@ async function openLabel (label) {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-
-    &--sidebar {
-      margin-top: 2px;
-    }
   }
 
   &__description,
