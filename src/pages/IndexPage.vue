@@ -15,12 +15,10 @@
 
         <LoadingSkeletonTile
           v-else-if="tile.type === 'loading'"
-          :background-image="tile.backgroundImage"
         />
 
         <DecorativePlaceholderTile
           v-else
-          :background-image="tile.backgroundImage"
         />
       </template>
     </section>
@@ -60,24 +58,6 @@ const pageWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
 const viewportHeight = ref(typeof window === 'undefined' ? 900 : window.innerHeight)
 const renderedColumnCount = ref(0)
 const tilesGridViewportTop = ref(0)
-
-const placeholderPalettes = [
-  ['var(--home-placeholder-palette-1-primary)', 'var(--home-placeholder-palette-1-secondary)', 'var(--home-placeholder-palette-1-accent)'],
-  ['var(--home-placeholder-palette-2-primary)', 'var(--home-placeholder-palette-2-secondary)', 'var(--home-placeholder-palette-2-accent)'],
-  ['var(--home-placeholder-palette-3-primary)', 'var(--home-placeholder-palette-3-secondary)', 'var(--home-placeholder-palette-3-accent)'],
-  ['var(--home-placeholder-palette-4-primary)', 'var(--home-placeholder-palette-4-secondary)', 'var(--home-placeholder-palette-4-accent)'],
-  ['var(--home-placeholder-palette-5-primary)', 'var(--home-placeholder-palette-5-secondary)', 'var(--home-placeholder-palette-5-accent)']
-]
-
-const buildPlaceholderBackground = (index) => {
-  const [primary, secondary, accent] = placeholderPalettes[index % placeholderPalettes.length]
-
-  return [
-    `radial-gradient(circle at 20% 20%, ${primary} 0%, var(--home-placeholder-clear) 52%)`,
-    `radial-gradient(circle at 78% 32%, ${secondary} 0%, var(--home-placeholder-clear) 48%)`,
-    `linear-gradient(145deg, ${accent} 0%, var(--home-placeholder-depth) 100%)`
-  ].join(', ')
-}
 
 const getPageElement = () => pageRef.value?.$el ?? pageRef.value
 const getTilesGridElement = () => tilesGridRef.value?.$el ?? tilesGridRef.value
@@ -194,7 +174,6 @@ const loadingSkeletonCount = computed(() => {
 
 const loadingSkeletonTiles = computed(() => Array.from({ length: loadingSkeletonCount.value }, (_, index) => ({
   id: `placeholder-${tiles.value.length}-${index}`,
-  backgroundImage: buildPlaceholderBackground(index),
   isPlaceholder: true
 })))
 const contentTileCount = computed(() => displayedTiles.value.length + loadingSkeletonTiles.value.length)
@@ -224,7 +203,6 @@ const decorativePlaceholderCount = computed(() => {
 })
 const decorativePlaceholderTiles = computed(() => Array.from({ length: decorativePlaceholderCount.value }, (_, index) => ({
   id: `decorative-placeholder-${contentTileCount.value}-${index}`,
-  backgroundImage: buildPlaceholderBackground(contentTileCount.value + index),
   isPlaceholder: true
 })))
 const renderedTiles = computed(() => ([
@@ -394,23 +372,6 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .index-page {
-  --home-placeholder-palette-1-primary: #{rgba($info, 0.88)};
-  --home-placeholder-palette-1-secondary: #{rgba($primary, 0.7)};
-  --home-placeholder-palette-1-accent: #{rgba($dark-page, 0.2)};
-  --home-placeholder-palette-2-primary: #{rgba($accent, 0.82)};
-  --home-placeholder-palette-2-secondary: #{rgba($secondary, 0.64)};
-  --home-placeholder-palette-2-accent: #{rgba($dark-page, 0.22)};
-  --home-placeholder-palette-3-primary: #{rgba($secondary, 0.84)};
-  --home-placeholder-palette-3-secondary: #{rgba($primary, 0.62)};
-  --home-placeholder-palette-3-accent: #{rgba($dark-page, 0.18)};
-  --home-placeholder-palette-4-primary: #{rgba($warning, 0.8)};
-  --home-placeholder-palette-4-secondary: #{rgba($accent, 0.66)};
-  --home-placeholder-palette-4-accent: #{rgba($dark-page, 0.18)};
-  --home-placeholder-palette-5-primary: #{rgba($primary, 0.82)};
-  --home-placeholder-palette-5-secondary: #{rgba($info, 0.6)};
-  --home-placeholder-palette-5-accent: #{rgba($dark-page, 0.2)};
-  --home-placeholder-clear: #{rgba($grey-1, 0)};
-  --home-placeholder-depth: #{rgba($dark-page, 0.58)};
   transition: opacity 0.3s ease;
 }
 

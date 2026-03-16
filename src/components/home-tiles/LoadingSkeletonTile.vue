@@ -3,7 +3,7 @@
     flat
     square
     class="loading-skeleton-tile"
-    :style="{ '--tile-background': backgroundImage, backgroundImage }"
+    :style="{ '--tile-background': computedBackgroundImage, backgroundImage: computedBackgroundImage }"
     aria-hidden="true"
   >
     <div class="loading-skeleton-tile__content absolute-position text-grey-1 q-pa-md">
@@ -16,11 +16,42 @@
 </template>
 
 <script setup>
-defineProps({
-  backgroundImage: {
-    type: String,
-    required: true
+import { computed } from 'vue'
+import { getQuasarColorRgb } from 'src/utils/quasar-utils.js'
+import colorConfig from 'src/config/colors.yml'
+
+// Generate palette rules based on Quasar colors
+const generatePalette = (index) => {
+  const quasarColors = colorConfig.placeholders.available_colors
+  const opacityConfig = colorConfig.placeholders.opacity
+  
+  const colorCount = quasarColors.length
+  const primaryColor = quasarColors[index % colorCount]
+  const secondaryColor = quasarColors[(index + 2) % colorCount]
+  
+  const primaryRgb = getQuasarColorRgb(primaryColor)
+  const secondaryRgb = getQuasarColorRgb(secondaryColor)
+  
+  return {
+    primary: `rgba(${primaryRgb.join(', ')}, ${opacityConfig.primary.base + (index % 3) * opacityConfig.primary.variation})`,
+    secondary: `rgba(${secondaryRgb.join(', ')}, ${opacityConfig.secondary.base + (index % 4) * opacityConfig.secondary.variation})`,
+    accent: `rgba(18, 18, 18, ${opacityConfig.accent.base + (index % 3) * opacityConfig.accent.variation})`
   }
+}
+
+// Use a consistent index based on component creation for loading skeletons
+const skeletonIndex = computed(() => {
+  return Math.floor(Math.random() * colorConfig.placeholders.available_colors.length)
+})
+
+const computedBackgroundImage = computed(() => {
+  const palette = generatePalette(skeletonIndex.value)
+  
+  return [
+    `radial-gradient(circle at 20% 20%, ${palette.primary} 0%, ${colorConfig.placeholders.clear_color} 52%)`,
+    `radial-gradient(circle at 78% 32%, ${palette.secondary} 0%, ${colorConfig.placeholders.clear_color} 48%)`,
+    `linear-gradient(145deg, ${palette.accent} 0%, ${colorConfig.placeholders.depth_color} 100%)`
+  ].join(', ')
 })
 </script>
 

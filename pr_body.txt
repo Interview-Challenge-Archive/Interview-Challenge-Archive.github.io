@@ -1,0 +1,1 @@
+Refactor styles to use SCSS nesting and add media queries for better responsiveness in ProjectDetailPage.vue.

@@ -1,0 +1,41 @@
+# Color configuration for placeholder tiles and utilities
+
+# Placeholder tile configuration
+placeholders:
+  # Available Quasar color names for random selection
+  available_colors:
+    - "primary"
+    - "secondary" 
+    - "accent"
+    - "info"
+    - "warning"
+    - "negative"
+    - "positive"
+  
+  # Opacity ranges for color generation
+  opacity:
+    primary:
+      base: 0.7
+      variation: 0.06  # Added to base: 0.7 + (index % 3) * 0.06
+    secondary:
+      base: 0.6
+      variation: 0.04  # Added to base: 0.6 + (index % 4) * 0.04
+    accent:
+      base: 0.18
+      variation: 0.02  # Added to base: 0.18 + (index % 3) * 0.02
+  
+  # Gradient clear color (transparent)
+  clear_color: "rgba(245, 245, 245, 0)"
+  
+  # Gradient depth color
+  depth_color: "rgba(18, 18, 18, 0.58)"
+
+# Color validation
+validation:
+  # Valid hex color patterns
+  hex_pattern: "^[0-9A-Fa-f]{3}$|^[0-9A-Fa-f]{6}$|^[0-9A-Fa-f]{8}$"
+  
+  # RGB value bounds
+  rgb:
+    min: 0
+    max: 255
