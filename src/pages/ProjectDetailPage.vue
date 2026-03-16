@@ -149,123 +149,150 @@ async function openLabel (label) {
 <style scoped lang="scss">
 .project-detail-page {
   padding: 24px 20px 112px;
+
+  @media (max-width: 900px) {
+    padding-inline: 16px;
+  }
+
+  @media (max-width: 640px) {
+    padding-bottom: 96px;
+  }
 }
 
-.project-detail__layout {
-  display: grid;
-  grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
-  gap: 32px;
-  align-items: start;
-}
+.project-detail {
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
 
-.project-detail__sidebar {
-  display: grid;
-  gap: 22px;
-  align-self: start;
-  position: sticky;
-  top: 24px;
-}
+    @media (max-width: 900px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
 
-.project-detail__poster {
-  min-height: clamp(340px, 56vh, 560px);
-  overflow: hidden;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border: 1px solid rgba($grey-1, 0.42);
-  box-shadow: 0 28px 60px rgba($dark-page, 0.16);
-  animation: project-poster-settle 0.62s cubic-bezier(0.22, 1, 0.36, 1);
-}
+  &__sidebar {
+    display: grid;
+    gap: 22px;
+    align-self: start;
+    position: sticky;
+    top: 24px;
 
-.project-detail__poster-overlay {
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba($dark-page, 0.08) 0%, rgba($dark-page, 0.78) 100%);
-}
+    @media (max-width: 900px) {
+      position: relative;
+      top: 0;
+    }
+  }
 
-.project-detail__back-btn {
-  top: 16px;
-  left: 16px;
-  z-index: 2;
-  color: $grey-1;
-  background: rgba($dark-page, 0.34);
-  border: 1px solid rgba($grey-1, 0.22);
-  backdrop-filter: blur(12px) saturate(1.08);
-  -webkit-backdrop-filter: blur(12px) saturate(1.08);
-}
+  &__poster {
+    min-height: clamp(340px, 56vh, 560px);
+    overflow: hidden;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 1px solid rgba($grey-1, 0.42);
+    box-shadow: 0 28px 60px rgba($dark-page, 0.16);
+    animation: project-poster-settle 0.62s cubic-bezier(0.22, 1, 0.36, 1);
 
-.project-detail__poster-copy {
-  z-index: 1;
-  padding: 24px;
-  color: $grey-1;
-}
+    @media (max-width: 900px) {
+      min-height: 320px;
+    }
 
-.project-detail__poster-label,
-.project-detail__eyebrow {
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-}
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
 
-.project-detail__poster-label {
-  color: rgba($grey-1, 0.72);
-}
+  &__poster-overlay {
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba($dark-page, 0.08) 0%, rgba($dark-page, 0.78) 100%);
+  }
 
-.project-detail__poster-title {
-  margin-top: 10px;
-  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-}
+  &__back-btn {
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    color: $grey-1;
+    background: rgba($dark-page, 0.34);
+    border: 1px solid rgba($grey-1, 0.22);
+    backdrop-filter: blur(12px) saturate(1.08);
+    -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  }
 
-.project-detail__body {
-  max-width: 860px;
-}
+  &__poster-copy {
+    z-index: 1;
+    padding: 24px;
+    color: $grey-1;
+  }
 
-.project-detail__github-btn {
-  justify-self: stretch;
-  min-height: 52px;
-}
+  &__poster-label,
+  &__eyebrow {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
 
-.project-detail__eyebrow {
-  color: rgba($dark-page, 0.48);
-}
+  &__poster-label {
+    color: rgba($grey-1, 0.72);
+  }
 
-.project-detail__subtitle {
-  max-width: 54rem;
-  margin: 0;
-  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
-  line-height: 1.45;
-  color: rgba($dark-page, 0.72);
-}
+  &__poster-title {
+    margin-top: 10px;
+    font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
 
-.project-detail__pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+  &__body {
+    max-width: 860px;
+  }
 
-.project-detail__pill-row--sidebar {
-  margin-top: 2px;
-}
+  &__github-btn {
+    justify-self: stretch;
+    min-height: 52px;
+  }
 
-.project-detail__description,
-.project-detail__paragraph {
-  max-width: 52rem;
-  margin: 0;
-  font-size: clamp(1.08rem, 1.5vw, 1.24rem);
-  line-height: 1.75;
-  color: rgba($dark-page, 0.9);
-}
+  &__eyebrow {
+    color: rgba($dark-page, 0.48);
+  }
 
-.project-detail__tag-chip {
-  cursor: pointer;
-}
+  &__subtitle {
+    max-width: 54rem;
+    margin: 0;
+    font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+    line-height: 1.45;
+    color: rgba($dark-page, 0.72);
+  }
 
-.project-detail__paragraph {
-  margin-top: 18px;
-  color: rgba($dark-page, 0.76);
+  &__pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    &--sidebar {
+      margin-top: 2px;
+    }
+  }
+
+  &__description,
+  &__paragraph {
+    max-width: 52rem;
+    margin: 0;
+    font-size: clamp(1.08rem, 1.5vw, 1.24rem);
+    line-height: 1.75;
+    color: rgba($dark-page, 0.9);
+  }
+
+  &__tag-chip {
+    cursor: pointer;
+  }
+
+  &__paragraph {
+    margin-top: 18px;
+    color: rgba($dark-page, 0.76);
+  }
 }
 
 @keyframes project-poster-settle {
@@ -277,37 +304,6 @@ async function openLabel (label) {
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-@media (max-width: 900px) {
-  .project-detail-page {
-    padding-inline: 16px;
-  }
-
-  .project-detail__layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .project-detail__sidebar {
-    position: relative;
-    top: 0;
-  }
-
-  .project-detail__poster {
-    min-height: 320px;
-  }
-}
-
-@media (max-width: 640px) {
-  .project-detail-page {
-    padding-bottom: 96px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-detail__poster {
-    animation: none;
   }
 }
 </style>
