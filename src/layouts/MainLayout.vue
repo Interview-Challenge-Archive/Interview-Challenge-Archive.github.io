@@ -41,7 +41,7 @@
         </div>
 
         <div class="bottom-dock__panel-scroll">
-          <div class="bottom-dock__panel-inner">
+          <div class="bottom-dock__panel-inner q-mr-auto">
             <q-tab-panels v-model="expandedTab" animated class="bottom-dock__panels bg-transparent text-dark">
               <q-tab-panel name="search" class="q-pa-none">
                 <SearchDockPanel @submitted="closeActiveTab" />
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="bottom-dock__bar">
+      <div class="bottom-dock__bar q-py-xs q-px-md">
         <router-link to="/" class="bottom-dock__title text-subtitle1 text-weight-medium text-dark">
           <span class="brand-lockup">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
@@ -353,7 +353,6 @@ function closeActiveTab () {
 .bottom-dock__panel-inner {
   max-width: 960px;
   min-height: 100%;
-  margin: 0 auto 0 0;
   padding: 28px 76px 24px 24px;
 }
 
@@ -383,7 +382,6 @@ function closeActiveTab () {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 6px 20px;
 }
 
 .bottom-dock__title {

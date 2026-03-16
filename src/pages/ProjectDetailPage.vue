@@ -22,9 +22,9 @@
 
             <div class="project-detail__poster-overlay absolute-full" aria-hidden="true" />
 
-            <div class="project-detail__poster-copy absolute-bottom text-grey-1">
+            <div class="project-detail__poster-copy absolute-bottom text-grey-1 q-pa-lg">
               <div class="project-detail__poster-label text-uppercase text-grey-4">{{ project.projectPath }}</div>
-              <div class="project-detail__poster-title text-grey-1">{{ project.title }}</div>
+              <div class="project-detail__poster-title text-grey-1 q-mt-sm">{{ project.title }}</div>
             </div>
           </q-card>
 
@@ -69,10 +69,10 @@
         </aside>
 
         <section class="project-detail__body text-dark">
-          <p class="project-detail__subtitle text-grey-8">{{ project.subtitle }}</p>
+          <p class="project-detail__subtitle text-grey-8 q-ma-none">{{ project.subtitle }}</p>
 
-          <p class="project-detail__description text-dark">{{ project.description }}</p>
-          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph text-grey-8">
+          <p class="project-detail__description text-dark q-ma-none">{{ project.description }}</p>
+          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph text-grey-8 q-ma-none q-mt-md">
             {{ paragraph }}
           </p>
         </section>
@@ -221,7 +221,6 @@ async function openLabel (label) {
 
   &__poster-copy {
     z-index: 1;
-    padding: 24px;
   }
 
   &__poster-label,
@@ -232,7 +231,6 @@ async function openLabel (label) {
   }
 
   &__poster-title {
-    margin-top: 10px;
     font-size: clamp(1.7rem, 2.8vw, 2.6rem);
     font-weight: 700;
     line-height: 1.02;
@@ -250,7 +248,6 @@ async function openLabel (label) {
 
   &__subtitle {
     max-width: 54rem;
-    margin: 0;
     font-size: clamp(1.1rem, 1.8vw, 1.45rem);
     line-height: 1.45;
   }
@@ -268,17 +265,12 @@ async function openLabel (label) {
   &__description,
   &__paragraph {
     max-width: 52rem;
-    margin: 0;
     font-size: clamp(1.08rem, 1.5vw, 1.24rem);
     line-height: 1.75;
   }
 
   &__tag-chip {
     cursor: pointer;
-  }
-
-  &__paragraph {
-    margin-top: 18px;
   }
 }
 

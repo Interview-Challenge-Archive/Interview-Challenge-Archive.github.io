@@ -3,7 +3,7 @@
     <div class="site-maintenance__backdrop" aria-hidden="true" />
     <div class="site-maintenance__wash" aria-hidden="true" />
 
-    <div class="site-maintenance__inner">
+    <div class="site-maintenance__inner q-mx-auto">
       <header class="site-maintenance__header">
         <div class="site-maintenance__brand text-subtitle1 text-weight-medium text-dark">
           <img src="favicon.svg" alt="" class="site-maintenance__brand-icon" aria-hidden="true">
@@ -13,9 +13,9 @@
 
       <q-card flat class="site-maintenance__panel">
         <section class="site-maintenance__copy text-dark">
-          <p class="text-uppercase text-grey-7">{{ t('maintenance.eyebrow') }}</p>
-          <h1 class="text-dark">{{ t('maintenance.title') }}</h1>
-          <p class="text-grey-8">{{ t('maintenance.description') }}</p>
+          <p class="text-uppercase text-grey-7 q-ma-none">{{ t('maintenance.eyebrow') }}</p>
+          <h1 class="text-dark q-ma-none">{{ t('maintenance.title') }}</h1>
+          <p class="text-grey-8 q-ma-none">{{ t('maintenance.description') }}</p>
         </section>
 
         <div class="site-maintenance__preview" aria-hidden="true">
@@ -179,7 +179,6 @@ function previewTileStyle (tile) {
 
   &__inner {
     width: min(1180px, 100%);
-    margin: 0 auto;
     display: grid;
     gap: 18px;
   }
@@ -222,10 +221,6 @@ function previewTileStyle (tile) {
     padding: clamp(28px, 5vw, 56px);
     border-right: 1px solid rgba($dark-page, 0.07);
 
-    > p {
-      margin: 0;
-    }
-
     > p:first-child {
       font-size: 0.76rem;
       font-weight: 700;
@@ -233,7 +228,6 @@ function previewTileStyle (tile) {
     }
 
     > h1 {
-      margin: 0;
       max-width: 11ch;
       font-size: clamp(2.3rem, 6vw, 4.6rem);
       line-height: 0.96;
