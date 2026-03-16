@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { useMeta } from 'quasar'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -47,6 +48,21 @@ defineOptions({
 })
 
 const { t } = useI18n()
+
+useMeta(() => {
+  const title = `${t('maintenance.title')} | Interview Challenge Archive`
+  const description = t('maintenance.description')
+
+  return {
+    title,
+    meta: {
+      description: { name: 'description', content: description },
+      ogTitle: { property: 'og:title', content: title },
+      ogDescription: { property: 'og:description', content: description },
+      robots: { name: 'robots', content: 'noindex, nofollow' }
+    }
+  }
+})
 
 const featureTileBackground = [
   'radial-gradient(circle at 18% 18%, rgba(101, 194, 255, 0.84) 0%, rgba(101, 194, 255, 0) 40%)',

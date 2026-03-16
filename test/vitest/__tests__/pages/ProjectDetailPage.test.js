@@ -1,5 +1,6 @@
 import { flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMeta } from 'quasar'
 import ProjectDetailPage from 'src/pages/ProjectDetailPage.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
@@ -37,6 +38,7 @@ describe('ProjectDetailPage', () => {
     routerPush.mockReset()
     routerPush.mockResolvedValue(undefined)
     routerBack.mockReset()
+    useMeta.mockClear()
   })
 
   it('renders the primary language like the other clickable labels', async () => {
@@ -105,5 +107,19 @@ describe('ProjectDetailPage', () => {
     expect(wrapper.find('.project-detail__back-btn').classes()).toContain('absolute-top-left')
     expect(wrapper.find('.project-detail__poster-overlay').classes()).toContain('absolute-full')
     expect(wrapper.find('.project-detail__poster-copy').classes()).toContain('absolute-bottom')
+  })
+
+  describe('SEO Metadata', () => {
+    it('sets correct metadata based on project data', async () => {
+      mountWithApp(ProjectDetailPage)
+      await flushPromises()
+
+      expect(useMeta).toHaveBeenCalled()
+      const metaFn = useMeta.mock.calls[0][0]
+      const meta = metaFn()
+
+      expect(meta.title).toBe('Frontend interview tracks | Interview Challenge Archive')
+      expect(meta.meta.description.content).toBe('Browse practical UI exercises, framework prompts, and implementation walkthroughs.')
+    })
   })
 })

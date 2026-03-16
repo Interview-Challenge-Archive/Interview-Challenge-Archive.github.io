@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import { flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { useMeta } from 'quasar'
 import IndexPage from 'src/pages/IndexPage.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
@@ -56,6 +58,7 @@ describe('IndexPage', () => {
 
     mockRoute.query = {}
     routerPush.mockReset()
+    useMeta.mockClear()
     vi.restoreAllMocks()
 
     // Initialize store for each test to ensure items are loaded
@@ -221,5 +224,31 @@ describe('IndexPage', () => {
 
     expect(document.body.classList.contains('no-scroll')).toBe(true)
     expect(wrapper.find('.home-tiles__sentinel').exists()).toBe(false)
+  })
+
+  describe('SEO Metadata', () => {
+    it('sets correct initial metadata', async () => {
+      mountWithApp(IndexPage, { pinia })
+      await flushPromises()
+
+      expect(useMeta).toHaveBeenCalled()
+      const metaFn = useMeta.mock.calls[0][0]
+      const meta = metaFn()
+
+      expect(meta.title).toBe('Interview Challenge Archive')
+      expect(meta.meta.description.content).toBe('Browse practical UI exercises, framework prompts, and implementation walkthroughs.')
+    })
+
+    it('updates metadata when searching', async () => {
+      mockRoute.query = { query: 'test', label: 'Vue 3' }
+      mountWithApp(IndexPage, { pinia })
+      await flushPromises()
+
+      const metaFn = useMeta.mock.calls[0][0]
+      const meta = metaFn()
+
+      expect(meta.title).toContain('Search for "test" in Vue 3')
+      expect(meta.meta.description.content).toContain('Showing')
+    })
   })
 })

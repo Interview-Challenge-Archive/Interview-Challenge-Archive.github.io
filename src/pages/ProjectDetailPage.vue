@@ -83,6 +83,7 @@
 <script setup>
 import { computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useMeta } from 'quasar'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 
 const route = useRoute()
@@ -90,6 +91,23 @@ const router = useRouter()
 const githubProjectsStore = useGitHubProjectsStore()
 
 const project = computed(() => githubProjectsStore.projectByRoute(route.params.owner, route.params.repo))
+
+useMeta(() => {
+  if (!project.value) {
+    return {
+      title: 'Project Not Found | Interview Challenge Archive'
+    }
+  }
+
+  return {
+    title: `${project.value.title} | Interview Challenge Archive`,
+    meta: {
+      description: { name: 'description', content: project.value.subtitle || project.value.description },
+      ogTitle: { property: 'og:title', content: project.value.title },
+      ogDescription: { property: 'og:description', content: project.value.subtitle || project.value.description }
+    }
+  }
+})
 
 // Check if project exists and redirect to 404 if not
 async function checkProjectAndRedirect () {
