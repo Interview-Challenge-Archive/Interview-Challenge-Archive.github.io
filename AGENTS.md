@@ -70,3 +70,9 @@ npm run test
 - **Error naming**: Use descriptive names ending with 'Error' (e.g., `InvalidHexColorError`)
 - **Error parameters**: Accept only relevant data, build messages internally
 - **Direct imports**: Import directly from error files unless multiple errors exist
+
+## GitHub CLI Usage
+
+- **Check for `gh` availability**: If asked to create a pull request, first check if the `gh` command is available locally
+- **Use `gh` for PR creation**: When `gh` is available, use it to create pull requests (e.g., `gh pr create`)
+- **Fallback to manual instructions**: If `gh` is not available, provide manual instructions for creating a PR
