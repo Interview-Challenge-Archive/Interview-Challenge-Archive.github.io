@@ -61,10 +61,7 @@ describe('IndexPage', () => {
     useMeta.mockClear()
     vi.restoreAllMocks()
 
-    // Initialize store for each test to ensure items are loaded
     const store = useGitHubProjectsStore()
-    // By default, it uses a real but small catalog and a 420ms delay.
-    // We can mock the delay or just wait.
     vi.mock('src/stores/github-projects-store', async (importOriginal) => {
       const actual = await importOriginal()
       return {
@@ -154,21 +151,16 @@ describe('IndexPage', () => {
   })
 
   it('hides scrollbar when last row is entirely decorative and fits viewport', async () => {
-    // 2 rows of content (4 tiles at 2 cols) fits in 900px height (tileHeight is ~300px)
-    mockRoute.query = { query: 'Frontend' } // Matches 1 project
+    mockRoute.query = { query: 'Frontend' }
     setViewport(1280, 900, '460px 460px')
 
     const wrapper = mountWithApp(IndexPage, { pinia })
     await nextTick()
 
-    // 1 project + 5 placeholders = 6 tiles (3 rows)
-    // contentHeight = 1 row * ~300px = 300px. fits in 900px - 64px = 836px.
     expect(document.body.classList.contains('no-scroll')).toBe(true)
   })
 
   it('shows scrollbar when real content exceeds viewport', async () => {
-    // Force small height so 1 project row + padding might exceed it
-    // 1 row * 400px (max height) = 400px.
     setViewport(1280, 300, '460px 460px')
 
     const wrapper = mountWithApp(IndexPage, { pinia })
@@ -178,11 +170,6 @@ describe('IndexPage', () => {
   })
 
   it('only fills the last row with placeholders when content scrolls', async () => {
-    // 1 column. 1 project.
-    // tileHeight = 240 (for narrow viewports). contentHeightActual = 1 * 240 = 240.
-    // viewportHeight = 200. availableViewportHeight = 200 - 0 - 64 = 136.
-    // shouldScrollForContent should be true.
-
     setViewport(390, 200, '390px') // 1 column
 
     const wrapper = mountWithApp(IndexPage, { pinia })
@@ -203,15 +190,12 @@ describe('IndexPage', () => {
     const projects = wrapper.findAll('.home-project-tile').length
     const placeholders = wrapper.findAll('.decorative-placeholder-tile:not(.loading-skeleton-tile)').length
 
-    // projects = 1. visibleColumnCount = 1.
-    // It should complete the last row. (1 - (1 % 1)) % 1 = 0.
     expect(placeholders).toBe(0)
   })
 
   it('hides load more sentinel when scrollbar is hidden', async () => {
-    // Force a state where scrollbar is hidden
-    mockRoute.query = { query: 'Frontend' } // 1 project
-    setViewport(1280, 900, '460px 460px') // 2 columns
+    mockRoute.query = { query: 'Frontend' }
+    setViewport(1280, 900, '460px 460px')
 
     const wrapper = mountWithApp(IndexPage, { pinia })
     const store = useGitHubProjectsStore()

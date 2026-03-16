@@ -49,7 +49,6 @@ describe('ErrorNotFound', () => {
 
     mountWithApp(ErrorNotFound)
 
-    // Wait for onMounted to execute
     await flushPromises()
 
     expect(replaceStateSpy).toHaveBeenCalledWith(

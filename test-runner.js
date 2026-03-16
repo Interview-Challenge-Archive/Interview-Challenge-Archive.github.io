@@ -1,12 +1,8 @@
-// Simple test runner for development
-// Run with: node test-runner.js
-
 import { hexToRgb } from './src/utils/colors.js'
 import { InvalidHexColorError } from './src/errors/InvalidHexColorError.js'
 
 console.log('🧪 Running utility tests...\n')
 
-// Test hexToRgb
 const hexTests = [
   { input: '#f00', expected: [255, 0, 0] },
   { input: 'ff0', expected: [255, 255, 0] },
@@ -36,7 +32,6 @@ hexTests.forEach((test, index) => {
   }
 })
 
-// Test InvalidHexColorError
 const errorTests = [
   { hex: '#xyz', shouldHaveError: false },
   { hex: '#abc123', shouldHaveError: false },
@@ -50,9 +45,9 @@ console.log('\n🚨 Testing InvalidHexColorError:')
 errorTests.forEach((test, index) => {
   try {
     const error = new InvalidHexColorError(test.hex)
-    
-    if (error.name === 'InvalidHexColorError' && 
-        error.message.includes('Invalid hex color format') && 
+
+    if (error.name === 'InvalidHexColorError' &&
+        error.message.includes('Invalid hex color format') &&
         error.hex === test.hex) {
       console.log(`  ✅ Error Test ${index + 1}: ${test.hex} → ${error.name}`)
       errorTestsPassed++
@@ -64,7 +59,6 @@ errorTests.forEach((test, index) => {
   }
 })
 
-// Test invalid hex values that should throw in hexToRgb
 const invalidHexTests = ['#xyz', 'abc', '#12', '#12345', '#1234567', '']
 let invalidTestsPassed = 0
 let invalidTestsTotal = invalidHexTests.length
@@ -84,7 +78,6 @@ invalidHexTests.forEach((test, index) => {
   }
 })
 
-// Summary
 const totalPassed = hexTestsPassed + errorTestsPassed + invalidTestsPassed
 const totalTests = hexTestsTotal + errorTestsTotal + invalidTestsTotal
 

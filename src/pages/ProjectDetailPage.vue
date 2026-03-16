@@ -111,9 +111,7 @@ useMeta(() => {
   }
 })
 
-// Check if project exists and redirect to 404 if not
 async function checkProjectAndRedirect () {
-  // Ensure store is loaded
   await githubProjectsStore.ensureItemsLoaded()
 
   if (!project.value) {
@@ -121,7 +119,6 @@ async function checkProjectAndRedirect () {
   }
 }
 
-// Check on mount and when route changes
 onMounted(() => {
   checkProjectAndRedirect()
 })
