@@ -6,7 +6,7 @@
     :style="{ '--tile-background': backgroundImage, backgroundImage }"
     aria-hidden="true"
   >
-    <div class="loading-skeleton-tile__content absolute-position">
+    <div class="loading-skeleton-tile__content absolute-position text-grey-1">
       <q-skeleton dark type="text" class="loading-skeleton-tile__line loading-skeleton-tile__line--meta" />
       <q-skeleton dark type="rect" class="loading-skeleton-tile__line loading-skeleton-tile__line--title" />
       <q-skeleton dark type="text" class="loading-skeleton-tile__line loading-skeleton-tile__line--subtitle" />
@@ -48,7 +48,6 @@ defineProps({
     gap: 12px;
     justify-content: flex-end;
     padding: 18px 20px;
-    color: $grey-1;
   }
 
   &__line {

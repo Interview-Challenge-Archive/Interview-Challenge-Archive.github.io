@@ -25,9 +25,9 @@
       </template>
     </section>
 
-    <div v-if="showLoadMoreIndicator" class="home-load-more" aria-live="polite">
+    <div v-if="showLoadMoreIndicator" class="home-load-more text-grey-1" aria-live="polite">
       <q-spinner-dots size="32px" color="white" />
-      <span class="home-load-more__label text-uppercase">{{ t('home.loadingMore') }}</span>
+      <span class="home-load-more__label text-uppercase text-grey-2">{{ t('home.loadingMore') }}</span>
     </div>
 
     <div v-if="!isLastRowDecorative" ref="loadMoreSentinelRef" class="home-tiles__sentinel" aria-hidden="true" />
@@ -422,14 +422,12 @@ onBeforeUnmount(() => {
   gap: 12px;
   min-height: 76px;
   padding: 18px 20px 12px;
-  color: $grey-1;
   background: linear-gradient(180deg, rgba($dark-page, 0) 0%, rgba($dark-page, 0.56) 100%);
 
   &__label {
     font-size: 0.92rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: rgba($grey-1, 0.92);
   }
 }
 
