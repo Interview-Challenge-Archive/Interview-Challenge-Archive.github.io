@@ -46,3 +46,18 @@ npm run test
 3. **Preserve conventions**: Match existing naming, structure, and patterns
 4. **Minimal changes**: Make targeted edits rather than large refactors
 5. **Verify paths**: Use absolute paths when reading/writing files
+6. **No self-explanatory comments**: Avoid obvious comments like `// Props to make component flexible` or `// Generate palette rules`
+7. **Meaningful comments only**: Add comments only when explaining complex business logic, algorithms, or non-obvious implementation details
+8. **Code should be self-documenting**: Write clear, readable code that doesn't require explanatory comments for basic functionality
+
+## Configuration Files
+
+- **`src/config/colors.yml`**: Color configuration for placeholder tiles
+- **`src/utils/colors.js`**: Color conversion utilities (hexToRgb)
+- **`src/utils/quasar-utils.js`**: Quasar CSS variable access utilities
+
+## Component Architecture
+
+- **DecorativePlaceholderTile**: Base component for placeholder tiles with dynamic color generation
+- **LoadingSkeletonTile**: Extends DecorativePlaceholderTile for loading states
+- **Composition over inheritance**: Use props and slots for component flexibility

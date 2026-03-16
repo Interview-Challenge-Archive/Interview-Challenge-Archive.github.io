@@ -3,9 +3,12 @@
     flat
     square
     class="decorative-placeholder-tile"
-    :style="{ backgroundImage: computedBackgroundImage }"
-    aria-hidden="true"
-  />
+    :class="{ 'decorative-placeholder-tile--loading': isLoading }"
+    :style="{ '--tile-background': computedBackgroundImage, backgroundImage: computedBackgroundImage }"
+    :aria-hidden="!isLoading"
+  >
+    <slot v-if="isLoading" name="loading-content" />
+  </q-card>
 </template>
 
 <script setup>
@@ -13,7 +16,21 @@ import { computed } from 'vue'
 import { getQuasarColorRgb } from 'src/utils/quasar-utils.js'
 import colorConfig from 'src/config/colors.yml'
 
-// Generate palette rules based on Quasar colors
+const props = defineProps({
+  isLoading: {
+    type: Boolean,
+    default: false
+  },
+  useRandomIndex: {
+    type: Boolean,
+    default: true
+  },
+  fixedIndex: {
+    type: Number,
+    default: null
+  }
+})
+
 const generatePalette = (index) => {
   const quasarColors = colorConfig.placeholders.available_colors
   const opacityConfig = colorConfig.placeholders.opacity
@@ -32,12 +49,20 @@ const generatePalette = (index) => {
   }
 }
 
-const randomPaletteIndex = computed(() => {
-  return Math.floor(Math.random() * colorConfig.placeholders.available_colors.length)
+const paletteIndex = computed(() => {
+  if (props.fixedIndex !== null) {
+    return props.fixedIndex
+  }
+  
+  if (props.useRandomIndex) {
+    return Math.floor(Math.random() * colorConfig.placeholders.available_colors.length)
+  }
+  
+  return 0
 })
 
 const computedBackgroundImage = computed(() => {
-  const palette = generatePalette(randomPaletteIndex.value)
+  const palette = generatePalette(paletteIndex.value)
   
   return [
     `radial-gradient(circle at 20% 20%, ${palette.primary} 0%, ${colorConfig.placeholders.clear_color} 52%)`,
@@ -72,6 +97,16 @@ const computedBackgroundImage = computed(() => {
       ),
       inset 0 0 0 1px rgba($grey-1, 0.12)
     );
+  }
+
+  &--loading {
+    opacity: 1;
+    filter: none;
+    pointer-events: auto;
+
+    &::after {
+      @include tile.tile-overlay(linear-gradient(180deg, rgba($grey-1, 0.06) 0%, rgba($dark-page, 0.24) 100%));
+    }
   }
 
   @media (max-width: 680px) {
