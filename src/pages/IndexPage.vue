@@ -45,6 +45,7 @@ import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
 import { clamp } from 'src/utils/math'
+import { navigateWithTransition } from 'src/utils/navigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -333,21 +334,8 @@ function observeLoadMoreSentinel () {
   loadMoreObserver.observe(loadMoreSentinelRef.value)
 }
 
-function prefersReducedMotion () {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
-
 async function openProject (tile) {
-  if (
-    typeof document !== 'undefined'
-    && typeof document.startViewTransition === 'function'
-    && !prefersReducedMotion()
-  ) {
-    document.startViewTransition(() => router.push(tile.routeLocation))
-    return
-  }
-
-  await router.push(tile.routeLocation)
+  await navigateWithTransition(router, tile.routeLocation)
 }
 
 onMounted(() => {
