@@ -44,6 +44,7 @@ import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlace
 import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
+import { clamp } from 'src/utils/math'
 
 const route = useRoute()
 const router = useRouter()
@@ -58,8 +59,6 @@ const pageWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
 const viewportHeight = ref(typeof window === 'undefined' ? 900 : window.innerHeight)
 const renderedColumnCount = ref(0)
 const tilesGridViewportTop = ref(0)
-
-const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
 const placeholderPalettes = [
   ['var(--home-placeholder-palette-1-primary)', 'var(--home-placeholder-palette-1-secondary)', 'var(--home-placeholder-palette-1-accent)'],
