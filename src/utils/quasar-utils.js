@@ -1,4 +1,5 @@
 import { hexToRgb } from './colors.js'
+import colorConfig from '../config/colors.yml'
 
 export const getQuasarVariable = (variableName) => {
   if (typeof window === 'undefined') return ''
@@ -15,5 +16,5 @@ export const getQuasarColorRgb = (colorName) => {
     return hexToRgb(cssVariable)
   }
   
-  return [25, 118, 210]
+  return colorConfig.fallback.default_rgb
 }

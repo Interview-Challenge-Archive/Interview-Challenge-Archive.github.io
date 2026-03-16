@@ -1,5 +1,10 @@
 # Color configuration for placeholder tiles and utilities
 
+# Fallback color configuration
+fallback:
+  # Default RGB values for when CSS variables are not available
+  default_rgb: [25, 118, 210]
+
 # Placeholder tile configuration
 placeholders:
   # Available Quasar color names for random selection
