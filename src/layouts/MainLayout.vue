@@ -549,8 +549,5 @@ function closeActiveTab () {
   .bottom-dock__panel {
     height: calc(50vh - 88px);
   }
-
-  .bottom-dock__bar {
-  }
 }
 </style>
