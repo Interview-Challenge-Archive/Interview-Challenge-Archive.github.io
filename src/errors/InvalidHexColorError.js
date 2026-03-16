@@ -3,6 +3,7 @@ export class InvalidHexColorError extends Error {
 
   constructor(hex) {
     super(`Invalid hex color format: ${hex}`)
+
     this.name = 'InvalidHexColorError'
     this.#hex = hex
   }
