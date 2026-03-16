@@ -63,7 +63,6 @@ describe('ProjectDetailPage', () => {
   })
 
   it('redirects to not-found route when project does not exist', async () => {
-    // Set route params to non-existent project
     mockRoute.params = {
       owner: 'nonexistent',
       repo: 'project'
@@ -72,11 +71,9 @@ describe('ProjectDetailPage', () => {
 
     const wrapper = mountWithApp(ProjectDetailPage)
 
-    // Wait for onMounted and async operations (ensureItemsLoaded has 420ms delay)
     await flushPromises()
     await new Promise(resolve => setTimeout(resolve, 500))
 
-    // Should redirect to not-found route with original path
     expect(routerReplace).toHaveBeenCalledWith({
       name: 'not-found',
       query: {
@@ -88,13 +85,10 @@ describe('ProjectDetailPage', () => {
   it('does not redirect when project exists', async () => {
     const wrapper = mountWithApp(ProjectDetailPage)
 
-    // Wait for onMounted and async operations
     await flushPromises()
 
-    // Should not redirect for valid project
     expect(routerReplace).not.toHaveBeenCalled()
 
-    // Should render project content
     expect(wrapper.html()).toContain('Frontend interview tracks')
   })
 
