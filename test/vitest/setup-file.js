@@ -1,8 +1,18 @@
 import { installQuasarPlugin } from '@quasar/quasar-app-extension-testing-unit-vitest'
-import { Notify } from 'quasar'
+import { Notify, Meta } from 'quasar'
+import { vi } from 'vitest'
+
+// Mock useMeta globally to avoid document is not defined errors when tests finish
+vi.mock('quasar', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    useMeta: vi.fn()
+  }
+})
 
 installQuasarPlugin({
-  plugins: { Notify }
+  plugins: { Notify, Meta }
 })
 
 if (typeof window !== 'undefined' && typeof window.localStorage?.getItem !== 'function') {
