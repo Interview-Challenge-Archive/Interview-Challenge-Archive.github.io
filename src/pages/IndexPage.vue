@@ -250,7 +250,7 @@ const isLastRowDecorative = computed(() => {
   const contentHeight = (lastRealRowIndex + 1) * tileHeight.value
 
   // Hide scrollbar only if the content height fits within the available viewport height
-  return contentHeight <= availableViewportHeight.value + 1 // Add 1px buffer for subpixel rendering
+  return contentHeight <= availableViewportHeight.value + 1
 })
 
 function isSentinelNearViewport () {

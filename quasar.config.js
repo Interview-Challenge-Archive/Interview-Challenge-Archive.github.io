@@ -12,9 +12,6 @@ export default defineConfig((ctx) => {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
-    // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
-    // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'open-feature',
       'maintenance',
@@ -47,7 +44,7 @@ export default defineConfig((ctx) => {
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'hash',
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -96,7 +93,7 @@ export default defineConfig((ctx) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
       // https: true,
-      open: true // opens browser window automatically
+      open: true
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework

@@ -80,7 +80,6 @@ useMeta(() => {
   }
 })
 
-// Restore original URL after component mounts
 onMounted(() => {
   if (route.query.path) {
     window.history.replaceState({}, '', route.query.path)
