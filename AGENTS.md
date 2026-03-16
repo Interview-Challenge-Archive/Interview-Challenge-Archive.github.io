@@ -49,6 +49,8 @@ npm run test
 6. **No self-explanatory comments**: Avoid obvious comments like `// Props to make component flexible` or `// Generate palette rules`
 7. **Meaningful comments only**: Add comments only when explaining complex business logic, algorithms, or non-obvious implementation details
 8. **Code should be self-documenting**: Write clear, readable code that doesn't require explanatory comments for basic functionality
+9. **Custom error classes**: Place all custom errors in `src/errors/` folder
+10. **Error message standards**: Custom errors should have built-in messages and only accept relevant parameters (e.g., hex value, not full message)
 
 ## Configuration Files
 
@@ -61,3 +63,10 @@ npm run test
 - **DecorativePlaceholderTile**: Base component for placeholder tiles with dynamic color generation
 - **LoadingSkeletonTile**: Extends DecorativePlaceholderTile for loading states
 - **Composition over inheritance**: Use props and slots for component flexibility
+
+## Error Organization
+
+- **`src/errors/`**: Dedicated folder for all custom error classes
+- **Error naming**: Use descriptive names ending with 'Error' (e.g., `InvalidHexColorError`)
+- **Error parameters**: Accept only relevant data, build messages internally
+- **Direct imports**: Import directly from error files unless multiple errors exist

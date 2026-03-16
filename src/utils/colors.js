@@ -1,3 +1,5 @@
+import { InvalidHexColorError } from '../errors/InvalidHexColorError.js'
+
 export const hexToRgb = (hex) => {
   const cleanHex = hex.startsWith('#') ? hex.slice(1) : hex
   
@@ -26,5 +28,5 @@ export const hexToRgb = (hex) => {
     return [r, g, b]
   }
   
-  throw new Error(`Invalid hex color format: ${hex}`)
+  throw new InvalidHexColorError(hex)
 }
