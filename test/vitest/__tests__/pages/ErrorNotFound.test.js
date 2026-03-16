@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
+import { useMeta } from 'quasar'
 import ErrorNotFound from 'src/pages/ErrorNotFound.vue'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
@@ -18,6 +19,7 @@ describe('ErrorNotFound', () => {
   beforeEach(() => {
     mockRoute.query = {}
     mockRoute.path = '/not-found'
+    useMeta.mockClear()
   })
 
   it('renders the 404 heading and description', () => {
@@ -96,5 +98,19 @@ describe('ErrorNotFound', () => {
     expect(wrapper.find('.error-not-found__backdrop').attributes('aria-hidden')).toBe('true')
     expect(wrapper.find('.error-not-found__wash').attributes('aria-hidden')).toBe('true')
     expect(wrapper.find('.error-not-found__visual').attributes('aria-hidden')).toBe('true')
+  })
+
+  describe('SEO Metadata', () => {
+    it('sets correct metadata with noindex', async () => {
+      mountWithApp(ErrorNotFound)
+      await flushPromises()
+
+      expect(useMeta).toHaveBeenCalled()
+      const metaFn = useMeta.mock.calls[0][0]
+      const meta = metaFn()
+
+      expect(meta.title).toBe('Page not found - 404 | Interview Challenge Archive')
+      expect(meta.meta.robots.content).toBe('noindex, follow')
+    })
   })
 })
