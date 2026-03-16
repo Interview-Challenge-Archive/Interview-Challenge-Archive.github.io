@@ -39,6 +39,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useMeta } from 'quasar'
 import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
 import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
@@ -148,6 +149,29 @@ const displayedTiles = computed(() => {
 
     return matchesQuery && matchesLabels
   })
+})
+
+useMeta(() => {
+  let title = 'Interview Challenge Archive'
+  let description = 'Browse practical UI exercises, framework prompts, and implementation walkthroughs.'
+
+  if (selectedQuery.value || selectedLabels.value.length) {
+    const filters = []
+    if (selectedQuery.value) filters.push(`"${selectedQuery.value}"`)
+    if (selectedLabels.value.length) filters.push(selectedLabels.value.join(', '))
+
+    title = `Search for ${filters.join(' in ')} | Interview Challenge Archive`
+    description = `Showing ${displayedTiles.value.length} projects matching your search criteria.`
+  }
+
+  return {
+    title,
+    meta: {
+      description: { name: 'description', content: description },
+      ogTitle: { property: 'og:title', content: title },
+      ogDescription: { property: 'og:description', content: description }
+    }
+  }
 })
 
 const visibleColumnCount = computed(() => renderedColumnCount.value || Math.max(1, Math.floor(pageWidth.value / 460)))

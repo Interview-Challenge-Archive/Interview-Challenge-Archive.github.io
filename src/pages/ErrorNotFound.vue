@@ -54,6 +54,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useMeta } from 'quasar'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -63,6 +64,21 @@ defineOptions({
 
 const route = useRoute()
 const { t } = useI18n()
+
+useMeta(() => {
+  const title = `${t('notfound.eyebrow')} - 404 | Interview Challenge Archive`
+  const description = t('notfound.description')
+
+  return {
+    title,
+    meta: {
+      description: { name: 'description', content: description },
+      ogTitle: { property: 'og:title', content: title },
+      ogDescription: { property: 'og:description', content: description },
+      robots: { name: 'robots', content: 'noindex, follow' }
+    }
+  }
+})
 
 // Restore original URL after component mounts
 onMounted(() => {
