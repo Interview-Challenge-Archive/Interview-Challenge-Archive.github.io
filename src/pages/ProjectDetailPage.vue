@@ -85,6 +85,7 @@ import { computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useMeta } from 'quasar'
 import { useGitHubProjectsStore } from 'src/stores/github-projects-store'
+import { goBack as performGoBack } from 'src/utils/navigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -131,30 +132,8 @@ watch(
   }
 )
 
-function prefersReducedMotion () {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
-
 async function goBack () {
-  const navigateBack = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back()
-      return
-    }
-
-    return router.push({ name: 'home' })
-  }
-
-  if (
-    typeof document !== 'undefined'
-    && typeof document.startViewTransition === 'function'
-    && !prefersReducedMotion()
-  ) {
-    document.startViewTransition(() => navigateBack())
-    return
-  }
-
-  await navigateBack()
+  await performGoBack(router)
 }
 
 async function openLabel (label) {
