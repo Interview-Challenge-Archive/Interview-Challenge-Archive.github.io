@@ -2,7 +2,7 @@
   <q-card
     flat
     square
-    class="home-project-tile home-tile home-tile--action"
+    class="home-project-tile home-tile home-tile--action q-pa-none"
     role="button"
     tabindex="0"
     :aria-label="ariaLabel"
@@ -11,10 +11,10 @@
     @keydown.enter.prevent="emitSelect"
     @keydown.space.prevent="emitSelect"
   >
-    <div class="home-project-tile__content home-tile__content absolute-bottom text-grey-1">
-      <div class="home-project-tile__meta home-tile__meta text-uppercase text-grey-4">{{ projectPath }}</div>
+    <div class="home-project-tile__content home-tile__content absolute-bottom text-grey-1 q-pa-md">
+      <div class="home-project-tile__meta home-tile__meta text-uppercase text-grey-4 q-mb-sm">{{ projectPath }}</div>
       <div class="home-project-tile__title home-tile__title text-grey-1">{{ title }}</div>
-      <div class="home-project-tile__subtitle home-tile__subtitle text-grey-3">{{ subtitle }}</div>
+      <div class="home-project-tile__subtitle home-tile__subtitle text-grey-3 q-mt-xs">{{ subtitle }}</div>
     </div>
   </q-card>
 </template>
@@ -60,7 +60,6 @@ function emitSelect () {
 .home-project-tile {
   @include tile.tile-surface(clamp(280px, 34vh, 420px), cover);
   width: 100%;
-  padding: 0;
   cursor: pointer;
   text-align: left;
   pointer-events: auto;
@@ -85,12 +84,10 @@ function emitSelect () {
     bottom: 0;
     left: 0;
     z-index: 1;
-    padding: 18px 20px;
     transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.24s ease;
   }
 
   &__meta {
-    margin-bottom: 8px;
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.18em;
@@ -103,7 +100,6 @@ function emitSelect () {
   }
 
   &__subtitle {
-    margin-top: 4px;
     max-width: 26rem;
     font-size: 0.98rem;
     line-height: 1.4;
@@ -111,10 +107,6 @@ function emitSelect () {
 
   @media (max-width: 680px) {
     min-height: 240px;
-
-    &__content {
-      padding: 16px;
-    }
   }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
-  <section class="error-not-found">
+  <section class="error-not-found q-pa-md">
     <div class="error-not-found__backdrop" aria-hidden="true" />
     <div class="error-not-found__wash" aria-hidden="true" />
 
-    <div class="error-not-found__inner">
+    <div class="error-not-found__inner q-mx-auto">
       <header class="error-not-found__header">
         <div class="error-not-found__brand text-subtitle1 text-weight-medium text-dark">
           <img src="favicon.svg" alt="" class="error-not-found__brand-icon" aria-hidden="true">
@@ -12,15 +12,15 @@
       </header>
 
       <q-card flat class="error-not-found__panel">
-        <section class="error-not-found__copy text-dark">
-          <p class="text-uppercase text-grey-7">{{ t('notfound.eyebrow') }}</p>
-          <h1 class="text-h1">
+        <section class="error-not-found__copy text-dark q-pa-md">
+          <p class="text-uppercase text-grey-7 q-ma-none">{{ t('notfound.eyebrow') }}</p>
+          <h1 class="text-h1 q-ma-none">
             <span class="error-not-found__code">404</span>
           </h1>
-          <p class="text-grey-8">{{ t('notfound.description') }}</p>
+          <p class="text-grey-8 q-ma-none">{{ t('notfound.description') }}</p>
 
           <q-btn
-            class="error-not-found__action"
+            class="error-not-found__action q-py-sm q-px-lg"
             color="primary"
             unelevated
             to="/"
@@ -30,7 +30,7 @@
         </section>
 
         <div class="error-not-found__visual" aria-hidden="true">
-          <div class="error-not-found__preview">
+          <div class="error-not-found__preview q-pa-md">
             <LoadingSkeletonTile
               :background-image="featureTileBackground"
             />
@@ -172,7 +172,6 @@ function previewTileStyle (tile) {
 .error-not-found {
   overflow: hidden;
   min-height: 100vh;
-  padding: clamp(20px, 4vw, 40px);
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.92), rgba($grey-2, 0) 36%),
     linear-gradient(180deg, $grey-2 0%, $blue-grey-1 100%);
@@ -202,7 +201,6 @@ function previewTileStyle (tile) {
 
   &__inner {
     width: min(1180px, 100%);
-    margin: 0 auto;
     display: grid;
     gap: 18px;
   }
@@ -242,12 +240,7 @@ function previewTileStyle (tile) {
     display: grid;
     align-content: start;
     gap: 12px;
-    padding: clamp(24px, 4vw, 40px);
     border-right: 1px solid rgba($dark-page, 0.07);
-
-    > p {
-      margin: 0;
-    }
 
     > p:first-child {
       font-size: 0.76rem;
@@ -276,7 +269,6 @@ function previewTileStyle (tile) {
   &__action {
     align-self: start;
     min-width: 140px;
-    padding: 10px 24px;
     font-weight: 600;
     letter-spacing: 0.02em;
   }
@@ -289,7 +281,6 @@ function previewTileStyle (tile) {
   &__preview {
     display: grid;
     gap: 16px;
-    padding: clamp(20px, 3vw, 28px);
     background: linear-gradient(180deg, rgba($grey-2, 0.14) 0%, rgba($blue-grey-1, 0.28) 100%);
 
     > :first-child,
@@ -322,7 +313,6 @@ function previewTileStyle (tile) {
 
       :deep(.loading-skeleton-tile__content) {
         gap: 10px;
-        padding: 16px;
         animation: notfound-skeleton-drift 4.2s ease-in-out infinite;
       }
 

@@ -41,7 +41,7 @@
         </div>
 
         <div class="bottom-dock__panel-scroll">
-          <div class="bottom-dock__panel-inner">
+          <div class="bottom-dock__panel-inner q-mr-auto q-pa-lg q-pl-md">
             <q-tab-panels v-model="expandedTab" animated class="bottom-dock__panels bg-transparent text-dark">
               <q-tab-panel name="search" class="q-pa-none">
                 <SearchDockPanel @submitted="closeActiveTab" />
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="bottom-dock__bar">
+      <div class="bottom-dock__bar q-py-xs q-px-md">
         <router-link to="/" class="bottom-dock__title text-subtitle1 text-weight-medium text-dark">
           <span class="brand-lockup">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
@@ -110,8 +110,8 @@
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <q-card class="mobile-dock-menu">
-        <div class="mobile-dock-menu__header">
+      <q-card class="mobile-dock-menu q-pa-md">
+        <div class="mobile-dock-menu__header q-mb-md">
           <div class="brand-lockup text-subtitle1 text-weight-medium">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
             <span class="brand-lockup__label">{{ t('app.title') }}</span>
@@ -153,7 +153,7 @@
       transition-hide="slide-right"
     >
       <q-card class="mobile-dock-panel">
-        <div class="mobile-dock-panel__header">
+        <div class="mobile-dock-panel__header q-pa-xs">
           <q-btn
             flat
             round
@@ -170,7 +170,7 @@
           <q-space />
         </div>
 
-        <div class="mobile-dock-panel__body">
+        <div class="mobile-dock-panel__body q-pa-md q-pt-lg q-pb-xl">
           <q-tab-panels
             v-model="expandedTab"
             animated
@@ -353,8 +353,6 @@ function closeActiveTab () {
 .bottom-dock__panel-inner {
   max-width: 960px;
   min-height: 100%;
-  margin: 0 auto 0 0;
-  padding: 28px 76px 24px 24px;
 }
 
 .bottom-dock__panel-toolbar {
@@ -383,7 +381,6 @@ function closeActiveTab () {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 6px 20px;
 }
 
 .bottom-dock__title {
@@ -418,7 +415,6 @@ function closeActiveTab () {
   display: inline-flex;
   align-items: center;
   align-self: stretch;
-  padding: 3px;
   border: 1px solid rgba($grey-1, 0.65);
   border-radius: 0;
   box-shadow:
@@ -438,7 +434,6 @@ function closeActiveTab () {
   overflow: hidden;
   align-self: stretch;
   min-height: 100%;
-  padding: 0 18px;
   border: 1px solid rgba($dark-page, 0);
   border-radius: 0;
   transform: translateY(0);
@@ -500,7 +495,6 @@ function closeActiveTab () {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 20px;
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.96), rgba($grey-2, 0.86) 32%, rgba($blue-grey-1, 0.95) 100%);
 
@@ -509,7 +503,6 @@ function closeActiveTab () {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 24px;
   }
 
   &__items {
@@ -520,7 +513,6 @@ function closeActiveTab () {
   &__item {
     justify-content: flex-start;
     min-height: 64px;
-    padding: 0 18px;
     border: 1px solid rgba($grey-1, 0.55);
     border-radius: 0;
     font-size: 1rem;
@@ -544,7 +536,6 @@ function closeActiveTab () {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
   border-bottom: 1px solid rgba($dark-page, 0.06);
   backdrop-filter: blur(18px) saturate(1.1);
 }
@@ -552,16 +543,11 @@ function closeActiveTab () {
 .mobile-dock-panel__body {
   flex: 1;
   overflow: auto;
-  padding: 24px 20px 32px;
 }
 
 @media (max-width: 640px) {
   .bottom-dock__panel {
     height: calc(50vh - 88px);
-  }
-
-  .bottom-dock__bar {
-    padding: 10px 16px;
   }
 }
 </style>

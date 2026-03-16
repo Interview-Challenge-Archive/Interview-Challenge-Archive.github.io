@@ -1,5 +1,5 @@
 <template>
-  <q-page class="project-detail-page">
+  <q-page class="project-detail-page q-pa-md q-pb-xl">
     <div v-if="project" class="project-detail">
       <div class="project-detail__layout">
         <aside class="project-detail__sidebar">
@@ -22,9 +22,9 @@
 
             <div class="project-detail__poster-overlay absolute-full" aria-hidden="true" />
 
-            <div class="project-detail__poster-copy absolute-bottom text-grey-1">
+            <div class="project-detail__poster-copy absolute-bottom text-grey-1 q-pa-lg">
               <div class="project-detail__poster-label text-uppercase text-grey-4">{{ project.projectPath }}</div>
-              <div class="project-detail__poster-title text-grey-1">{{ project.title }}</div>
+              <div class="project-detail__poster-title text-grey-1 q-mt-sm">{{ project.title }}</div>
             </div>
           </q-card>
 
@@ -40,7 +40,7 @@
             rel="noreferrer"
           />
 
-          <div class="project-detail__pill-row project-detail__pill-row--sidebar">
+          <div class="project-detail__pill-row project-detail__pill-row--sidebar q-mt-xs">
             <q-chip
               clickable
               square
@@ -69,10 +69,10 @@
         </aside>
 
         <section class="project-detail__body text-dark">
-          <p class="project-detail__subtitle text-grey-8">{{ project.subtitle }}</p>
+          <p class="project-detail__subtitle text-grey-8 q-ma-none">{{ project.subtitle }}</p>
 
-          <p class="project-detail__description text-dark">{{ project.description }}</p>
-          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph text-grey-8">
+          <p class="project-detail__description text-dark q-ma-none">{{ project.description }}</p>
+          <p v-for="paragraph in project.storyline" :key="paragraph" class="project-detail__paragraph text-grey-8 q-ma-none q-mt-md">
             {{ paragraph }}
           </p>
         </section>
@@ -149,14 +149,10 @@ async function openLabel (label) {
 
 <style scoped lang="scss">
 .project-detail-page {
-  padding: 24px 20px 112px;
-
   @media (max-width: 900px) {
-    padding-inline: 16px;
   }
 
   @media (max-width: 640px) {
-    padding-bottom: 96px;
   }
 }
 
@@ -221,7 +217,6 @@ async function openLabel (label) {
 
   &__poster-copy {
     z-index: 1;
-    padding: 24px;
   }
 
   &__poster-label,
@@ -232,7 +227,6 @@ async function openLabel (label) {
   }
 
   &__poster-title {
-    margin-top: 10px;
     font-size: clamp(1.7rem, 2.8vw, 2.6rem);
     font-weight: 700;
     line-height: 1.02;
@@ -250,7 +244,6 @@ async function openLabel (label) {
 
   &__subtitle {
     max-width: 54rem;
-    margin: 0;
     font-size: clamp(1.1rem, 1.8vw, 1.45rem);
     line-height: 1.45;
   }
@@ -259,26 +252,17 @@ async function openLabel (label) {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-
-    &--sidebar {
-      margin-top: 2px;
-    }
   }
 
   &__description,
   &__paragraph {
     max-width: 52rem;
-    margin: 0;
     font-size: clamp(1.08rem, 1.5vw, 1.24rem);
     line-height: 1.75;
   }
 
   &__tag-chip {
     cursor: pointer;
-  }
-
-  &__paragraph {
-    margin-top: 18px;
   }
 }
 

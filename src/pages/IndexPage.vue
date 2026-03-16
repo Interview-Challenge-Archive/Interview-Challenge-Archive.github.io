@@ -1,5 +1,5 @@
 <template>
-  <q-page ref="pageRef" class="index-page">
+  <q-page ref="pageRef" class="index-page q-pa-none">
     <section ref="tilesGridRef" class="home-tiles">
       <template v-for="tile in renderedTiles" :key="tile.id">
         <HomeProjectTile
@@ -25,7 +25,7 @@
       </template>
     </section>
 
-    <div v-if="showLoadMoreIndicator" class="home-load-more text-grey-1" aria-live="polite">
+    <div v-if="showLoadMoreIndicator" class="home-load-more text-grey-1 q-pt-md q-px-md q-pb-sm" aria-live="polite">
       <q-spinner-dots size="32px" color="white" />
       <span class="home-load-more__label text-uppercase text-grey-2">{{ t('home.loadingMore') }}</span>
     </div>
@@ -411,7 +411,6 @@ onBeforeUnmount(() => {
   --home-placeholder-palette-5-accent: #{rgba($dark-page, 0.2)};
   --home-placeholder-clear: #{rgba($grey-1, 0)};
   --home-placeholder-depth: #{rgba($dark-page, 0.58)};
-  padding: 0 !important;
   transition: opacity 0.3s ease;
 }
 
@@ -421,7 +420,6 @@ onBeforeUnmount(() => {
   justify-content: center;
   gap: 12px;
   min-height: 76px;
-  padding: 18px 20px 12px;
   background: linear-gradient(180deg, rgba($dark-page, 0) 0%, rgba($dark-page, 0.56) 100%);
 
   &__label {
