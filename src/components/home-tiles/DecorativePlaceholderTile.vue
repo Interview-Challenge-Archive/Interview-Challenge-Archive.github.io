@@ -4,7 +4,7 @@
     square
     class="decorative-placeholder-tile"
     :class="{ 'decorative-placeholder-tile--loading': isLoading }"
-    :style="{ '--tile-background': computedBackgroundImage, backgroundImage: computedBackgroundImage }"
+    :style="{ '--tile-background': computedBackgroundImage }"
     :aria-hidden="!isLoading"
   >
     <slot v-if="isLoading" name="loading-content" />
@@ -77,6 +77,7 @@ const computedBackgroundImage = computed(() => {
 
 .decorative-placeholder-tile {
   @include tile.tile-surface(clamp(280px, 34vh, 420px));
+  background-image: var(--tile-background);
   opacity: 0.68;
   filter: saturate(0.62) brightness(0.92);
 
