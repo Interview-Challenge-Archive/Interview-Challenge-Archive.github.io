@@ -124,7 +124,7 @@ describe('IndexPage', () => {
     expect(wrapper.findAll('.home-tiles')).toHaveLength(1)
     expect(wrapper.find('.home-tiles--placeholder-layer').exists()).toBe(false)
     expect(wrapper.find('.home-tiles > .home-project-tile').exists()).toBe(true)
-    expect(wrapper.findAll('.home-tiles > .decorative-placeholder-tile').length).toBeGreaterThan(0)
+    expect(wrapper.findAll('.home-tiles > .decorative-placeholder-tile:not(.loading-skeleton-tile)').length).toBeGreaterThan(0)
   })
 
   it('keeps the unified grid filled on narrow viewports', async () => {
@@ -137,7 +137,7 @@ describe('IndexPage', () => {
     await nextTick()
 
     expect(wrapper.findAll('.home-tiles > .home-project-tile')).toHaveLength(1)
-    expect(wrapper.findAll('.home-tiles > .decorative-placeholder-tile')).toHaveLength(3)
+    expect(wrapper.findAll('.home-tiles > .decorative-placeholder-tile:not(.loading-skeleton-tile)')).toHaveLength(3)
   })
 
   it('keeps the unified grid filled on wider viewports', async () => {
@@ -150,7 +150,7 @@ describe('IndexPage', () => {
     await nextTick()
 
     expect(wrapper.findAll('.home-tiles > .home-project-tile')).toHaveLength(1)
-    expect(wrapper.findAll('.home-tiles > .decorative-placeholder-tile')).toHaveLength(5)
+    expect(wrapper.findAll('.home-tiles > .decorative-placeholder-tile:not(.loading-skeleton-tile)')).toHaveLength(5)
   })
 
   it('hides scrollbar when last row is entirely decorative and fits viewport', async () => {
@@ -178,32 +178,32 @@ describe('IndexPage', () => {
   })
 
   it('only fills the last row with placeholders when content scrolls', async () => {
-    // 1 column. 1 project. 
+    // 1 column. 1 project.
     // tileHeight = 240 (for narrow viewports). contentHeightActual = 1 * 240 = 240.
     // viewportHeight = 200. availableViewportHeight = 200 - 0 - 64 = 136.
     // shouldScrollForContent should be true.
-    
+
     setViewport(390, 200, '390px') // 1 column
-    
+
     const wrapper = mountWithApp(IndexPage, { pinia })
     const store = useGitHubProjectsStore()
-    
+
     store.items = [
       { id: 'p1', title: 'P1', type: 'project', projectPath: 'p1', subtitle: 'S1', backgroundImage: 'B1' }
     ]
     store.hasInitialized = true
-    
+
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(390)
     mockGridTemplateColumns('390px')
-    
+
     wrapper.vm.updatePageMetrics()
     await nextTick()
     await nextTick()
 
     const projects = wrapper.findAll('.home-project-tile').length
-    const placeholders = wrapper.findAll('.decorative-placeholder-tile').length
-    
-    // projects = 1. visibleColumnCount = 1. 
+    const placeholders = wrapper.findAll('.decorative-placeholder-tile:not(.loading-skeleton-tile)').length
+
+    // projects = 1. visibleColumnCount = 1.
     // It should complete the last row. (1 - (1 % 1)) % 1 = 0.
     expect(placeholders).toBe(0)
   })
@@ -212,13 +212,13 @@ describe('IndexPage', () => {
     // Force a state where scrollbar is hidden
     mockRoute.query = { query: 'Frontend' } // 1 project
     setViewport(1280, 900, '460px 460px') // 2 columns
-    
+
     const wrapper = mountWithApp(IndexPage, { pinia })
     const store = useGitHubProjectsStore()
-    
+
     store.items = [{ id: 'p1', title: 'P1', type: 'project' }]
     store.hasInitialized = true
-    
+
     await nextTick()
     await nextTick()
 
