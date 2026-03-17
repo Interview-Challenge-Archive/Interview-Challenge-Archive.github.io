@@ -15,17 +15,16 @@ describe('AboutDockPanel', () => {
 })
 
 describe('LoginDockPanel', () => {
-  it('renders translated fields and the login action', () => {
+  it('renders OAuth actions for GitHub and LinkedIn', () => {
     const wrapper = mountWithApp(LoginDockPanel)
-    const inputs = wrapper.findAllComponents({ name: 'QInput' })
-    const action = wrapper.findComponent({ name: 'QBtn' })
+    const actions = wrapper.findAllComponents({ name: 'QBtn' })
 
     expect(wrapper.text()).toContain('Login to your account')
-    expect(wrapper.text()).toContain('Access saved submissions, favorites, and your personal activity.')
-    expect(inputs).toHaveLength(2)
-    expect(inputs.map((input) => input.props('label'))).toEqual(['Email', 'Password'])
-    expect(inputs.map((input) => input.props('type'))).toEqual(['email', 'password'])
-    expect(action.props('label')).toBe('Login')
+    expect(wrapper.text()).toContain('Connect GitHub or LinkedIn to keep your archive session in the current browser tab.')
+    expect(actions.map((action) => action.props('label'))).toEqual([
+      'Login with GitHub',
+      'Login with LinkedIn'
+    ])
   })
 })
 

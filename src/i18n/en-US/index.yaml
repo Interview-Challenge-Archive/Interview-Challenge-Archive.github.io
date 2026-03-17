@@ -146,10 +146,21 @@ dock:
   login:
     label: Login
     title: Login to your account
-    description: Access saved submissions, favorites, and your personal activity.
-    email: Email
-    password: Password
-    action: Login
+    description: Connect GitHub or LinkedIn to keep your archive session in the current browser tab.
+    helper: OAuth opens in a secure popup and stores your session for this tab only.
+    actions:
+      loginWith: Login with {provider}
+    status:
+      connected: Connected with {provider}.
+    errors:
+      blocked: The login popup was blocked. Allow popups and try again.
+      cancelled: The login flow was closed before it finished.
+      failed: Login failed. Please try again.
+    session:
+      connectedAs: Signed in for this tab
+      provider: 'Provider: {provider}'
+      tokenStored: Session token stored in the tab session.
+    logout: Logout
   about:
     label: About
     title: About Interview Challenge Archive

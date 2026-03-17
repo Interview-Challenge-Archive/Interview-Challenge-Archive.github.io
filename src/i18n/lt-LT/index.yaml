@@ -146,10 +146,21 @@ dock:
   login:
     label: Login
     title: Prisijungimas prie paskyros
-    description: Pasiekite išsaugotus pateikimus, mėgstamiausius ir savo veiklą.
-    email: El. paštas
-    password: Slaptažodis
-    action: Prisijungti
+    description: Prisijunkite per GitHub arba LinkedIn ir išsaugokite sesiją tik šioje naršyklės kortelėje.
+    helper: OAuth atidaromas saugiame iššokančiame lange, o sesija saugoma tik šioje kortelėje.
+    actions:
+      loginWith: Prisijungti su {provider}
+    status:
+      connected: Prisijungta per {provider}.
+    errors:
+      blocked: Prisijungimo langas buvo užblokuotas. Leiskite iššokančius langus ir bandykite dar kartą.
+      cancelled: Prisijungimo procesas buvo uždarytas jam nepasibaigus.
+      failed: Prisijungti nepavyko. Bandykite dar kartą.
+    session:
+      connectedAs: Prisijungta šiai kortelei
+      provider: 'Tiekėjas: {provider}'
+      tokenStored: Sesijos tokenas išsaugotas kortelės sesijoje.
+    logout: Atsijungti
   about:
     label: About
     title: Apie Job Test Vault

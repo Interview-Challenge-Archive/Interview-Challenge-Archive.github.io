@@ -15,9 +15,10 @@ installQuasarPlugin({
   plugins: { Notify, Meta }
 })
 
-if (typeof window !== 'undefined' && typeof window.localStorage?.getItem !== 'function') {
+function createStorageMock () {
   const storage = new Map()
-  const localStorage = {
+
+  return {
     getItem: (key) => storage.has(key) ? storage.get(key) : null,
     setItem: (key, value) => {
       storage.set(String(key), String(value))
@@ -29,9 +30,22 @@ if (typeof window !== 'undefined' && typeof window.localStorage?.getItem !== 'fu
       storage.clear()
     }
   }
+}
+
+if (typeof window !== 'undefined' && typeof window.localStorage?.getItem !== 'function') {
+  const localStorage = createStorageMock()
 
   Object.defineProperty(window, 'localStorage', {
     value: localStorage,
+    configurable: true
+  })
+}
+
+if (typeof window !== 'undefined' && typeof window.sessionStorage?.getItem !== 'function') {
+  const sessionStorage = createStorageMock()
+
+  Object.defineProperty(window, 'sessionStorage', {
+    value: sessionStorage,
     configurable: true
   })
 }
