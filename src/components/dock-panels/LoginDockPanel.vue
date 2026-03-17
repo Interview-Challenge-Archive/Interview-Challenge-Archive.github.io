@@ -53,7 +53,7 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import appConfig from 'src/config/config.yml'
+import appConfig from 'src/config/auth.yml'
 import { useSessionStore } from 'src/stores/session-store'
 
 const { t } = useI18n()

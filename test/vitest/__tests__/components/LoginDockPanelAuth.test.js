@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import appConfig from 'src/config/config.yml'
+import appConfig from 'src/config/auth.yml'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
 import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
