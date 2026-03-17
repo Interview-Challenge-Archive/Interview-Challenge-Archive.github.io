@@ -3,29 +3,6 @@
     <div class="text-h5 text-uppercase q-mb-sm">{{ t('dock.login.title') }}</div>
     <div class="text-body1 text-grey-7 q-mb-lg">{{ t('dock.login.description') }}</div>
 
-    <div v-if="isAuthenticated" class="login-dock-panel__session bg-grey-1 q-pa-md q-mb-lg">
-      <div class="row items-center q-col-gutter-md">
-        <div v-if="avatarUrl" class="col-auto">
-          <q-avatar size="56px">
-            <img :src="avatarUrl" :alt="displayName">
-          </q-avatar>
-        </div>
-
-        <div class="col">
-          <div class="text-subtitle1 text-weight-medium">{{ displayName }}</div>
-          <div class="text-body2 text-grey-7">{{ t('dock.login.session.connectedAs') }}</div>
-          <div v-if="sessionDetails.length" class="text-caption text-grey-7 q-mt-xs">
-            {{ sessionDetails.join(' • ') }}
-          </div>
-          <div class="text-caption text-grey-7 q-mt-xs">{{ t('dock.login.session.tokenStored') }}</div>
-        </div>
-
-        <div class="col-auto">
-          <q-btn flat no-caps color="dark" :label="t('dock.login.logout')" @click="logout" />
-        </div>
-      </div>
-    </div>
-
     <div v-if="statusMessage" class="text-body2 q-mb-md" :class="statusClass">
       {{ statusMessage }}
     </div>
@@ -59,37 +36,11 @@ import { useSessionStore } from 'src/stores/session-store'
 const { t } = useI18n()
 
 const sessionStore = useSessionStore()
-const activeAccountStore = computed(() => Object.values(sessionStore.accounts)[0] ?? null)
-const isAuthenticated = computed(() => sessionStore.isAuthenticated)
-const avatarUrl = computed(() => activeAccountStore.value?.avatarUrl ?? '')
-const displayName = computed(() => activeAccountStore.value?.displayName ?? '')
-const email = computed(() => activeAccountStore.value?.email ?? '')
-const loginHandle = computed(() => activeAccountStore.value?.loginHandle ?? '')
-const provider = computed(() => activeAccountStore.value?.provider ?? null)
-
 const activeProviderId = ref(null)
 const statusMessage = ref('')
 const statusTone = ref('info')
 
 const authProviders = computed(() => Object.values(appConfig.auth.providers))
-const sessionDetails = computed(() => {
-  const details = []
-  const providerLabel = resolveProviderLabel(provider.value)
-
-  if (providerLabel) {
-    details.push(t('dock.login.session.provider', { provider: providerLabel }))
-  }
-
-  if (email.value) {
-    details.push(email.value)
-  }
-
-  if (loginHandle.value) {
-    details.push(`@${loginHandle.value}`)
-  }
-
-  return details
-})
 const statusClass = computed(() => `text-${statusTone.value}`)
 
 let authPopup = null
@@ -202,24 +153,12 @@ function startLogin (providerConfig) {
   }, appConfig.auth.popup.statusCheckMs)
 }
 
-function logout () {
-  cleanupAuthFlow({ closePopup: true })
-  activeProviderId.value = null
-  statusMessage.value = ''
-  statusTone.value = 'info'
-  sessionStore.logout()
-}
-
 onBeforeUnmount(() => {
   cleanupAuthFlow({ closePopup: true })
 })
 </script>
 
 <style scoped lang="scss">
-.login-dock-panel__session {
-  border: 1px solid rgba($dark-page, 0.06);
-}
-
 .login-dock-panel__provider {
   justify-content: flex-start;
   min-height: 48px;

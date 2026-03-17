@@ -79,7 +79,6 @@ describe('LoginDockPanel auth flow', () => {
     expect(accountStore.accessToken).toBe('github-access-token')
     expect(accountStore.displayName).toBe('The Octocat')
     expect(wrapper.text()).toContain('Connected with GitHub.')
-    expect(wrapper.text()).toContain('The Octocat')
     expect(popup.close).toHaveBeenCalledTimes(1)
 
     wrapper.unmount()
