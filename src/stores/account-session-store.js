@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const ACCOUNT_SESSION_STORAGE_KEY_PREFIX = 'job-test-vault-session-account'
 
-const accountPersistStorage = typeof window !== 'undefined' ? window.sessionStorage : null
+const accountPersistStorage = typeof window !== 'undefined' ? window.localStorage : null
 const accountStoreFactoryCache = new Map()
 
 function toStoreSafeId (accountId) {

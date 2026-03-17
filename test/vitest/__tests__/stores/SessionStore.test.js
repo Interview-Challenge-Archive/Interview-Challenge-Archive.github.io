@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { createApp, nextTick } from 'vue'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { buildAccountSessionStorageKey, useAccountSessionStore } from 'src/stores/account-session-store'
-import { SESSION_STORAGE_SESSION_KEY, useSessionStore } from 'src/stores/session-store'
+import { useSessionStore } from 'src/stores/session-store'
 
 function createSessionStore () {
   const app = createApp({})
@@ -18,6 +18,7 @@ function createSessionStore () {
 
 describe('useSessionStore', () => {
   beforeEach(() => {
+    window.localStorage.clear()
     window.sessionStorage.clear()
   })
 
@@ -47,10 +48,10 @@ describe('useSessionStore', () => {
     expect(activeAccountStore.displayName).toBe('Ada Lovelace')
     expect(activeAccountStore.email).toBe('ada@example.com')
     expect(activeAccountStore.avatarUrl).toBe('https://images.example/ada.png')
-    expect(window.sessionStorage.getItem(SESSION_STORAGE_SESSION_KEY)).toBeNull()
+    expect(window.localStorage.getItem('job-test-vault-session')).toBeNull()
 
     const accountPersistedSession = JSON.parse(
-      window.sessionStorage.getItem(buildAccountSessionStorageKey('linkedin:ada@example.com'))
+      window.localStorage.getItem(buildAccountSessionStorageKey('linkedin:ada@example.com'))
     )
 
     expect(accountPersistedSession).toEqual({
@@ -102,8 +103,8 @@ describe('useSessionStore', () => {
 
     expect(githubAccountStore.provider).toBe('github')
     expect(githubAccountStore.displayName).toBe('The Octocat')
-    expect(window.sessionStorage.getItem(SESSION_STORAGE_SESSION_KEY)).toBeNull()
-    expect(JSON.parse(window.sessionStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
+    expect(window.localStorage.getItem('job-test-vault-session')).toBeNull()
+    expect(JSON.parse(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
       provider: 'github',
       accessToken: 'github-token',
       tokenType: 'Bearer',
@@ -115,7 +116,7 @@ describe('useSessionStore', () => {
         name: 'The Octocat'
       }
     })
-    expect(JSON.parse(window.sessionStorage.getItem(buildAccountSessionStorageKey('linkedin:ada@example.com')))).toEqual({
+    expect(JSON.parse(window.localStorage.getItem(buildAccountSessionStorageKey('linkedin:ada@example.com')))).toEqual({
       provider: 'linkedin',
       accessToken: 'linkedin-token',
       tokenType: 'Bearer',
@@ -159,7 +160,7 @@ describe('useSessionStore', () => {
     expect(Object.keys(store.accounts)).toEqual(['linkedin:ada@example.com'])
     expect(store.isAuthenticated).toBe(true)
     expect(linkedinAccountStore.provider).toBe('linkedin')
-    expect(JSON.parse(window.sessionStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
+    expect(JSON.parse(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
       provider: null,
       accessToken: '',
       tokenType: 'Bearer',
@@ -191,8 +192,8 @@ describe('useSessionStore', () => {
     expect(activeAccountStore.provider).toBeNull()
     expect(activeAccountStore.accessToken).toBe('')
     expect(activeAccountStore.user).toBeNull()
-    expect(window.sessionStorage.getItem(SESSION_STORAGE_SESSION_KEY)).toBeNull()
-    expect(JSON.parse(window.sessionStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
+    expect(window.localStorage.getItem('job-test-vault-session')).toBeNull()
+    expect(JSON.parse(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
       provider: null,
       accessToken: '',
       tokenType: 'Bearer',

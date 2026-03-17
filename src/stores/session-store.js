@@ -5,9 +5,8 @@ import {
   useAccountSessionStore
 } from 'src/stores/account-session-store'
 
-export const SESSION_STORAGE_SESSION_KEY = 'job-test-vault-session'
-
-const sessionPersistStorage = typeof window !== 'undefined' ? window.sessionStorage : null
+const sessionPersistStorage = typeof window !== 'undefined' ? window.localStorage : null
+const legacySessionPersistStorage = typeof window !== 'undefined' ? window.sessionStorage : null
 
 export const useSessionStore = defineStore('session', () => {
   const accounts = ref({})
@@ -39,13 +38,13 @@ export const useSessionStore = defineStore('session', () => {
     return Object.keys(accounts.value)
   }
 
-  function hydrateAccountsFromSessionStorage () {
-    if (!sessionPersistStorage) {
+  function hydrateAccountsFromStorage (storage) {
+    if (!storage) {
       return
     }
 
-    for (let index = 0; index < sessionPersistStorage.length; index += 1) {
-      const key = sessionPersistStorage.key(index)
+    for (let index = 0; index < storage.length; index += 1) {
+      const key = storage.key(index)
 
       if (!key || !key.startsWith(`${ACCOUNT_SESSION_STORAGE_KEY_PREFIX}:`)) {
         continue
@@ -59,7 +58,30 @@ export const useSessionStore = defineStore('session', () => {
     }
   }
 
-  hydrateAccountsFromSessionStorage()
+  function migrateLegacySessionStorageToLocalStorage () {
+    if (!sessionPersistStorage || !legacySessionPersistStorage) {
+      return
+    }
+
+    for (let index = 0; index < legacySessionPersistStorage.length; index += 1) {
+      const key = legacySessionPersistStorage.key(index)
+
+      if (!key || !key.startsWith(`${ACCOUNT_SESSION_STORAGE_KEY_PREFIX}:`)) {
+        continue
+      }
+
+      if (sessionPersistStorage.getItem(key) === null) {
+        const value = legacySessionPersistStorage.getItem(key)
+
+        if (value !== null) {
+          sessionPersistStorage.setItem(key, value)
+        }
+      }
+    }
+  }
+
+  migrateLegacySessionStorageToLocalStorage()
+  hydrateAccountsFromStorage(sessionPersistStorage)
 
   function hasSessionData (store) {
     if (!store || !store.provider || !store.accessToken || !store.user) {
@@ -159,8 +181,7 @@ export const useSessionStore = defineStore('session', () => {
     }
   }
 
-  function setSession (payload) {
-    const accountId = resolveAccountIdentifier(payload)
+  function upsertAccountSession (accountId, payload) {
     const normalizedPayload = normalizeSessionPayload(payload)
     const targetAccountStore = accounts.value[accountId] ?? linkAccountStore(accountId)
 
@@ -171,6 +192,26 @@ export const useSessionStore = defineStore('session', () => {
     targetAccountStore.$patch(normalizedPayload)
   }
 
+  function setSession (payload) {
+    const accountId = resolveAccountIdentifier(payload)
+
+    upsertAccountSession(accountId, payload)
+  }
+
+  function removeAccountSession (accountId) {
+    if (!accountId) {
+      return
+    }
+
+    const removedStore = accounts.value[accountId]
+
+    if (removedStore) {
+      removedStore.clearSession()
+    }
+
+    unlinkAccountStore(accountId)
+  }
+
   function clearSession (accountId) {
     const removedAccountId = accountId ?? linkedAccountIds()[0]
 
@@ -178,13 +219,7 @@ export const useSessionStore = defineStore('session', () => {
       return
     }
 
-    const removedStore = accounts.value[removedAccountId]
-
-    if (removedStore) {
-      removedStore.clearSession()
-    }
-
-    unlinkAccountStore(removedAccountId)
+    removeAccountSession(removedAccountId)
   }
 
   function clearAllSessions () {

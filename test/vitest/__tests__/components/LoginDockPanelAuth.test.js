@@ -14,6 +14,7 @@ function findButtonByLabel (wrapper, label) {
 
 describe('LoginDockPanel auth flow', () => {
   beforeEach(() => {
+    window.localStorage.clear()
     window.sessionStorage.clear()
   })
 
