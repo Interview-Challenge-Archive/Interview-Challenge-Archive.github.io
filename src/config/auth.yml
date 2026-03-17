@@ -1,0 +1,19 @@
+auth:
+  serviceOrigin: "https://interview-challenge-archive.raimondas-cc6.workers.dev"
+  messageSource: "interview-challenge-archive-auth"
+  popup:
+    name: "interview-challenge-archive-auth"
+    width: 560
+    height: 720
+    statusCheckMs: 250
+  providers:
+    github:
+      id: "github"
+      label: "GitHub"
+      icon: "fa-brands fa-github"
+      loginUrl: "https://interview-challenge-archive.raimondas-cc6.workers.dev/login/github"
+    linkedin:
+      id: "linkedin"
+      label: "LinkedIn"
+      icon: "fa-brands fa-linkedin"
+      loginUrl: "https://interview-challenge-archive.raimondas-cc6.workers.dev/login/linkedin"

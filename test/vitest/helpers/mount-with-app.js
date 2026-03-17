@@ -164,9 +164,48 @@ const messages = {
         action: 'Prepare submission'
       },
       login: {
-        label: 'Login', title: 'Login to your account',
-        description: 'Access saved submissions, favorites, and your personal activity.',
-        email: 'Email', password: 'Password', action: 'Login'
+        label: 'Login',
+        title: 'Login to your account',
+        description: 'Connect GitHub or LinkedIn to keep your archive session in the current browser tab.',
+        helper: 'OAuth opens in a secure popup and stores your session for this tab only.',
+        actions: {
+          loginWith: 'Login with {provider}'
+        },
+        status: {
+          connected: 'Connected with {provider}.'
+        },
+        errors: {
+          blocked: 'The login popup was blocked. Allow popups and try again.',
+          cancelled: 'The login flow was closed before it finished.',
+          failed: 'Login failed. Please try again.'
+        },
+        session: {
+          connectedAs: 'Signed in for this tab',
+          provider: 'Provider: {provider}',
+          tokenStored: 'Session token stored in the tab session.'
+        },
+        logout: 'Logout'
+      },
+      account: {
+        label: 'Account',
+        title: 'Account',
+        description: 'Manage connected providers and switch account sessions from one place.',
+        connectedAccounts: 'Connected accounts',
+        logout: 'Logout',
+        unknownProvider: 'Unknown provider',
+        actions: {
+          connect: 'Connect',
+          disconnect: 'Disconnect'
+        },
+        rows: {
+          connected: 'Connected',
+          expired: 'Session expired',
+          notConnected: 'Not connected'
+        },
+        status: {
+          connected: 'Connected with {provider}.',
+          disconnected: 'Disconnected {provider}.'
+        }
       },
       about: {
         label: 'About', title: 'About Interview Challenge Archive',

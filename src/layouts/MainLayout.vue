@@ -51,8 +51,12 @@
                 <SubmitDockPanel />
               </q-tab-panel>
 
-              <q-tab-panel name="login" class="q-pa-none">
+              <q-tab-panel v-if="!isAuthenticated" name="login" class="q-pa-none">
                 <LoginDockPanel />
+              </q-tab-panel>
+
+              <q-tab-panel v-if="isAuthenticated" name="account" class="q-pa-none">
+                <AccountDockPanel />
               </q-tab-panel>
 
               <q-tab-panel name="about" class="q-pa-none">
@@ -187,8 +191,12 @@
               <SubmitDockPanel />
             </q-tab-panel>
 
-            <q-tab-panel name="login" class="q-pa-none">
+            <q-tab-panel v-if="!isAuthenticated" name="login" class="q-pa-none">
               <LoginDockPanel />
+            </q-tab-panel>
+
+            <q-tab-panel v-if="isAuthenticated" name="account" class="q-pa-none">
+              <AccountDockPanel />
             </q-tab-panel>
 
             <q-tab-panel name="about" class="q-pa-none">
@@ -202,26 +210,32 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import AboutDockPanel from 'src/components/dock-panels/AboutDockPanel.vue'
+import AccountDockPanel from 'src/components/dock-panels/AccountDockPanel.vue'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
 import SearchDockPanel from 'src/components/dock-panels/SearchDockPanel.vue'
 import SubmitDockPanel from 'src/components/dock-panels/SubmitDockPanel.vue'
+import { useSessionStore } from 'src/stores/session-store'
 
 const $q = useQuasar()
 const { t } = useI18n()
 const route = useRoute()
+const sessionStore = useSessionStore()
 
 const expandedTab = ref(null)
 const mobileMenuOpen = ref(false)
+const isAuthenticated = computed(() => sessionStore.isAuthenticated)
 
 const dockTabs = computed(() => [
   { name: 'search', label: t('dock.search.label') },
   { name: 'submit', label: t('dock.submit.label') },
-  { name: 'login', label: t('dock.login.label') },
+  isAuthenticated.value
+    ? { name: 'account', label: t('dock.account.label') }
+    : { name: 'login', label: t('dock.login.label') },
   { name: 'about', label: t('dock.about.label') }
 ])
 
@@ -260,6 +274,16 @@ function selectDockTab (tabName) {
 function closeActiveTab () {
   expandedTab.value = null
 }
+
+watch(isAuthenticated, (authenticated) => {
+  if (authenticated && expandedTab.value === 'login') {
+    expandedTab.value = 'account'
+  }
+
+  if (!authenticated && expandedTab.value === 'account') {
+    expandedTab.value = 'login'
+  }
+})
 </script>
 
 <style scoped lang="scss">

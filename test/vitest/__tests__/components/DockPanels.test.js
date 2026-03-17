@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import AboutDockPanel from 'src/components/dock-panels/AboutDockPanel.vue'
+import AccountDockPanel from 'src/components/dock-panels/AccountDockPanel.vue'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
 import SubmitDockPanel from 'src/components/dock-panels/SubmitDockPanel.vue'
+import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 describe('AboutDockPanel', () => {
@@ -15,17 +18,49 @@ describe('AboutDockPanel', () => {
 })
 
 describe('LoginDockPanel', () => {
-  it('renders translated fields and the login action', () => {
+  it('renders OAuth actions for GitHub and LinkedIn', () => {
     const wrapper = mountWithApp(LoginDockPanel)
-    const inputs = wrapper.findAllComponents({ name: 'QInput' })
-    const action = wrapper.findComponent({ name: 'QBtn' })
+    const actions = wrapper.findAllComponents({ name: 'QBtn' })
 
     expect(wrapper.text()).toContain('Login to your account')
-    expect(wrapper.text()).toContain('Access saved submissions, favorites, and your personal activity.')
-    expect(inputs).toHaveLength(2)
-    expect(inputs.map((input) => input.props('label'))).toEqual(['Email', 'Password'])
-    expect(inputs.map((input) => input.props('type'))).toEqual(['email', 'password'])
-    expect(action.props('label')).toBe('Login')
+    expect(wrapper.text()).toContain('Connect GitHub or LinkedIn to keep your archive session in the current browser tab.')
+    expect(actions.map((action) => action.props('label'))).toEqual([
+      'GitHub',
+      'LinkedIn'
+    ])
+    expect(actions.map((action) => action.props('icon'))).toEqual([
+      'fa-brands fa-github',
+      'fa-brands fa-linkedin'
+    ])
+  })
+})
+
+describe('AccountDockPanel', () => {
+  it('renders connected accounts list with disconnect and connect actions', () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const sessionStore = useSessionStore(pinia)
+    sessionStore.setSession({
+      provider: 'github',
+      accessToken: 'github-access-token',
+      user: {
+        login: 'octocat',
+        name: 'The Octocat',
+        email: 'octocat@github.local'
+      }
+    })
+
+    const wrapper = mountWithApp(AccountDockPanel, { pinia })
+    const actions = wrapper.findAllComponents({ name: 'QBtn' }).map((button) => button.props('label'))
+
+    expect(wrapper.text()).toContain('Account')
+    expect(wrapper.text()).toContain('Connected accounts')
+    expect(wrapper.text()).toContain('GitHub')
+    expect(wrapper.text()).toContain('The Octocat')
+    expect(actions).toContain('Logout')
+    expect(actions).toContain('Disconnect')
+    expect(actions).toContain('Connect')
   })
 })
 

@@ -27,7 +27,7 @@ export default defineConfig((ctx) => {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v7',
-      // 'fontawesome-v6',
+      'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -64,7 +64,7 @@ export default defineConfig((ctx) => {
       // viteVuePluginOptions: {},
 
       vitePlugins: [
-        yaml({ include: ['**/src/config/feature-flags.yml', '**/src/config/colors.yml'] }),
+        yaml({ include: ['**/src/config/feature-flags.yml', '**/src/config/colors.yml', '**/src/config/auth.yml'] }),
 
         ['@intlify/unplugin-vue-i18n/vite', {
           // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
