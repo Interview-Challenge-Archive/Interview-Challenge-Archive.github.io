@@ -161,6 +161,8 @@ dock:
       provider: 'Provider: {provider}'
       tokenStored: Session token stored in the tab session.
     logout: Logout
+  account:
+    label: Account
   about:
     label: About
     title: About Interview Challenge Archive

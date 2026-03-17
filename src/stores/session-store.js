@@ -1,100 +1,213 @@
 import { computed, ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import {
+  ACCOUNT_SESSION_STORAGE_KEY_PREFIX,
+  useAccountSessionStore
+} from 'src/stores/account-session-store'
 
 export const SESSION_STORAGE_SESSION_KEY = 'job-test-vault-session'
 
 const sessionPersistStorage = typeof window !== 'undefined' ? window.sessionStorage : null
 
 export const useSessionStore = defineStore('session', () => {
-  const provider = ref(null)
-  const accessToken = ref('')
-  const tokenType = ref('Bearer')
-  const scope = ref('')
-  const expiresIn = ref(null)
-  const authenticatedAt = ref(null)
-  const user = ref(null)
+  const accounts = ref({})
+  const sessionContext = {}
 
-  const isAuthenticated = computed(() => Boolean(provider.value && accessToken.value && user.value))
-  const displayName = computed(() => {
-    const account = user.value
+  function linkAccountStore (accountId) {
+    const linkedStore = useAccountSessionStore(sessionContext, accountId)
 
-    if (!account || typeof account !== 'object') {
-      return ''
+    if (!linkedStore) {
+      return null
     }
 
-    return [account.given_name, account.family_name].filter(Boolean).join(' ')
-      || account.name
-      || account.login
-      || account.email
-      || account.sub
-      || ''
-  })
-  const email = computed(() => {
-    const account = user.value
+    accounts.value = {
+      ...accounts.value,
+      [accountId]: linkedStore
+    }
 
-    return account && typeof account === 'object' && typeof account.email === 'string'
-      ? account.email
-      : ''
-  })
-  const avatarUrl = computed(() => {
-    const account = user.value
-
-    return account && typeof account === 'object'
-      ? account.avatar_url || account.picture || ''
-      : ''
-  })
-  const loginHandle = computed(() => {
-    const account = user.value
-
-    return account && typeof account === 'object' && typeof account.login === 'string'
-      ? account.login
-      : ''
-  })
-
-  function setSession (session) {
-    provider.value = session.provider ?? null
-    accessToken.value = session.accessToken ?? ''
-    tokenType.value = session.tokenType ?? 'Bearer'
-    scope.value = session.scope ?? ''
-    expiresIn.value = Number.isFinite(session.expiresIn) ? session.expiresIn : null
-    authenticatedAt.value = session.authenticatedAt ?? new Date().toISOString()
-    user.value = session.user ?? null
+    return linkedStore
   }
 
-  function clearSession () {
-    provider.value = null
-    accessToken.value = ''
-    tokenType.value = 'Bearer'
-    scope.value = ''
-    expiresIn.value = null
-    authenticatedAt.value = null
-    user.value = null
+  function unlinkAccountStore (accountId) {
+    const nextAccounts = { ...accounts.value }
+
+    delete nextAccounts[accountId]
+    accounts.value = nextAccounts
+  }
+
+  function linkedAccountIds () {
+    return Object.keys(accounts.value)
+  }
+
+  function hydrateAccountsFromSessionStorage () {
+    if (!sessionPersistStorage) {
+      return
+    }
+
+    for (let index = 0; index < sessionPersistStorage.length; index += 1) {
+      const key = sessionPersistStorage.key(index)
+
+      if (!key || !key.startsWith(`${ACCOUNT_SESSION_STORAGE_KEY_PREFIX}:`)) {
+        continue
+      }
+
+      const accountId = key.slice(`${ACCOUNT_SESSION_STORAGE_KEY_PREFIX}:`.length)
+
+      if (accountId) {
+        linkAccountStore(accountId)
+      }
+    }
+  }
+
+  hydrateAccountsFromSessionStorage()
+
+  function hasSessionData (store) {
+    if (!store || !store.provider || !store.accessToken || !store.user) {
+      return false
+    }
+
+    return true
+  }
+
+  function resolveExpirationTimestamp (store) {
+    if (!hasSessionData(store)) {
+      return null
+    }
+
+    if (!Number.isFinite(store.expiresIn) || store.expiresIn <= 0) {
+      return null
+    }
+
+    const authenticatedAtMs = Date.parse(store.authenticatedAt)
+
+    if (!Number.isFinite(authenticatedAtMs)) {
+      return null
+    }
+
+    return authenticatedAtMs + (store.expiresIn * 1000)
+  }
+
+  const nearestExpirationAt = computed(() => {
+    let nearestExpirationTimestamp = null
+    const now = Date.now()
+
+    for (const accountStore of Object.values(accounts.value)) {
+      const expirationTimestamp = resolveExpirationTimestamp(accountStore)
+
+      if (!Number.isFinite(expirationTimestamp) || expirationTimestamp <= now) {
+        continue
+      }
+
+      if (nearestExpirationTimestamp === null || expirationTimestamp < nearestExpirationTimestamp) {
+        nearestExpirationTimestamp = expirationTimestamp
+      }
+    }
+
+    return nearestExpirationTimestamp === null
+      ? null
+      : new Date(nearestExpirationTimestamp).toISOString()
+  })
+
+  const hasNonExpiringSession = computed(() => {
+    for (const accountStore of Object.values(accounts.value)) {
+      if (!hasSessionData(accountStore)) {
+        continue
+      }
+
+      if (!Number.isFinite(accountStore.expiresIn) || accountStore.expiresIn <= 0) {
+        return true
+      }
+    }
+
+    return false
+  })
+
+  const isAuthenticated = computed(() => {
+    if (nearestExpirationAt.value !== null) {
+      return true
+    }
+
+    return hasNonExpiringSession.value
+  })
+
+  function resolveAccountIdentifier (payload) {
+    const providerId = typeof payload.provider === 'string' ? payload.provider.trim() : ''
+    const account = payload.user && typeof payload.user === 'object' ? payload.user : null
+    const accountId = account
+      ? account.sub || account.id || account.login || account.email
+      : null
+    const normalizedAccountId = typeof accountId === 'string' || typeof accountId === 'number'
+      ? String(accountId).trim()
+      : ''
+
+    if (providerId && normalizedAccountId) {
+      return `${providerId}:${normalizedAccountId}`
+    }
+
+    return providerId || normalizedAccountId || `account:${Date.now()}`
+  }
+
+  function normalizeSessionPayload (payload) {
+    return {
+      provider: payload.provider ?? null,
+      accessToken: payload.accessToken ?? '',
+      tokenType: payload.tokenType ?? 'Bearer',
+      scope: payload.scope ?? '',
+      expiresIn: Number.isFinite(payload.expiresIn) ? payload.expiresIn : null,
+      authenticatedAt: payload.authenticatedAt ?? new Date().toISOString(),
+      user: payload.user ?? null
+    }
+  }
+
+  function setSession (payload) {
+    const accountId = resolveAccountIdentifier(payload)
+    const normalizedPayload = normalizeSessionPayload(payload)
+    const targetAccountStore = accounts.value[accountId] ?? linkAccountStore(accountId)
+
+    if (!targetAccountStore) {
+      return
+    }
+
+    targetAccountStore.$patch(normalizedPayload)
+  }
+
+  function clearSession (accountId) {
+    const removedAccountId = accountId ?? linkedAccountIds()[0]
+
+    if (!removedAccountId) {
+      return
+    }
+
+    const removedStore = accounts.value[removedAccountId]
+
+    if (removedStore) {
+      removedStore.clearSession()
+    }
+
+    unlinkAccountStore(removedAccountId)
+  }
+
+  function clearAllSessions () {
+    for (const store of Object.values(accounts.value)) {
+      store.clearSession()
+    }
+
+    accounts.value = {}
+  }
+
+  function logout () {
+    clearAllSessions()
   }
 
   return {
-    provider,
-    accessToken,
-    tokenType,
-    scope,
-    expiresIn,
-    authenticatedAt,
-    user,
+    accounts,
+    nearestExpirationAt,
     isAuthenticated,
-    displayName,
-    email,
-    avatarUrl,
-    loginHandle,
     setSession,
-    clearSession
+    logout,
+    clearSession,
+    clearAllSessions
   }
-}, {
-  persist: sessionPersistStorage
-    ? {
-        key: SESSION_STORAGE_SESSION_KEY,
-        storage: sessionPersistStorage,
-        pick: ['provider', 'accessToken', 'tokenType', 'scope', 'expiresIn', 'authenticatedAt', 'user']
-      }
-    : false
 })
 
 if (import.meta.hot) {

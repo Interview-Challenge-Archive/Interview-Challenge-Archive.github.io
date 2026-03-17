@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import appConfig from 'src/config/auth.yml'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
+import { useAccountSessionStore } from 'src/stores/account-session-store'
 import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
@@ -70,11 +71,12 @@ describe('LoginDockPanel auth flow', () => {
     await nextTick()
 
     const sessionStore = useSessionStore(pinia)
+    const accountStore = useAccountSessionStore(sessionStore, 'github:octocat', pinia)
 
     expect(sessionStore.isAuthenticated).toBe(true)
-    expect(sessionStore.provider).toBe('github')
-    expect(sessionStore.accessToken).toBe('github-access-token')
-    expect(sessionStore.displayName).toBe('The Octocat')
+    expect(accountStore.provider).toBe('github')
+    expect(accountStore.accessToken).toBe('github-access-token')
+    expect(accountStore.displayName).toBe('The Octocat')
     expect(wrapper.text()).toContain('Connected with GitHub.')
     expect(wrapper.text()).toContain('The Octocat')
     expect(popup.close).toHaveBeenCalledTimes(1)

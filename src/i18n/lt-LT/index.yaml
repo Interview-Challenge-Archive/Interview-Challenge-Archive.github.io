@@ -161,6 +161,8 @@ dock:
       provider: 'Tiekėjas: {provider}'
       tokenStored: Sesijos tokenas išsaugotas kortelės sesijoje.
     logout: Atsijungti
+  account:
+    label: Paskyra
   about:
     label: About
     title: Apie Job Test Vault

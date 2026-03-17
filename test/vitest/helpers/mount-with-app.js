@@ -186,6 +186,9 @@ const messages = {
         },
         logout: 'Logout'
       },
+      account: {
+        label: 'Account'
+      },
       about: {
         label: 'About', title: 'About Interview Challenge Archive',
         description: 'Interview Challenge Archive is a place to collect, organize, and review interview and hiring task material.',

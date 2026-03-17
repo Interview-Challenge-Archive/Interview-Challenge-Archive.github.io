@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import MainLayout from 'src/layouts/MainLayout.vue'
+import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 const { routeState } = vi.hoisted(() => ({
@@ -41,6 +43,24 @@ function mountLayout (query = {}) {
   })
 }
 
+function createAuthenticatedPinia () {
+  const pinia = createPinia()
+
+  setActivePinia(pinia)
+  const sessionStore = useSessionStore(pinia)
+
+  sessionStore.setSession({
+    provider: 'github',
+    accessToken: 'github-access-token',
+    user: {
+      login: 'octocat',
+      name: 'The Octocat'
+    }
+  })
+
+  return pinia
+}
+
 describe('MainLayout', () => {
   afterEach(() => {
     routeState.query = {}
@@ -63,5 +83,34 @@ describe('MainLayout', () => {
 
     expect(wrapper.find('.bottom-dock__tab--active').exists()).toBe(true)
     expect(wrapper.find('.bottom-dock__panel-close').exists()).toBe(false)
+  })
+
+  it('shows Login tab and hides Account tab for unauthenticated users', () => {
+    const wrapper = mountLayout()
+    const tabLabels = wrapper.findAll('.bottom-dock__tab-label').map((node) => node.text())
+
+    expect(tabLabels).toContain('Login')
+    expect(tabLabels).not.toContain('Account')
+  })
+
+  it('shows Account tab and hides Login tab for authenticated users', () => {
+    const pinia = createAuthenticatedPinia()
+    const wrapper = mountWithApp(MainLayout, {
+      pinia,
+      global: {
+        stubs: {
+          RouterLink: { template: '<a><slot /></a>' },
+          RouterView: true,
+          SearchDockPanel: true,
+          SubmitDockPanel: true,
+          LoginDockPanel: true,
+          AboutDockPanel: true
+        }
+      }
+    })
+    const tabLabels = wrapper.findAll('.bottom-dock__tab-label').map((node) => node.text())
+
+    expect(tabLabels).toContain('Account')
+    expect(tabLabels).not.toContain('Login')
   })
 })

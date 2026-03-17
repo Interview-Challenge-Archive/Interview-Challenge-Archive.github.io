@@ -52,7 +52,6 @@
 
 <script setup>
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import appConfig from 'src/config/auth.yml'
 import { useSessionStore } from 'src/stores/session-store'
@@ -60,7 +59,13 @@ import { useSessionStore } from 'src/stores/session-store'
 const { t } = useI18n()
 
 const sessionStore = useSessionStore()
-const { avatarUrl, displayName, email, isAuthenticated, loginHandle, provider } = storeToRefs(sessionStore)
+const activeAccountStore = computed(() => Object.values(sessionStore.accounts)[0] ?? null)
+const isAuthenticated = computed(() => sessionStore.isAuthenticated)
+const avatarUrl = computed(() => activeAccountStore.value?.avatarUrl ?? '')
+const displayName = computed(() => activeAccountStore.value?.displayName ?? '')
+const email = computed(() => activeAccountStore.value?.email ?? '')
+const loginHandle = computed(() => activeAccountStore.value?.loginHandle ?? '')
+const provider = computed(() => activeAccountStore.value?.provider ?? null)
 
 const activeProviderId = ref(null)
 const statusMessage = ref('')
@@ -202,7 +207,7 @@ function logout () {
   activeProviderId.value = null
   statusMessage.value = ''
   statusTone.value = 'info'
-  sessionStore.clearSession()
+  sessionStore.logout()
 }
 
 onBeforeUnmount(() => {
