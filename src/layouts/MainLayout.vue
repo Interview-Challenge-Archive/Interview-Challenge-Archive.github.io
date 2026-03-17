@@ -56,7 +56,7 @@
               </q-tab-panel>
 
               <q-tab-panel v-if="isAuthenticated" name="account" class="q-pa-none">
-                <LoginDockPanel />
+                <AccountDockPanel />
               </q-tab-panel>
 
               <q-tab-panel name="about" class="q-pa-none">
@@ -196,7 +196,7 @@
             </q-tab-panel>
 
             <q-tab-panel v-if="isAuthenticated" name="account" class="q-pa-none">
-              <LoginDockPanel />
+              <AccountDockPanel />
             </q-tab-panel>
 
             <q-tab-panel name="about" class="q-pa-none">
@@ -215,6 +215,7 @@ import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import AboutDockPanel from 'src/components/dock-panels/AboutDockPanel.vue'
+import AccountDockPanel from 'src/components/dock-panels/AccountDockPanel.vue'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
 import SearchDockPanel from 'src/components/dock-panels/SearchDockPanel.vue'
 import SubmitDockPanel from 'src/components/dock-panels/SubmitDockPanel.vue'

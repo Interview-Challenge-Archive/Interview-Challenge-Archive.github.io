@@ -169,15 +169,25 @@ export const useSessionStore = defineStore('session', () => {
     return providerId || normalizedAccountId || `account:${Date.now()}`
   }
 
+  function normalizeExpiresIn (value) {
+    const numericValue = Number(value)
+
+    if (!Number.isFinite(numericValue)) {
+      return null
+    }
+
+    return numericValue
+  }
+
   function normalizeSessionPayload (payload) {
     return {
-      provider: payload.provider ?? null,
-      accessToken: payload.accessToken ?? '',
-      tokenType: payload.tokenType ?? 'Bearer',
-      scope: payload.scope ?? '',
-      expiresIn: Number.isFinite(payload.expiresIn) ? payload.expiresIn : null,
-      authenticatedAt: payload.authenticatedAt ?? new Date().toISOString(),
-      user: payload.user ?? null
+      provider: payload.provider ?? payload.providerId ?? null,
+      accessToken: payload.accessToken ?? payload.access_token ?? payload.token ?? '',
+      tokenType: payload.tokenType ?? payload.token_type ?? 'Bearer',
+      scope: payload.scope ?? payload.scopes ?? '',
+      expiresIn: normalizeExpiresIn(payload.expiresIn ?? payload.expires_in),
+      authenticatedAt: payload.authenticatedAt ?? payload.authenticated_at ?? new Date().toISOString(),
+      user: payload.user ?? payload.profile ?? payload.account ?? null
     }
   }
 
@@ -193,9 +203,10 @@ export const useSessionStore = defineStore('session', () => {
   }
 
   function setSession (payload) {
-    const accountId = resolveAccountIdentifier(payload)
+    const normalizedPayload = normalizeSessionPayload(payload)
+    const accountId = resolveAccountIdentifier(normalizedPayload)
 
-    upsertAccountSession(accountId, payload)
+    upsertAccountSession(accountId, normalizedPayload)
   }
 
   function removeAccountSession (accountId) {

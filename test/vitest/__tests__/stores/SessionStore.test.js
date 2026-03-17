@@ -247,4 +247,32 @@ describe('useSessionStore', () => {
     expect(Object.keys(store.accounts)).toEqual([])
     expect(store.isAuthenticated).toBe(false)
   })
+
+  it('normalizes snake_case OAuth payload fields used by some providers', async () => {
+    const store = createSessionStore()
+    const authenticatedAt = new Date().toISOString()
+
+    store.setSession({
+      provider: 'linkedin',
+      access_token: 'linkedin-snake-token',
+      token_type: 'Bearer',
+      expires_in: '3600',
+      authenticated_at: authenticatedAt,
+      profile: {
+        sub: 'linkedin-user-id',
+        name: 'Linked In User'
+      }
+    })
+    await nextTick()
+    const linkedinAccountStore = useAccountSessionStore(store, 'linkedin:linkedin-user-id')
+
+    expect(store.isAuthenticated).toBe(true)
+    expect(linkedinAccountStore.accessToken).toBe('linkedin-snake-token')
+    expect(linkedinAccountStore.tokenType).toBe('Bearer')
+    expect(linkedinAccountStore.expiresIn).toBe(3600)
+    expect(linkedinAccountStore.user).toEqual({
+      sub: 'linkedin-user-id',
+      name: 'Linked In User'
+    })
+  })
 })

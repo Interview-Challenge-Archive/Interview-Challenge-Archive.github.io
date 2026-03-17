@@ -163,6 +163,21 @@ dock:
     logout: Atsijungti
   account:
     label: Paskyra
+    title: Paskyra
+    description: Valdykite prijungtus tiekėjus ir paskyrų sesijas vienoje vietoje.
+    connectedAccounts: Prijungtos paskyros
+    logout: Atsijungti
+    unknownProvider: Nežinomas tiekėjas
+    actions:
+      connect: Prisijungti
+      disconnect: Atjungti
+    rows:
+      connected: Prijungta
+      expired: Sesija pasibaigė
+      notConnected: Neprijungta
+    status:
+      connected: Prisijungta per {provider}.
+      disconnected: Atjungta {provider}.
   about:
     label: About
     title: Apie Job Test Vault

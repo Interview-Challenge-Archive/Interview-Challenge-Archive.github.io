@@ -187,7 +187,25 @@ const messages = {
         logout: 'Logout'
       },
       account: {
-        label: 'Account'
+        label: 'Account',
+        title: 'Account',
+        description: 'Manage connected providers and switch account sessions from one place.',
+        connectedAccounts: 'Connected accounts',
+        logout: 'Logout',
+        unknownProvider: 'Unknown provider',
+        actions: {
+          connect: 'Connect',
+          disconnect: 'Disconnect'
+        },
+        rows: {
+          connected: 'Connected',
+          expired: 'Session expired',
+          notConnected: 'Not connected'
+        },
+        status: {
+          connected: 'Connected with {provider}.',
+          disconnected: 'Disconnected {provider}.'
+        }
       },
       about: {
         label: 'About', title: 'About Interview Challenge Archive',

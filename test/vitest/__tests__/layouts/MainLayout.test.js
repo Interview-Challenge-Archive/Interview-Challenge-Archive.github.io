@@ -37,6 +37,7 @@ function mountLayout (query = {}) {
         SearchDockPanel: true,
         SubmitDockPanel: true,
         LoginDockPanel: true,
+        AccountDockPanel: true,
         AboutDockPanel: true
       }
     }
@@ -104,6 +105,7 @@ describe('MainLayout', () => {
           SearchDockPanel: true,
           SubmitDockPanel: true,
           LoginDockPanel: true,
+          AccountDockPanel: true,
           AboutDockPanel: true
         }
       }
