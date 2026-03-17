@@ -69,4 +69,53 @@ describe('AccountDockPanel', () => {
     expect(Object.keys(sessionStore.accounts)).toHaveLength(0)
     expect(sessionStore.isAuthenticated).toBe(false)
   })
+
+  it('does not duplicate provider rows when provider account exists but is expired', () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const sessionStore = useSessionStore(pinia)
+    sessionStore.setSession({
+      provider: 'linkedin',
+      accessToken: 'expired-linkedin-token',
+      tokenType: 'Bearer',
+      expiresIn: 60,
+      authenticatedAt: '2020-01-01T00:00:00.000Z',
+      user: {
+        email: 'old@example.com',
+        name: 'Old LinkedIn'
+      }
+    })
+
+    const wrapper = mountWithApp(AccountDockPanel, { pinia })
+    const linkedinRows = wrapper.findAll('.account-dock-panel__row')
+      .filter((row) => row.text().includes('LinkedIn'))
+
+    expect(linkedinRows).toHaveLength(1)
+  })
+
+  it('shows connect action for an expired provider account row', () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const sessionStore = useSessionStore(pinia)
+    sessionStore.setSession({
+      provider: 'linkedin',
+      accessToken: 'expired-linkedin-token',
+      tokenType: 'Bearer',
+      expiresIn: 60,
+      authenticatedAt: '2020-01-01T00:00:00.000Z',
+      user: {
+        email: 'old@example.com',
+        name: 'Old LinkedIn'
+      }
+    })
+
+    const wrapper = mountWithApp(AccountDockPanel, { pinia })
+    const linkedinRow = wrapper.findAll('.account-dock-panel__row')
+      .find((row) => row.text().includes('LinkedIn'))
+    const actionButton = linkedinRow?.findAllComponents({ name: 'QBtn' })[0]
+
+    expect(actionButton?.props('label')).toBe('Connect')
+  })
 })
