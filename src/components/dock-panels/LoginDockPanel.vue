@@ -30,7 +30,7 @@
       {{ statusMessage }}
     </div>
 
-    <div class="column q-gutter-sm q-mb-md">
+    <div class="login-dock-panel__actions q-mb-md">
       <q-btn
         v-for="providerConfig in authProviders"
         :key="providerConfig.id"
@@ -38,7 +38,8 @@
         no-caps
         color="dark"
         class="login-dock-panel__provider"
-        :label="t('dock.login.actions.loginWith', { provider: providerConfig.label })"
+        :label="providerConfig.label"
+        :icon="providerConfig.icon"
         :loading="activeProviderId === providerConfig.id"
         :disable="Boolean(activeProviderId) && activeProviderId !== providerConfig.id"
         @click="startLogin(providerConfig)"
@@ -217,5 +218,24 @@ onBeforeUnmount(() => {
 .login-dock-panel__provider {
   justify-content: flex-start;
   min-height: 48px;
+  width: 100%;
+}
+
+.login-dock-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 600px) {
+  .login-dock-panel__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .login-dock-panel__provider {
+    flex: 0 1 180px;
+    width: 180px;
+  }
 }
 </style>

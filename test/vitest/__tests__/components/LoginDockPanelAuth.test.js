@@ -31,7 +31,9 @@ describe('LoginDockPanel auth flow', () => {
     setActivePinia(pinia)
 
     const wrapper = mountWithApp(LoginDockPanel, { pinia })
-    const githubButton = findButtonByLabel(wrapper, 'Login with GitHub')
+    const githubButton = findButtonByLabel(wrapper, 'GitHub')
+
+    expect(githubButton.props('icon')).toBe(appConfig.auth.providers.github.icon)
 
     githubButton.vm.$emit('click')
     await nextTick()

@@ -10,8 +10,10 @@ auth:
     github:
       id: "github"
       label: "GitHub"
+      icon: "fa-brands fa-github"
       loginUrl: "https://interview-challenge-archive.raimondas-cc6.workers.dev/login/github"
     linkedin:
       id: "linkedin"
       label: "LinkedIn"
+      icon: "fa-brands fa-linkedin"
       loginUrl: "https://interview-challenge-archive.raimondas-cc6.workers.dev/login/linkedin"

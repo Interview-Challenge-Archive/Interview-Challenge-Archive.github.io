@@ -22,8 +22,12 @@ describe('LoginDockPanel', () => {
     expect(wrapper.text()).toContain('Login to your account')
     expect(wrapper.text()).toContain('Connect GitHub or LinkedIn to keep your archive session in the current browser tab.')
     expect(actions.map((action) => action.props('label'))).toEqual([
-      'Login with GitHub',
-      'Login with LinkedIn'
+      'GitHub',
+      'LinkedIn'
+    ])
+    expect(actions.map((action) => action.props('icon'))).toEqual([
+      'fa-brands fa-github',
+      'fa-brands fa-linkedin'
     ])
   })
 })
