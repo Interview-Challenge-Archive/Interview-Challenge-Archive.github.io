@@ -9,74 +9,12 @@
           :is="container.component"
           :class="container.class"
         >
-          <div class="about-dock-panel__description text-body2 text-grey-8">
-            <p
-              v-for="(paragraph, paragraphIndex) in descriptionParagraphs"
-              :key="`${container.key}-${paragraphIndex}`"
-              class="q-mb-md"
-            >
-              <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${container.key}-${paragraphIndex}-${tokenIndex}`">
-                <template v-if="token.type === 'text'">
-                  {{ token.value }}
-                </template>
-                <template v-else-if="token.type === 'aiTools'">
-                  <template v-for="(tool, toolIndex) in aiTools" :key="`${container.key}-${tool.name}`">
-                    <a
-                      class="about-dock-panel__tool-link text-dark"
-                      :href="tool.url"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {{ tool.name }}
-                    </a>
-                    <span v-if="toolIndex < aiTools.length - 1">, </span>
-                  </template>
-                </template>
-                <template v-else-if="token.type === 'social'">
-                  <a
-                    class="about-dock-panel__tool-link text-dark"
-                    :href="resolveSocialLink(token.value)?.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    v-if="resolveSocialLink(token.value)?.url"
-                  >
-                    {{ resolveSocialLink(token.value).label }}
-                  </a>
-                  <template v-else>
-                    {{ token.value === 'github' ? 'GitHub' : 'LinkedIn' }}
-                  </template>
-                </template>
-                <template v-else-if="token.type === 'primaryAuthor'">
-                  <a
-                    v-if="primaryAuthor.profileUrl"
-                    class="about-dock-panel__author-link text-dark"
-                    :href="primaryAuthor.profileUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {{ primaryAuthor.displayName }}
-                  </a>
-                  <template v-else>
-                    {{ primaryAuthor.displayName }}
-                  </template>
-                </template>
-                <template v-else-if="token.type === 'multiverse'">
-                  <a
-                    class="about-dock-panel__tool-link text-dark"
-                    :href="multiverseLink.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    v-if="multiverseLink?.url"
-                  >
-                    {{ multiverseLink.label || 'Multiverse theme by HTML5 UP' }}
-                  </a>
-                  <template v-else>
-                    Multiverse theme by HTML5 UP
-                  </template>
-                </template>
-              </template>
-            </p>
-          </div>
+          <QMarkdown
+            class="about-dock-panel__description text-body2 text-grey-8"
+            :src="descriptionMarkdown"
+            no-html
+            no-heading-anchor-links
+          />
         </component>
       </div>
 
@@ -93,17 +31,13 @@
 import { computed } from 'vue'
 import { QScrollArea } from 'quasar'
 import { useI18n } from 'vue-i18n'
+import { QMarkdown } from '@quasar/quasar-ui-qmarkdown'
+import '@quasar/quasar-ui-qmarkdown/dist/index.css'
 import aboutConfig from 'src/config/about.yml'
 import SocialNetworkLinks from 'src/components/dock-panels/SocialNetworkLinks.vue'
 import packageInfo from '../../../package.json'
 
 const { t } = useI18n()
-const aiToolsPlaceholder = '__AI_TOOLS__'
-const githubPlaceholder = '__GITHUB__'
-const linkedinPlaceholder = '__LINKEDIN__'
-const primaryAuthorPlaceholder = '__PRIMARY_AUTHOR__'
-const multiversePlaceholder = '__MULTIVERSE__'
-const placeholderPattern = /(__AI_TOOLS__|__GITHUB__|__LINKEDIN__|__PRIMARY_AUTHOR__|__MULTIVERSE__)/
 const descriptionContainers = [
   {
     key: 'desktop',
@@ -118,13 +52,10 @@ const descriptionContainers = [
 ]
 
 const socialLinks = computed(() => Object.values(aboutConfig.about.socialLinks ?? {}))
+const descriptionLinks = aboutConfig.about.descriptionLinks ?? {}
+const githubDescriptionLink = descriptionLinks.github ?? {}
+const linkedinDescriptionLink = descriptionLinks.linkedin ?? {}
 const multiverseLink = aboutConfig.about.referenceLinks?.multiverse ?? {}
-const socialLinkMap = computed(() =>
-  socialLinks.value.reduce((result, socialLink) => {
-    result[socialLink.id] = socialLink
-    return result
-  }, {})
-)
 const primaryAuthor = normalizeAuthor(packageInfo.author)
 const aiTools = computed(() =>
   Object.entries(packageInfo.aiTools ?? {})
@@ -134,46 +65,59 @@ const aiTools = computed(() =>
     }))
     .filter((tool) => tool.url)
 )
-const descriptionParagraphs = computed(() =>
+const descriptionMarkdown = computed(() =>
   t('dock.about.description', {
-    aiTools: aiToolsPlaceholder,
-    github: githubPlaceholder,
-    linkedin: linkedinPlaceholder,
-    primaryAuthor: primaryAuthorPlaceholder,
-    multiverse: multiversePlaceholder
+    aiTools: aiToolsMarkdown.value,
+    github: linkOrText(githubDescriptionLink.label || 'GitHub', githubDescriptionLink.url),
+    githubUrl: normalizeHttpUrl(githubDescriptionLink.url),
+    linkedin: linkOrText(linkedinDescriptionLink.label || 'LinkedIn', linkedinDescriptionLink.url),
+    linkedinUrl: normalizeHttpUrl(linkedinDescriptionLink.url),
+    primaryAuthor: linkOrText(primaryAuthor.displayName, primaryAuthor.profileUrl),
+    multiverse: linkOrText(multiverseLink.label || 'Multiverse theme by HTML5 UP', multiverseLink.url),
+    multiverseLabel: multiverseLink.label || 'Multiverse theme by HTML5 UP',
+    multiverseUrl: normalizeHttpUrl(multiverseLink.url)
   })
-    .split('\n\n')
-    .map((paragraph) => paragraph.trim())
+)
+const aiToolsMarkdown = computed(() =>
+  aiTools.value
+    .map((tool) => linkOrText(tool.name, tool.url))
     .filter(Boolean)
-    .map((paragraph) => ({
-      tokens: paragraph.split(placeholderPattern).map((token) => {
-        if (token === aiToolsPlaceholder) {
-          return { type: 'aiTools', value: token }
-        }
-
-        if (token === githubPlaceholder) {
-          return { type: 'social', value: 'github' }
-        }
-
-        if (token === linkedinPlaceholder) {
-          return { type: 'social', value: 'linkedin' }
-        }
-
-        if (token === primaryAuthorPlaceholder) {
-          return { type: 'primaryAuthor', value: token }
-        }
-
-        if (token === multiversePlaceholder) {
-          return { type: 'multiverse', value: token }
-        }
-
-        return { type: 'text', value: token }
-      })
-    }))
+    .join(', ')
 )
 
-function resolveSocialLink (socialId) {
-  return socialLinkMap.value[socialId] ?? null
+function linkOrText (label, url) {
+  const normalizedLabel = String(label ?? '').trim()
+  const normalizedUrl = normalizeHttpUrl(url)
+
+  if (!normalizedLabel) {
+    return ''
+  }
+
+  if (!normalizedUrl) {
+    return normalizedLabel
+  }
+
+  return `[${normalizedLabel}](${normalizedUrl})`
+}
+
+function normalizeHttpUrl (value) {
+  const rawValue = String(value ?? '').trim()
+
+  if (!rawValue) {
+    return ''
+  }
+
+  try {
+    const url = new URL(rawValue)
+
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return ''
+    }
+
+    return url.toString()
+  } catch {
+    return ''
+  }
 }
 
 function normalizeAuthor (author) {
@@ -221,13 +165,20 @@ function normalizeObjectAuthor (author) {
   }
 
   &__description {
-    p:last-child {
+    :deep(p:last-child) {
       margin-bottom: 0;
+    }
+
+    :deep(p) {
+      margin-bottom: 1rem;
+    }
+
+    :deep(.q-markdown--link) {
+      color: inherit;
     }
   }
 
-  &__tool-link,
-  &__author-link {
+  :deep(.q-markdown--link) {
     text-underline-offset: 3px;
   }
 }

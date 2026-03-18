@@ -186,7 +186,7 @@ dock:
     description: |-
       Interview Challenge Archive yra viešas namų užduočių archyvas, kuriame kandidatai gali parodyti, ko įmonės paprašė, ką jie pristatė ir kaip procesas judėjo po pateikimo termino. Pagrindinė idėja yra nepalikti tokio darbo užmiršto, o paversti jį aiškiai matomu ir panaudojamu ateityje.
 
-      Šis projektas yra tarpinė grandis tarp {github} ir {linkedin}: jis sujungia kodo rezultatą su atrankos kontekstu. Vienos įmonės atmetimas dažnai gali tapti stipriu signalu kitai įmonei, todėl platforma padeda išsaugoti darbą, paaiškinti pasirinkimus ir parodyti, ko buvo išmokta.
+      Šis projektas yra tarpinė grandis tarp [GitHub]({githubUrl}) ir [LinkedIn]({linkedinUrl}): jis sujungia kodo rezultatą su atrankos kontekstu. Vienos įmonės atmetimas dažnai gali tapti stipriu signalu kitai įmonei, todėl platforma padeda išsaugoti darbą, paaiškinti pasirinkimus ir parodyti, ko buvo išmokta.
 
       Projektas prasidėjo dar prieš moderniems kodavimo asistentams pasiekiant praktinę kokybę, o {primaryAuthor} asmeninis iššūkis buvo įrodyti, kad toks produktas gali veikti daugiausia GitHub infrastruktūroje. Tą pačią idėją įprastame hostinge įgyvendinti būtų buvę paprasčiau. Dabartinė versija buvo gerokai paspartinta su {aiTools}, tačiau prasmingam rezultatui vis tiek reikia inžinerinio mąstymo, produkto supratimo ir disciplinuoto įgyvendinimo.
     details: Naudokite apatinę navigaciją, kad pereitumėte tarp atskirų paieškos, pateikimo, prisijungimo ir informacijos puslapių.

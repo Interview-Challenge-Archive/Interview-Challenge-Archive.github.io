@@ -39,6 +39,7 @@
   "dependencies": {
     "@openfeature/web-sdk": "^1.7.3",
     "@quasar/extras": "^1.16.4",
+    "@quasar/quasar-ui-qmarkdown": "^2.0.5",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.7.1",
     "quasar": "^2.16.0",

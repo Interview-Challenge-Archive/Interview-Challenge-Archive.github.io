@@ -1,4 +1,13 @@
 about:
+  descriptionLinks:
+    github:
+      id: github-site
+      label: GitHub
+      url: "https://github.com/"
+    linkedin:
+      id: linkedin-site
+      label: LinkedIn
+      url: "https://www.linkedin.com/"
   socialLinks:
     github:
       id: github
