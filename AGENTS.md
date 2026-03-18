@@ -51,6 +51,8 @@ npm run test
 8. **Code should be self-documenting**: Write clear, readable code that doesn't require explanatory comments for basic functionality
 9. **Custom error classes**: Place all custom errors in `src/errors/` folder
 10. **Error message standards**: Custom errors should have built-in messages and only accept relevant parameters (e.g., hex value, not full message)
+11. **Prefer Quasar CSS utilities**: Always prefer Quasar CSS utility classes (e.g., `q-pa-md`, `q-mt-lg`, `text-center`, `row`, `col`) over defining custom style rules in components
+12. **Nested component styles**: When custom component styles are necessary, write them using nested CSS syntax within the component's `<style>` block
 
 ## Configuration Files
 
