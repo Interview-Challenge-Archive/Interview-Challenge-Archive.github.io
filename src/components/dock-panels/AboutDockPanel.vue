@@ -4,22 +4,23 @@
     <div class="row q-col-gutter-lg items-start">
       <div class="col-12 col-md about-dock-panel__content-col">
         <component
-          :is="isMobile ? 'div' : QScrollArea"
-          class="about-dock-panel__description-container full-width"
-          :class="{ 'about-dock-panel__scroll-area': !isMobile }"
+          v-for="container in descriptionContainers"
+          :key="container.key"
+          :is="container.component"
+          :class="container.class"
         >
           <div class="about-dock-panel__description text-body2 text-grey-8">
             <p
               v-for="(paragraph, paragraphIndex) in descriptionParagraphs"
-              :key="paragraphIndex"
+              :key="`${container.key}-${paragraphIndex}`"
               class="q-mb-md"
             >
-              <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${paragraphIndex}-${tokenIndex}`">
+              <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${container.key}-${paragraphIndex}-${tokenIndex}`">
                 <template v-if="token.type === 'text'">
                   {{ token.value }}
                 </template>
                 <template v-else-if="token.type === 'aiTools'">
-                  <template v-for="(tool, toolIndex) in aiTools" :key="tool.name">
+                  <template v-for="(tool, toolIndex) in aiTools" :key="`${container.key}-${tool.name}`">
                     <a
                       class="about-dock-panel__tool-link text-dark"
                       :href="tool.url"
@@ -106,12 +107,11 @@
 
 <script setup>
 import { computed } from 'vue'
-import { QScrollArea, useQuasar } from 'quasar'
+import { QScrollArea } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import aboutConfig from 'src/config/about.yml'
 import packageInfo from '../../../package.json'
 
-const $q = useQuasar()
 const { t } = useI18n()
 const aiToolsPlaceholder = '__AI_TOOLS__'
 const githubPlaceholder = '__GITHUB__'
@@ -119,10 +119,21 @@ const linkedinPlaceholder = '__LINKEDIN__'
 const primaryAuthorPlaceholder = '__PRIMARY_AUTHOR__'
 const multiversePlaceholder = '__MULTIVERSE__'
 const placeholderPattern = /(__AI_TOOLS__|__GITHUB__|__LINKEDIN__|__PRIMARY_AUTHOR__|__MULTIVERSE__)/
+const descriptionContainers = [
+  {
+    key: 'desktop',
+    component: QScrollArea,
+    class: 'about-dock-panel__description-container about-dock-panel__scroll-area full-width gt-xs'
+  },
+  {
+    key: 'mobile',
+    component: 'div',
+    class: 'about-dock-panel__description-container full-width lt-sm'
+  }
+]
 
 const socialLinks = computed(() => Object.values(aboutConfig.about.socialLinks ?? {}))
 const multiverseLink = aboutConfig.about.referenceLinks?.multiverse ?? {}
-const isMobile = computed(() => $q.screen.lt.sm)
 const socialLinkMap = computed(() =>
   socialLinks.value.reduce((result, socialLink) => {
     result[socialLink.id] = socialLink
