@@ -135,7 +135,7 @@
           />
         </div>
 
-        <div class="mobile-dock-menu__items">
+        <div class="mobile-dock-menu__items col overflow-auto">
           <q-btn
             v-for="tab in dockTabs"
             :key="`mobile-${tab.name}`"
@@ -567,6 +567,7 @@ onBeforeUnmount(() => {
 
 .mobile-dock-menu {
   min-height: 100vh;
+  min-height: 100dvh;
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.96), rgba($grey-2, 0.86) 32%, rgba($blue-grey-1, 0.95) 100%);
 
@@ -576,6 +577,8 @@ onBeforeUnmount(() => {
 
   &__items {
     display: grid;
+    min-height: 0;
+    align-content: start;
     gap: 12px;
   }
 
