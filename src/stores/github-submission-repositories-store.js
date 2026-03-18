@@ -72,14 +72,41 @@ export const useGitHubSubmissionRepositoriesStore = defineStore('github-submissi
       const authenticatedUserResponse = await octokit.rest.users.getAuthenticated()
       const normalizedViewerLogin = String(authenticatedUserResponse.data?.login ?? '').trim()
       const ownedOrganizations = await fetchOwnedOrganizations(octokit)
-      const knownOrganizations = Array.from(new Set([normalizedViewerLogin, ...ownedOrganizations].filter(Boolean)))
+      const organizationsByLogin = new Map()
+
+      if (normalizedViewerLogin) {
+        organizationsByLogin.set(normalizedViewerLogin.toLowerCase(), {
+          login: normalizedViewerLogin,
+          avatarUrl: String(authenticatedUserResponse.data?.avatar_url ?? '').trim()
+        })
+      }
+
+      for (const organizationProfile of ownedOrganizations) {
+        const normalizedLogin = String(organizationProfile?.login ?? '').trim()
+
+        if (!normalizedLogin) {
+          continue
+        }
+
+        const key = normalizedLogin.toLowerCase()
+
+        if (!organizationsByLogin.has(key)) {
+          organizationsByLogin.set(key, {
+            login: normalizedLogin,
+            avatarUrl: String(organizationProfile?.avatarUrl ?? '').trim()
+          })
+        }
+      }
+
+      const knownOrganizations = Array.from(organizationsByLogin.values()).map((organizationProfile) => organizationProfile.login)
 
       viewerLogin.value = normalizedViewerLogin
       organizations.value = knownOrganizations
         .sort((left, right) => sortOrganizations(left, right, normalizedViewerLogin))
         .map((organizationLogin) => ({
           label: organizationLogin,
-          value: organizationLogin
+          value: organizationLogin,
+          avatarUrl: organizationsByLogin.get(organizationLogin.toLowerCase())?.avatarUrl ?? ''
         }))
       hasLoadedOrganizations.value = true
       loadedAccessToken.value = accessToken
@@ -207,8 +234,11 @@ async function fetchOwnedOrganizations (octokit) {
 
     return memberships
       .filter((membership) => membership?.role === 'admin')
-      .map((membership) => String(membership?.organization?.login ?? '').trim())
-      .filter(Boolean)
+      .map((membership) => ({
+        login: String(membership?.organization?.login ?? '').trim(),
+        avatarUrl: String(membership?.organization?.avatar_url ?? '').trim()
+      }))
+      .filter((organizationProfile) => Boolean(organizationProfile.login))
   } catch (error) {
     if (isMembershipPermissionError(error)) {
       return []

@@ -29,7 +29,30 @@
                 :hint="t('dock.submissions.dialog.hints.organization')"
                 :loading="isLoadingOrganizations"
                 @virtual-scroll="onOrganizationsVirtualScroll"
-              />
+              >
+                <template #option="scope">
+                  <q-item v-bind="scope.itemProps">
+                    <q-item-section side class="q-pr-sm">
+                      <q-avatar v-if="scope.opt.avatarUrl" size="22px">
+                        <img :src="scope.opt.avatarUrl" :alt="scope.opt.label">
+                      </q-avatar>
+                      <q-icon v-else name="domain" />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ scope.opt.label }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template #selected-item="scope">
+                  <div class="row items-center no-wrap">
+                    <q-avatar v-if="scope.opt.avatarUrl" size="18px" class="q-mr-xs">
+                      <img :src="scope.opt.avatarUrl" :alt="scope.opt.label">
+                    </q-avatar>
+                    <q-icon v-else name="domain" class="q-mr-xs" />
+                    <span>{{ scope.opt.label }}</span>
+                  </div>
+                </template>
+              </q-select>
               <q-input
                 v-else
                 v-model="organization"
@@ -55,7 +78,24 @@
                 :disable="!organization"
                 :loading="isLoadingRepositories"
                 @virtual-scroll="onRepositoriesVirtualScroll"
-              />
+              >
+                <template #option="scope">
+                  <q-item v-bind="scope.itemProps">
+                    <q-item-section side class="q-pr-sm">
+                      <q-icon name="folder" />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ scope.opt.label }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template #selected-item="scope">
+                  <div class="row items-center no-wrap">
+                    <q-icon name="folder" class="q-mr-xs" />
+                    <span>{{ scope.opt.label }}</span>
+                  </div>
+                </template>
+              </q-select>
               <q-input
                 v-else
                 v-model="repository"
