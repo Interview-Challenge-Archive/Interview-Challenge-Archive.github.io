@@ -171,13 +171,8 @@ const messages = {
         label: 'Submissions',
         title: 'Submissions',
         description: 'The table gives you a quick view of what is already shared and what still needs an update before anyone reviews it. Use this space to keep each challenge entry clear over time: start by submitting one repository, then return whenever you want to add progress, feedback, or context so your work stays understandable and easy to follow.',
-        intro: {
-          title: 'Submit or update a repository',
-          description: 'Keep things simple here. Add a new repository when it is ready, or continue an existing one whenever you need to.'
-        },
         actions: {
           submit: 'Submit',
-          refresh: 'Refresh',
           update: 'Update'
         },
         table: {
@@ -191,7 +186,6 @@ const messages = {
           noPullRequest: 'Not available'
         },
         status: {
-          loading: 'Loading submissions from GitHub...',
           loaded: 'Loaded {count} submitted repositories.'
         },
         dialog: {
