@@ -35,7 +35,7 @@ import { useI18n } from 'vue-i18n'
 import { QMarkdown } from '@quasar/quasar-ui-qmarkdown'
 import '@quasar/quasar-ui-qmarkdown/dist/index.css'
 import aboutConfig from 'src/config/about.yml'
-import SocialNetworkLinks from 'src/components/dock-panels/SocialNetworkLinks.vue'
+import SocialNetworkLinks from 'src/components/internal/SocialNetworkLinks.vue'
 import OrganizationTopContributorsControl from 'src/components/internal/OrganizationTopContributorsControl.vue'
 import packageInfo from '../../../package.json'
 
