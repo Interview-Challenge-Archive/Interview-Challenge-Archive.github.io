@@ -55,6 +55,7 @@ npm run test
 12. **Nested component styles**: When custom component styles are necessary, write them using nested CSS syntax within the component's `<style>` block
 13. **Translation syntax validation**: After changing any translation files, always run a Vite syntax check (for example `npm run build`) to ensure parsing does not fail
 14. **Dense form controls preference**: Prefer Quasar `dense` style for `q-input` and `q-select` fields unless a specific screen requires non-dense spacing
+15. **External labels preference**: Prefer labels rendered above `q-input`, `q-select`, and textarea fields instead of using the built-in field label prop
 
 ## Configuration Files
 
