@@ -2,13 +2,14 @@ import { computed, ref } from 'vue'
 import { Octokit } from '@octokit/rest'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useSessionStore } from 'src/stores/session-store'
+import githubApiConfig from 'src/config/github_api.yml'
 
 const SUBMISSION_MARKER_PATH = '.github/ica-submission.yml'
 const SUBMISSION_BOT_LOGIN = 'InterviewChallengeArchive[bot]'
-const REPOSITORY_PAGE_SIZE = 100
-const CODE_SEARCH_PAGE_SIZE = 100
-const PULL_REQUEST_SEARCH_PAGE_SIZE = 100
-const REPOSITORY_SCAN_CONCURRENCY = 4
+const REPOSITORY_PAGE_SIZE = githubApiConfig.githubApi.submissions.repositoryPageSize
+const CODE_SEARCH_PAGE_SIZE = githubApiConfig.githubApi.submissions.codeSearchPageSize
+const PULL_REQUEST_SEARCH_PAGE_SIZE = githubApiConfig.githubApi.submissions.pullRequestSearchPageSize
+const REPOSITORY_SCAN_CONCURRENCY = githubApiConfig.githubApi.submissions.repositoryScanConcurrency
 
 export const useGitHubSubmissionsStore = defineStore('github-submissions', () => {
   const sessionStore = useSessionStore()

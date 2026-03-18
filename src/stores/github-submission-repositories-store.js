@@ -2,9 +2,10 @@ import { computed, ref } from 'vue'
 import { Octokit } from '@octokit/rest'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useSessionStore } from 'src/stores/session-store'
+import githubApiConfig from 'src/config/github_api.yml'
 
-const ORGANIZATION_PAGE_SIZE = 100
-const REPOSITORY_PAGE_SIZE = 100
+const ORGANIZATION_PAGE_SIZE = githubApiConfig.githubApi.submissionRepositories.organizationPageSize
+const REPOSITORY_PAGE_SIZE = githubApiConfig.githubApi.submissionRepositories.repositoryPageSize
 
 export const useGitHubSubmissionRepositoriesStore = defineStore('github-submission-repositories', () => {
   const sessionStore = useSessionStore()
