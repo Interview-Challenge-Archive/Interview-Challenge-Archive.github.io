@@ -66,7 +66,7 @@ export const useGitHubSubmissionsStore = defineStore('github-submissions', () =>
       )
       const viewerRepositories = repositories.filter((repository) =>
         repository?.name
-        && !repository.archived
+        && !repository.fork
         && !repository.disabled
         && String(repository?.owner?.login ?? '').trim().toLowerCase() === normalizedViewerLogin
       )
