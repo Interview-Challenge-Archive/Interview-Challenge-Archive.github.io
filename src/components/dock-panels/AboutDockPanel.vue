@@ -82,23 +82,7 @@
 
       <aside class="col-12 col-md-auto q-mt-md q-mt-md-none">
         <div class="text-subtitle2 text-uppercase text-grey-8 q-mb-sm">{{ t('dock.about.sections.socialNetworks') }}</div>
-        <div class="row q-gutter-sm">
-          <q-btn
-            v-for="socialLink in socialLinks"
-            :key="socialLink.id"
-            flat
-            round
-            dense
-            color="dark"
-            :icon="socialLink.icon"
-            :aria-label="socialLink.label"
-            :href="socialLink.url"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <q-tooltip>{{ socialLink.label }}</q-tooltip>
-          </q-btn>
-        </div>
+        <SocialNetworkLinks :social-links="socialLinks" />
       </aside>
     </div>
 
@@ -110,6 +94,7 @@ import { computed } from 'vue'
 import { QScrollArea } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import aboutConfig from 'src/config/about.yml'
+import SocialNetworkLinks from 'src/components/dock-panels/SocialNetworkLinks.vue'
 import packageInfo from '../../../package.json'
 
 const { t } = useI18n()
