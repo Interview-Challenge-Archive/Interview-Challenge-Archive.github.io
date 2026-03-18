@@ -56,6 +56,7 @@ npm run test
 13. **Translation syntax validation**: After changing any translation files, always run a Vite syntax check (for example `npm run build`) to ensure parsing does not fail
 14. **Dense form controls preference**: Prefer Quasar `dense` style for `q-input` and `q-select` fields unless a specific screen requires non-dense spacing
 15. **External labels preference**: Prefer semantic `<label>` elements rendered above `q-input`, `q-select`, and textarea fields; labels must always use `for` and the matching field must set the same `for` value
+16. **No hardcoded API limits**: Move hardcoded API-related constants (for example request page sizes and limits like `ORGANIZATION_PAGE_SIZE`) into config files (for example `src/config/github_api.yml`) and read them from config in code
 
 ## Configuration Files
 
