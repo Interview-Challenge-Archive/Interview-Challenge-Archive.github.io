@@ -86,7 +86,7 @@ export default defineConfig((ctx) => {
       // viteVuePluginOptions: {},
 
       vitePlugins: [
-        yaml({ include: ['**/src/config/feature-flags.yml', '**/src/config/colors.yml', '**/src/config/auth.yml', '**/src/config/about.yml', '**/src/config/github_api.yml', '**/src/config/cache.yml', '**/src/config/submissions.yml'] }),
+        yaml({ include: ['**/src/config/**/*.{yml,yaml}'] }),
 
         ['@intlify/unplugin-vue-i18n/vite', {
           // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
