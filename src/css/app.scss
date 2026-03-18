@@ -17,6 +17,10 @@ textarea {
   font: inherit;
 }
 
+.q-field__bottom {
+  padding-left: 0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
