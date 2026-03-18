@@ -140,7 +140,11 @@ export const useGitHubSubmissionRepositoriesStore = defineStore('github-submissi
             }
           )
       const normalizedRepositories = repositories
-        .filter((repository) => repository?.name && !repository.archived && !repository.disabled)
+        .filter((repository) =>
+          repository?.name
+          && !repository.archived
+          && !repository.disabled
+          && !repository.fork)
         .map((repository) => ({
           id: repository.id,
           name: repository.name,
