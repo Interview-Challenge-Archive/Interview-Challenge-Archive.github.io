@@ -3,7 +3,28 @@
   "version": "0.0.1",
   "description": "Interview Challenge Archive SPA",
   "productName": "Interview Challenge Archive",
-  "author": "Raimondas Rimkevičius (aka MekDrop) <github@mekdrop.name>",
+  "author": {
+    "name": "Raimondas Rimkevičius (aka MekDrop)",
+    "email": "github@mekdrop.name",
+    "url": "https://github.com/MekDrop"
+  },
+  "aiTools": {
+    "Augmented": {
+      "url": "https://www.augmentcode.com/"
+    },
+    "Zencoder": {
+      "url": "https://zencoder.ai/"
+    },
+    "OpenAI Codex": {
+      "url": "https://openai.com/codex/"
+    },
+    "OpenCode": {
+      "url": "https://opencode.ai/"
+    },
+    "Qwen Code": {
+      "url": "https://github.com/QwenLM/qwen-code"
+    }
+  },
   "type": "module",
   "private": true,
   "scripts": {
@@ -16,8 +37,10 @@
     "test:unit:ci": "vitest run"
   },
   "dependencies": {
+    "@octokit/rest": "^22.0.1",
     "@openfeature/web-sdk": "^1.7.3",
     "@quasar/extras": "^1.16.4",
+    "@quasar/quasar-ui-qmarkdown": "^2.0.5",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.7.1",
     "quasar": "^2.16.0",

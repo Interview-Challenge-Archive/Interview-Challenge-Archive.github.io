@@ -40,7 +40,10 @@
           />
         </div>
 
-        <div class="bottom-dock__panel-scroll">
+        <div
+          class="bottom-dock__panel-scroll"
+          :class="{ 'bottom-dock__panel-scroll--lock': expandedTab === 'about' }"
+        >
           <div class="bottom-dock__panel-inner q-mr-auto q-pa-lg q-pl-md">
             <q-tab-panels v-model="expandedTab" animated class="bottom-dock__panels bg-transparent text-dark">
               <q-tab-panel name="search" class="q-pa-none">
@@ -374,9 +377,17 @@ watch(isAuthenticated, (authenticated) => {
   overflow: auto;
 }
 
+.bottom-dock__panel-scroll--lock {
+  overflow: hidden;
+}
+
 .bottom-dock__panel-inner {
   max-width: 960px;
   min-height: 100%;
+}
+
+.bottom-dock__panel-tab {
+  height: 100%;
 }
 
 .bottom-dock__panel-toolbar {

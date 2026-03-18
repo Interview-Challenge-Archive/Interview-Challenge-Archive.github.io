@@ -1,0 +1,32 @@
+about:
+  contributors:
+    maxRepositoriesPerRequest: 100
+    maxContributorRequestsInParallel: 6
+    topPerRepository: 50
+    topContributorsLimit: 500
+    cacheTtlMs: 604800000
+  descriptionLinks:
+    github:
+      id: github-site
+      label: GitHub
+      url: "https://github.com/"
+    linkedin:
+      id: linkedin-site
+      label: LinkedIn
+      url: "https://www.linkedin.com/"
+  socialLinks:
+    github:
+      id: github
+      label: GitHub
+      icon: "fa-brands fa-github"
+      url: "https://github.com/Interview-Challenge-Archive"
+    linkedin:
+      id: linkedin
+      label: LinkedIn
+      icon: "fa-brands fa-linkedin"
+      url: "https://www.linkedin.com/company/interview-challenge-archive/"
+  referenceLinks:
+    multiverse:
+      id: multiverse
+      label: Multiverse theme by HTML5 UP
+      url: "https://html5up.net/multiverse"

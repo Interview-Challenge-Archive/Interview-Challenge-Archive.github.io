@@ -1,5 +1,5 @@
 app:
-  title: Job Test Vault
+  title: Interview Challenge Archive
   subtitle: Quasar SPA pradžia su maršrutizavimu, Pinia ir vertimais
 nav:
   home: Pradžia
@@ -180,9 +180,25 @@ dock:
       disconnected: Atjungta {provider}.
   about:
     label: About
-    title: Apie Job Test Vault
-    description: Job Test Vault padeda kaupti, tvarkyti ir peržiūrėti interviu bei atrankų užduočių medžiagą.
+    title: Apie Interview Challenge Archive
+    sections:
+      socialNetworks: Socialiniai tinklai
+      topContributors: Aktyviausi prisidėję
+    contributors:
+      loading: Kraunami aktyviausi prisidėję...
+      loaded: Įkelta {contributors} prisidėjusių iš {repositories} repozitorijų.
+      empty: Šiai organizacijai prisidėjusių duomenų nerasta.
+      errors:
+        organizationNotConfigured: GitHub organizacija nesukonfigūruota.
+        rateLimited: Pasiektas GitHub API užklausų limitas. Prisijunkite su GitHub paskyra ir bandykite dar kartą.
+        loadFailed: Nepavyko įkelti prisidėjusių duomenų iš GitHub.
+    description: |-
+      Interview Challenge Archive yra viešas namų užduočių archyvas, kuriame kandidatai gali parodyti, ko įmonės paprašė, ką jie pristatė ir kaip procesas judėjo po pateikimo termino. Pagrindinė idėja yra nepalikti tokio darbo užmiršto, o paversti jį aiškiai matomu ir panaudojamu ateityje.
+
+      Šis projektas yra tarpinė grandis tarp [GitHub]({githubUrl}) ir [LinkedIn]({linkedinUrl}): jis sujungia kodo rezultatą su atrankos kontekstu. Vienos įmonės atmetimas dažnai gali tapti stipriu signalu kitai įmonei, todėl platforma padeda išsaugoti darbą, paaiškinti pasirinkimus ir parodyti, ko buvo išmokta.
+
+      Projektas prasidėjo dar prieš moderniems kodavimo asistentams pasiekiant praktinę kokybę, o {primaryAuthor} asmeninis iššūkis buvo įrodyti, kad toks produktas gali veikti daugiausia GitHub infrastruktūroje. Tą pačią idėją įprastame hostinge įgyvendinti būtų buvę paprasčiau. Dabartinė versija buvo gerokai paspartinta su {aiTools}, tačiau prasmingam rezultatui vis tiek reikia inžinerinio mąstymo, produkto supratimo ir disciplinuoto įgyvendinimo.
     details: Naudokite apatinę navigaciją, kad pereitumėte tarp atskirų paieškos, pateikimo, prisijungimo ir informacijos puslapių.
 about:
   title: Apie šį pradinį projektą
-  description: Naudokite šį projektą kaip švarų pagrindą JobTestVault vieno puslapio programai.
+  description: Naudokite šį projektą kaip švarų pagrindą Interview Challenge Archive vieno puslapio programai.

@@ -181,8 +181,26 @@ dock:
   about:
     label: About
     title: About Interview Challenge Archive
-    description: Interview Challenge Archive is a place to collect, organize, and review interview and hiring task material.
+    description: |-
+      Interview Challenge Archive is a public collection of take-home interview tasks, designed to make them discoverable and searchable on [GitHub]({githubUrl}). Candidates share what companies asked for, what they delivered, and what happened after the deadline, so this work does not disappear into private chats or forgotten repositories.
+
+      The archive is especially useful for people who are just starting out or have not yet gone through many interview processes, as it provides concrete, real-world examples of what to expect and how others approached similar tasks. It is also easy to reference alongside professional profiles on [LinkedIn]({linkedinUrl}). Using AI during these assignments is acceptable, but the shared outcomes still reflect individual judgment, trade-offs, and execution.
+
+      The only requirement for inclusion is that the submission is made by the candidate, includes additional context, and is stored in a public repository.
+
+      The project started before AI coding assistants were something you could rely on every day. At the time, {primaryAuthor} was not thinking about monetization - this was more of a personal challenge to see if a product like this could run almost entirely on GitHub infrastructure, even though it would have been simpler to build it on a more traditional setup. Finding time to actually finish it was not easy, so progress was slow. Early on, the design took inspiration from [{multiverseLabel}]({multiverseUrl}), but it never stayed a direct copy. The project only really came together after adopting vibe coding, which finally made it possible to turn it into a working release. Instead of copying the original theme, the interface was rebuilt piece by piece by asking AI tools to recreate specific ideas and elements, which is why it looks similar in spirit but different in execution. This release also moved forward much faster, helped by {aiTools}.
     details: Use the bottom navigation to move between dedicated search, submission, login, and information pages.
+    sections:
+      socialNetworks: Social networks
+      topContributors: Top contributors
+    contributors:
+      loading: Loading contributors...
+      loaded: Loaded {contributors} contributors across {repositories} repositories.
+      empty: No contributor data found for this organization.
+      errors:
+        organizationNotConfigured: The GitHub organization is not configured.
+        rateLimited: GitHub API rate limit reached. Connect a GitHub account and try again.
+        loadFailed: Failed to load contributors from GitHub.
 about:
   title: About this starter
   description: Use this project as a clean foundation for the Interview Challenge Archive single-page application.

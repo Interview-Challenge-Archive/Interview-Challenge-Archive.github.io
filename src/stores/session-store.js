@@ -152,6 +152,54 @@ export const useSessionStore = defineStore('session', () => {
     return hasNonExpiringSession.value
   })
 
+  function isActiveSession (store) {
+    if (!hasSessionData(store)) {
+      return false
+    }
+
+    const expirationTimestamp = resolveExpirationTimestamp(store)
+
+    if (!Number.isFinite(expirationTimestamp)) {
+      return true
+    }
+
+    return expirationTimestamp > Date.now()
+  }
+
+  function findLatestActiveAccountStore (providerId) {
+    const normalizedProviderId = typeof providerId === 'string' ? providerId.trim() : ''
+    let selectedStore = null
+    let selectedAuthenticatedAt = Number.NEGATIVE_INFINITY
+
+    for (const accountStore of Object.values(accounts.value)) {
+      if (!isActiveSession(accountStore)) {
+        continue
+      }
+
+      if (normalizedProviderId && accountStore.provider !== normalizedProviderId) {
+        continue
+      }
+
+      const authenticatedAtMs = Date.parse(accountStore.authenticatedAt)
+      const comparableAuthenticatedAt = Number.isFinite(authenticatedAtMs)
+        ? authenticatedAtMs
+        : Number.NEGATIVE_INFINITY
+
+      if (!selectedStore || comparableAuthenticatedAt > selectedAuthenticatedAt) {
+        selectedStore = accountStore
+        selectedAuthenticatedAt = comparableAuthenticatedAt
+      }
+    }
+
+    return selectedStore
+  }
+
+  function getActiveAccessToken (providerId) {
+    const activeAccountStore = findLatestActiveAccountStore(providerId)
+
+    return activeAccountStore?.accessToken ?? ''
+  }
+
   function resolveAccountIdentifier (payload) {
     const providerId = typeof payload.provider === 'string' ? payload.provider.trim() : ''
     const account = payload.user && typeof payload.user === 'object' ? payload.user : null
@@ -249,6 +297,7 @@ export const useSessionStore = defineStore('session', () => {
     accounts,
     nearestExpirationAt,
     isAuthenticated,
+    getActiveAccessToken,
     setSession,
     logout,
     clearSession,
