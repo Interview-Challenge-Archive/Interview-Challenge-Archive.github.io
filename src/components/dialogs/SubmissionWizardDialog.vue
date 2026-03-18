@@ -21,10 +21,11 @@
               outlined
               emit-value
               map-options
-              :options="organizations"
+              :options="organizationOptions"
               :label="t('dock.submissions.dialog.fields.organization')"
               :hint="t('dock.submissions.dialog.hints.organization')"
               :loading="isLoadingOrganizations"
+              @virtual-scroll="onOrganizationsVirtualScroll"
             />
             <q-input
               v-else
@@ -45,6 +46,7 @@
               :hint="t('dock.submissions.dialog.hints.repository')"
               :disable="!organization"
               :loading="isLoadingRepositories"
+              @virtual-scroll="onRepositoriesVirtualScroll"
             />
             <q-input
               v-else
@@ -120,6 +122,9 @@ import { useI18n } from 'vue-i18n'
 import { useDialogPluginComponent } from 'quasar'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 
+const SELECT_PAGE_SIZE = 50
+const SELECT_LOAD_MORE_THRESHOLD = 8
+
 const props = defineProps({
   mode: {
     type: String,
@@ -156,17 +161,23 @@ const {
 const step = ref(1)
 const organization = ref(String(props.owner ?? '').trim())
 const repository = ref(String(props.repository ?? '').trim())
+const organizationOptionsLimit = ref(SELECT_PAGE_SIZE)
+const repositoryOptionsLimit = ref(SELECT_PAGE_SIZE)
 
 const isSubmitMode = computed(() => props.mode === 'submit')
 const dialogTitle = computed(() => isSubmitMode.value
   ? t('dock.submissions.dialog.title.submit')
   : t('dock.submissions.dialog.title.update'))
-const organizationOptionsAvailable = computed(() => organizations.value.length > 0)
+const allOrganizationOptions = computed(() => organizations.value)
+const organizationOptions = computed(() =>
+  allOrganizationOptions.value.slice(0, organizationOptionsLimit.value))
+const organizationOptionsAvailable = computed(() => allOrganizationOptions.value.length > 0)
 const repositoryRecords = computed(() => githubSubmissionRepositoriesStore.repositoriesForOrganization(organization.value))
-const repositoryOptions = computed(() => repositoryRecords.value.map((repositoryRecord) => ({
+const allRepositoryOptions = computed(() => repositoryRecords.value.map((repositoryRecord) => ({
   label: repositoryRecord.name,
   value: repositoryRecord.name
 })))
+const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, repositoryOptionsLimit.value))
 const isLoadingRepositories = computed(() =>
   githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(organization.value))
 const canGoNext = computed(() => Boolean(organization.value && repository.value))
@@ -185,6 +196,7 @@ watch(organization, async (nextOrganization, previousOrganization) => {
 
   if (nextOrganization !== previousOrganization) {
     repository.value = ''
+    repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   }
 
   await loadRepositoriesForOrganization(nextOrganization)
@@ -237,6 +249,8 @@ async function loadRepositoriesForOrganization (organizationLogin) {
     return
   }
 
+  repositoryOptionsLimit.value = SELECT_PAGE_SIZE
+
   try {
     await githubSubmissionRepositoriesStore.ensureRepositoriesLoaded(normalizedOrganizationLogin)
   } catch {
@@ -244,8 +258,32 @@ async function loadRepositoriesForOrganization (organizationLogin) {
   }
 
   if (!repository.value) {
-    repository.value = repositoryOptions.value[0]?.value ?? ''
+    repository.value = allRepositoryOptions.value[0]?.value ?? ''
   }
+}
+
+function onOrganizationsVirtualScroll ({ to }) {
+  if (to + SELECT_LOAD_MORE_THRESHOLD < organizationOptionsLimit.value) {
+    return
+  }
+
+  if (organizationOptionsLimit.value >= allOrganizationOptions.value.length) {
+    return
+  }
+
+  organizationOptionsLimit.value += SELECT_PAGE_SIZE
+}
+
+function onRepositoriesVirtualScroll ({ to }) {
+  if (to + SELECT_LOAD_MORE_THRESHOLD < repositoryOptionsLimit.value) {
+    return
+  }
+
+  if (repositoryOptionsLimit.value >= allRepositoryOptions.value.length) {
+    return
+  }
+
+  repositoryOptionsLimit.value += SELECT_PAGE_SIZE
 }
 </script>
 
