@@ -4,10 +4,11 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useSessionStore } from 'src/stores/session-store'
 import { readJsonCacheEntry, writeJsonCacheEntry } from 'src/utils/cache-storage'
 import aboutConfig from 'src/config/about.yml'
+import cacheConfig from 'src/config/cache.yml'
 import githubApiConfig from 'src/config/github_api.yml'
 
-const CONTRIBUTORS_CACHE_NAME = 'project-organization-contributors-cache-v1'
-const CONTRIBUTORS_CACHE_KEY = '/project-organization-contributors/v1'
+const CONTRIBUTORS_CACHE_NAME = cacheConfig.projectOrganizationContributorsCacheName
+const CONTRIBUTORS_CACHE_KEY = cacheConfig.projectOrganizationContributorsCacheKey
 const MAX_REPOSITORIES_PER_REQUEST = githubApiConfig.repositoryPageSize
 const MAX_CONTRIBUTOR_REQUESTS_IN_PARALLEL = githubApiConfig.contributorRequestsInParallel
 const TOP_CONTRIBUTORS_PER_REPOSITORY = aboutConfig.about.contributors.topPerRepository
