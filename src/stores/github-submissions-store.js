@@ -6,10 +6,10 @@ import githubApiConfig from 'src/config/github_api.yml'
 
 const SUBMISSION_MARKER_PATH = '.github/ica-submission.yml'
 const SUBMISSION_BOT_LOGIN = 'InterviewChallengeArchive[bot]'
-const REPOSITORY_PAGE_SIZE = githubApiConfig.githubApi.submissions.repositoryPageSize
-const CODE_SEARCH_PAGE_SIZE = githubApiConfig.githubApi.submissions.codeSearchPageSize
-const PULL_REQUEST_SEARCH_PAGE_SIZE = githubApiConfig.githubApi.submissions.pullRequestSearchPageSize
-const REPOSITORY_SCAN_CONCURRENCY = githubApiConfig.githubApi.submissions.repositoryScanConcurrency
+const REPOSITORY_PAGE_SIZE = githubApiConfig.submissions.repositoryPageSize
+const CODE_SEARCH_PAGE_SIZE = githubApiConfig.submissions.codeSearchPageSize
+const PULL_REQUEST_SEARCH_PAGE_SIZE = githubApiConfig.submissions.pullRequestSearchPageSize
+const REPOSITORY_SCAN_CONCURRENCY = githubApiConfig.submissions.repositoryScanConcurrency
 
 export const useGitHubSubmissionsStore = defineStore('github-submissions', () => {
   const sessionStore = useSessionStore()

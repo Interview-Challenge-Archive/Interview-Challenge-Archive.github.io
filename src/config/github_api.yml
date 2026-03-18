@@ -1,9 +1,8 @@
-githubApi:
-  submissionRepositories:
-    organizationPageSize: 100
-    repositoryPageSize: 100
-  submissions:
-    repositoryPageSize: 100
-    codeSearchPageSize: 100
-    pullRequestSearchPageSize: 100
-    repositoryScanConcurrency: 4
+submissionRepositories:
+  organizationPageSize: 100
+  repositoryPageSize: 100
+submissions:
+  repositoryPageSize: 100
+  codeSearchPageSize: 100
+  pullRequestSearchPageSize: 100
+  repositoryScanConcurrency: 4
