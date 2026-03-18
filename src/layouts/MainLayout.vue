@@ -70,9 +70,9 @@
         </div>
       </div>
 
-      <div class="bottom-dock__bar q-py-xs q-px-md">
-        <router-link to="/" class="bottom-dock__title text-subtitle1 text-weight-medium text-dark">
-          <span class="brand-lockup">
+      <div class="bottom-dock__bar row no-wrap items-center justify-between q-py-xs q-px-md">
+        <router-link to="/" class="bottom-dock__title row no-wrap items-center text-subtitle1 text-weight-medium text-dark">
+          <span class="brand-lockup row no-wrap items-center">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
             <span class="brand-lockup__label text-dark">{{ t('app.title') }}</span>
           </span>
@@ -117,9 +117,9 @@
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <q-card class="mobile-dock-menu q-pa-md">
-        <div class="mobile-dock-menu__header q-mb-md">
-          <div class="brand-lockup text-subtitle1 text-weight-medium">
+      <q-card class="mobile-dock-menu column q-pa-md">
+        <div class="mobile-dock-menu__header row no-wrap items-center justify-between q-mb-md">
+          <div class="brand-lockup row no-wrap items-center text-subtitle1 text-weight-medium">
             <img src="favicon.svg" alt="" class="brand-lockup__icon" aria-hidden="true">
             <span class="brand-lockup__label">{{ t('app.title') }}</span>
           </div>
@@ -159,8 +159,8 @@
       transition-show="slide-left"
       transition-hide="slide-right"
     >
-      <q-card class="mobile-dock-panel">
-        <div class="mobile-dock-panel__header q-pa-xs">
+      <q-card class="mobile-dock-panel column">
+        <div class="mobile-dock-panel__header row no-wrap items-center q-pa-xs">
           <q-btn
             flat
             round
@@ -177,7 +177,7 @@
           <q-space />
         </div>
 
-        <div class="mobile-dock-panel__body q-pa-md q-pt-lg q-pb-xl">
+        <div class="mobile-dock-panel__body col overflow-auto q-pa-md q-pt-lg q-pb-xl">
           <q-tab-panels
             v-model="expandedTab"
             animated
@@ -340,34 +340,34 @@ onBeforeUnmount(() => {
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.92), rgba($grey-2, 0) 36%),
     linear-gradient(180deg, $grey-2 0%, $blue-grey-1 100%);
-}
 
-.bottom-layout__content {
-  z-index: 1;
-}
+  &__content {
+    z-index: 1;
+  }
 
-.bottom-layout__glass {
-  position: fixed;
-  inset: 0;
-  z-index: 1500;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(180deg, rgba($grey-1, 0.03), rgba($blue-grey-1, 0.06));
-  backdrop-filter: blur(0) saturate(1);
-  -webkit-backdrop-filter: blur(0) saturate(1);
-  transition:
-    opacity 0.42s ease,
-    backdrop-filter 0.42s ease,
-    -webkit-backdrop-filter 0.42s ease,
-    background-color 0.42s ease;
-}
+  &__glass {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(180deg, rgba($grey-1, 0.03), rgba($blue-grey-1, 0.06));
+    backdrop-filter: blur(0) saturate(1);
+    -webkit-backdrop-filter: blur(0) saturate(1);
+    transition:
+      opacity 0.42s ease,
+      backdrop-filter 0.42s ease,
+      -webkit-backdrop-filter 0.42s ease,
+      background-color 0.42s ease;
 
-.bottom-layout__glass--visible {
-  opacity: 1;
-  pointer-events: auto;
-  background: linear-gradient(180deg, rgba($grey-1, 0.05), rgba($blue-grey-1, 0.09));
-  backdrop-filter: blur(2.4px) saturate(1.02);
-  -webkit-backdrop-filter: blur(2.4px) saturate(1.02);
+    &--visible {
+      opacity: 1;
+      pointer-events: auto;
+      background: linear-gradient(180deg, rgba($grey-1, 0.05), rgba($blue-grey-1, 0.09));
+      backdrop-filter: blur(2.4px) saturate(1.02);
+      -webkit-backdrop-filter: blur(2.4px) saturate(1.02);
+    }
+  }
 }
 
 .bottom-dock {
@@ -381,208 +381,196 @@ onBeforeUnmount(() => {
   border-top-color: rgba($dark-page, 0.08);
   box-shadow: 0 -8px 30px rgba($dark-page, 0.05);
   transition: background-color 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
-}
 
-.bottom-dock--expanded {
-  border-top-color: rgba($dark-page, 0.1);
-  box-shadow: 0 -18px 44px rgba($dark-page, 0.08);
-}
+  &--expanded {
+    border-top-color: rgba($dark-page, 0.1);
+    box-shadow: 0 -18px 44px rgba($dark-page, 0.08);
+  }
 
-.bottom-dock__panel {
-  position: absolute;
-  right: 0;
-  bottom: 100%;
-  left: 0;
-  height: calc(50vh - 64px);
-  border: 1px solid rgba($dark-page, 0.06);
-  border-bottom: 0;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba($grey-1, 0.48) 0%, rgba($grey-1, 0.82) 26%, rgba($grey-1, 0.92) 100%);
-  box-shadow: 0 -18px 44px rgba($dark-page, 0.08);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(12px);
-  transition:
-    opacity 0.24s ease,
-    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0.24s;
-  will-change: opacity, transform;
-}
+  &__panel {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    left: 0;
+    height: calc(50vh - 64px);
+    border: 1px solid rgba($dark-page, 0.06);
+    border-bottom: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba($grey-1, 0.48) 0%, rgba($grey-1, 0.82) 26%, rgba($grey-1, 0.92) 100%);
+    box-shadow: 0 -18px 44px rgba($dark-page, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition:
+      opacity 0.24s ease,
+      transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.24s;
+    will-change: opacity, transform;
 
-.bottom-dock__panel--open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateY(0);
-  transition-delay: 0s;
-}
+    &--open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition-delay: 0s;
+    }
+  }
 
-.bottom-dock__panel-scroll {
-  height: 100%;
-  overflow: auto;
-}
+  &__panel-scroll {
+    height: 100%;
+    overflow: auto;
 
-.bottom-dock__panel-scroll--lock {
-  overflow: hidden;
-}
+    &--lock {
+      overflow: hidden;
+    }
+  }
 
-.bottom-dock__panel-inner {
-  max-width: 960px;
-  min-height: 100%;
-}
+  &__panel-inner {
+    max-width: 960px;
+    min-height: 100%;
+  }
 
-.bottom-dock__panel-tab {
-  height: 100%;
-}
+  &__panel-tab {
+    height: 100%;
+  }
 
-.bottom-dock__panel-toolbar {
-  position: absolute;
-  top: 16px;
-  right: 24px;
-  z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  pointer-events: none;
-}
+  &__panel-toolbar {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
 
-.bottom-dock__panel-close {
-  pointer-events: auto;
-  border: 1px solid rgba($grey-1, 0.7);
-  backdrop-filter: blur(12px) saturate(1.08);
-}
+  &__panel-close {
+    pointer-events: auto;
+    border: 1px solid rgba($grey-1, 0.7);
+    backdrop-filter: blur(12px) saturate(1.08);
+  }
 
-.bottom-dock__panels {
-  min-height: 100%;
-}
+  &__panels {
+    min-height: 100%;
+  }
 
-.bottom-dock__bar {
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
+  &__bar {
+    min-height: 64px;
+    gap: 16px;
+  }
 
-.bottom-dock__title {
-  display: inline-flex;
-  align-items: center;
-  letter-spacing: -0.01em;
-  text-decoration: none;
+  &__title {
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  &__menu-button {
+    border: 1px solid rgba($grey-1, 0.6);
+  }
+
+  &__tabs-surface {
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    border: 1px solid rgba($grey-1, 0.65);
+    border-radius: 0;
+    box-shadow:
+      inset 0 1px 0 rgba($grey-1, 0.5),
+      0 8px 22px rgba($dark-page, 0.05);
+    backdrop-filter: blur(16px) saturate(1.1);
+  }
+
+  &__tabs {
+    height: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  &__tab {
+    overflow: hidden;
+    align-self: stretch;
+    min-height: 100%;
+    border: 1px solid rgba($dark-page, 0);
+    border-radius: 0;
+    transform: translateY(0);
+    transition: transform 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+
+    &::before,
+    &::after {
+      content: '';
+      inset: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    &::before {
+      background: rgba($grey-1, 0.9);
+      box-shadow:
+        inset 0 1px 0 rgba($grey-1, 0.65),
+        0 2px 12px rgba($dark-page, 0.06);
+      opacity: 0;
+      transform: scale(0.96);
+    }
+
+    &::after {
+      border: 1px solid rgba($grey-1, 0.68);
+      opacity: 0;
+      transform: scale(0.98);
+    }
+
+    &:hover::before {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+
+    &:hover::after {
+      opacity: 0.65;
+      transform: scale(1);
+    }
+
+    &:active {
+      transform: scale(0.985);
+    }
+
+    :deep(.q-btn__content) {
+      z-index: 1;
+    }
+
+    &-label {
+      letter-spacing: -0.01em;
+    }
+
+    &--active::before,
+    &--active::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }
 
 .brand-lockup {
-  display: inline-flex;
-  align-items: center;
   gap: 10px;
-}
 
-.brand-lockup__icon {
-  width: 20px;
-  height: 20px;
-  flex: 0 0 auto;
-  border-radius: 6px;
-}
+  &__icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    border-radius: 6px;
+  }
 
-.brand-lockup__label {
-  line-height: 1.2;
-}
-
-.bottom-dock__menu-button {
-  border: 1px solid rgba($grey-1, 0.6);
-}
-
-.bottom-dock__tabs-surface {
-  display: inline-flex;
-  align-items: center;
-  align-self: stretch;
-  border: 1px solid rgba($grey-1, 0.65);
-  border-radius: 0;
-  box-shadow:
-    inset 0 1px 0 rgba($grey-1, 0.5),
-    0 8px 22px rgba($dark-page, 0.05);
-  backdrop-filter: blur(16px) saturate(1.1);
-}
-
-.bottom-dock__tabs {
-  height: 100%;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 4px;
-}
-
-.bottom-dock__tab {
-  overflow: hidden;
-  align-self: stretch;
-  min-height: 100%;
-  border: 1px solid rgba($dark-page, 0);
-  border-radius: 0;
-  transform: translateY(0);
-  transition: transform 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.bottom-dock__tab::before,
-.bottom-dock__tab::after {
-  content: '';
-  inset: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-.bottom-dock__tab::before {
-  background: rgba($grey-1, 0.9);
-  box-shadow:
-    inset 0 1px 0 rgba($grey-1, 0.65),
-    0 2px 12px rgba($dark-page, 0.06);
-  opacity: 0;
-  transform: scale(0.96);
-}
-
-.bottom-dock__tab::after {
-  border: 1px solid rgba($grey-1, 0.68);
-  opacity: 0;
-  transform: scale(0.98);
-}
-
-.bottom-dock__tab:hover::before {
-  opacity: 0.7;
-  transform: scale(1);
-}
-
-.bottom-dock__tab:hover::after {
-  opacity: 0.65;
-  transform: scale(1);
-}
-
-.bottom-dock__tab:active {
-  transform: scale(0.985);
-}
-
-.bottom-dock__tab :deep(.q-btn__content) {
-  z-index: 1;
-}
-
-.bottom-dock__tab-label {
-  letter-spacing: -0.01em;
-}
-
-.bottom-dock__tab--active::before,
-.bottom-dock__tab--active::after {
-  opacity: 1;
-  transform: scale(1);
+  &__label {
+    line-height: 1.2;
+  }
 }
 
 .mobile-dock-menu {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.96), rgba($grey-2, 0.86) 32%, rgba($blue-grey-1, 0.95) 100%);
 
   &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     gap: 12px;
   }
 
@@ -606,29 +594,22 @@ onBeforeUnmount(() => {
 }
 
 .mobile-dock-panel {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
   background:
     radial-gradient(circle at top, rgba($grey-1, 0.97), rgba($grey-2, 0.9) 28%, rgba($blue-grey-1, 0.98) 100%);
-}
 
-.mobile-dock-panel__header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid rgba($dark-page, 0.06);
-  backdrop-filter: blur(18px) saturate(1.1);
-}
-
-.mobile-dock-panel__body {
-  flex: 1;
-  overflow: auto;
+  &__header {
+    gap: 12px;
+    border-bottom: 1px solid rgba($dark-page, 0.06);
+    backdrop-filter: blur(18px) saturate(1.1);
+  }
 }
 
 @media (max-width: 640px) {
-  .bottom-dock__panel {
-    height: calc(50vh - 88px);
+  .bottom-dock {
+    &__panel {
+      height: calc(50vh - 88px);
+    }
   }
 }
 </style>
