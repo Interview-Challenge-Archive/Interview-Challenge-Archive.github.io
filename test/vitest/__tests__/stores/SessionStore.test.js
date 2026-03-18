@@ -222,6 +222,47 @@ describe('useSessionStore', () => {
     expect(store.nearestExpirationAt).toBeNull()
   })
 
+  it('returns the active provider access token and prefers the latest authenticated session', async () => {
+    const store = createSessionStore()
+
+    store.setSession({
+      provider: 'github',
+      accessToken: 'older-token',
+      authenticatedAt: '2026-03-18T08:00:00.000Z',
+      user: {
+        login: 'octocat-old'
+      }
+    })
+    store.setSession({
+      provider: 'github',
+      accessToken: 'newer-token',
+      authenticatedAt: '2026-03-18T10:00:00.000Z',
+      user: {
+        login: 'octocat-new'
+      }
+    })
+    await nextTick()
+
+    expect(store.getActiveAccessToken('github')).toBe('newer-token')
+  })
+
+  it('returns an empty provider token when no active session is available', async () => {
+    const store = createSessionStore()
+
+    store.setSession({
+      provider: 'github',
+      accessToken: 'expired-token',
+      expiresIn: 10,
+      authenticatedAt: '2026-03-18T00:00:00.000Z',
+      user: {
+        login: 'octocat'
+      }
+    })
+    await nextTick()
+
+    expect(store.getActiveAccessToken('github')).toBe('')
+  })
+
   it('logout clears all account-session stores', async () => {
     const store = createSessionStore()
 
