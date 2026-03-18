@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { createApp, nextTick } from 'vue'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -160,15 +160,7 @@ describe('useSessionStore', () => {
     expect(Object.keys(store.accounts)).toEqual(['linkedin:ada@example.com'])
     expect(store.isAuthenticated).toBe(true)
     expect(linkedinAccountStore.provider).toBe('linkedin')
-    expect(JSON.parse(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
-      provider: null,
-      accessToken: '',
-      tokenType: 'Bearer',
-      scope: '',
-      expiresIn: null,
-      authenticatedAt: null,
-      user: null
-    })
+    expect(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat'))).toBeNull()
   })
 
   it('clears the active account session state when it is the only account', async () => {
@@ -193,15 +185,7 @@ describe('useSessionStore', () => {
     expect(activeAccountStore.accessToken).toBe('')
     expect(activeAccountStore.user).toBeNull()
     expect(window.localStorage.getItem('job-test-vault-session')).toBeNull()
-    expect(JSON.parse(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat')))).toEqual({
-      provider: null,
-      accessToken: '',
-      tokenType: 'Bearer',
-      scope: '',
-      expiresIn: null,
-      authenticatedAt: null,
-      user: null
-    })
+    expect(window.localStorage.getItem(buildAccountSessionStorageKey('github:octocat'))).toBeNull()
   })
 
   it('considers the session unauthenticated when all account sessions are expired', async () => {
@@ -287,6 +271,28 @@ describe('useSessionStore', () => {
 
     expect(Object.keys(store.accounts)).toEqual([])
     expect(store.isAuthenticated).toBe(false)
+  })
+
+  it('disposes account-session stores when clearing an account session', async () => {
+    const store = createSessionStore()
+
+    store.setSession({
+      provider: 'github',
+      accessToken: 'github-token',
+      user: {
+        login: 'octocat'
+      }
+    })
+    await nextTick()
+
+    const githubAccountStore = useAccountSessionStore(store, 'github:octocat')
+    const disposeSpy = vi.spyOn(githubAccountStore, '$dispose')
+
+    store.clearSession('github:octocat')
+    await nextTick()
+
+    expect(disposeSpy).toHaveBeenCalledTimes(1)
+    expect(store.accounts['github:octocat']).toBeUndefined()
   })
 
   it('normalizes snake_case OAuth payload fields used by some providers', async () => {

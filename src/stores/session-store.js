@@ -265,7 +265,7 @@ export const useSessionStore = defineStore('session', () => {
     const removedStore = accounts.value[accountId]
 
     if (removedStore) {
-      removedStore.clearSession()
+      destroyAccountStore(removedStore)
     }
 
     unlinkAccountStore(accountId)
@@ -282,11 +282,23 @@ export const useSessionStore = defineStore('session', () => {
   }
 
   function clearAllSessions () {
-    for (const store of Object.values(accounts.value)) {
-      store.clearSession()
+    for (const accountStore of Object.values(accounts.value)) {
+      destroyAccountStore(accountStore)
     }
 
     accounts.value = {}
+  }
+
+  function destroyAccountStore (store) {
+    if (!store) {
+      return
+    }
+
+    store.clearSession()
+
+    if (typeof store.$dispose === 'function') {
+      store.$dispose()
+    }
   }
 
   function logout () {
