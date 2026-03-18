@@ -19,6 +19,7 @@
               v-if="isSubmitMode"
               v-model="organization"
               outlined
+              dense
               emit-value
               map-options
               :options="organizationOptions"
@@ -31,6 +32,7 @@
               v-else
               v-model="organization"
               outlined
+              dense
               readonly
               :label="t('dock.submissions.dialog.fields.organization')"
             />
@@ -39,6 +41,7 @@
               v-if="isSubmitMode"
               v-model="repository"
               outlined
+              dense
               emit-value
               map-options
               :options="repositoryOptions"
@@ -52,6 +55,7 @@
               v-else
               v-model="repository"
               outlined
+              dense
               readonly
               :label="t('dock.submissions.dialog.fields.repository')"
             />

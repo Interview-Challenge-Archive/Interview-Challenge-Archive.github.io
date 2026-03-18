@@ -5,6 +5,7 @@
     <q-input
       v-model="searchQuery"
       outlined
+      dense
       clearable
       :label="t('dock.search.queryFieldLabel')"
       :hint="t('dock.search.queryHint')"
@@ -15,6 +16,7 @@
       v-model="selectedLabels"
       class="q-mt-md"
       outlined
+      dense
       clearable
       multiple
       use-chips

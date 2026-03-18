@@ -8,13 +8,14 @@
       <section>
         <div class="text-subtitle2 text-weight-medium">{{ t('dock.submit.sections.basics') }}</div>
         <div class="column q-gutter-md q-mt-sm">
-          <q-input v-model="form.entryTitle" outlined :label="t('dock.submit.fields.entryTitle.label')" :hint="t('dock.submit.fields.entryTitle.hint')" />
-          <q-input v-model="form.company" outlined :label="t('dock.submit.fields.company.label')" :hint="t('dock.submit.fields.company.hint')" />
-          <q-input v-model="form.role" outlined :label="t('dock.submit.fields.role.label')" :hint="t('dock.submit.fields.role.hint')" />
-          <q-input v-model="form.sourceUrl" outlined type="url" :label="t('dock.submit.fields.sourceUrl.label')" :hint="t('dock.submit.fields.sourceUrl.hint')" />
+          <q-input v-model="form.entryTitle" outlined dense :label="t('dock.submit.fields.entryTitle.label')" :hint="t('dock.submit.fields.entryTitle.hint')" />
+          <q-input v-model="form.company" outlined dense :label="t('dock.submit.fields.company.label')" :hint="t('dock.submit.fields.company.hint')" />
+          <q-input v-model="form.role" outlined dense :label="t('dock.submit.fields.role.label')" :hint="t('dock.submit.fields.role.hint')" />
+          <q-input v-model="form.sourceUrl" outlined dense type="url" :label="t('dock.submit.fields.sourceUrl.label')" :hint="t('dock.submit.fields.sourceUrl.hint')" />
           <q-select
             v-model="form.stage"
             outlined
+            dense
             emit-value
             map-options
             :options="stageOptions"
@@ -32,6 +33,7 @@
           <q-select
             v-model="form.languages"
             outlined
+            dense
             multiple
             use-chips
             use-input
@@ -44,6 +46,7 @@
           <q-select
             v-model="form.stack"
             outlined
+            dense
             multiple
             use-chips
             use-input
@@ -56,6 +59,7 @@
           <q-select
             v-model="form.taskType"
             outlined
+            dense
             emit-value
             map-options
             :options="taskTypeOptions"
@@ -65,14 +69,15 @@
           <q-select
             v-model="form.difficulty"
             outlined
+            dense
             emit-value
             map-options
             :options="difficultyOptions"
             :label="t('dock.submit.fields.difficulty.label')"
             :hint="t('dock.submit.fields.difficulty.hint')"
           />
-          <q-input v-model="form.timeLimit" outlined :label="t('dock.submit.fields.timeLimit.label')" :hint="t('dock.submit.fields.timeLimit.hint')" />
-          <q-input v-model="form.submittedAt" outlined type="date" :label="t('dock.submit.fields.submittedAt.label')" :hint="t('dock.submit.fields.submittedAt.hint')" />
+          <q-input v-model="form.timeLimit" outlined dense :label="t('dock.submit.fields.timeLimit.label')" :hint="t('dock.submit.fields.timeLimit.hint')" />
+          <q-input v-model="form.submittedAt" outlined dense type="date" :label="t('dock.submit.fields.submittedAt.label')" :hint="t('dock.submit.fields.submittedAt.hint')" />
         </div>
       </section>
 
@@ -84,6 +89,7 @@
           <q-select
             v-model="form.reaction"
             outlined
+            dense
             emit-value
             map-options
             :options="reactionOptions"
@@ -110,11 +116,11 @@
       <section>
         <div class="text-subtitle2 text-weight-medium">{{ t('dock.submit.sections.notes') }}</div>
         <div class="column q-gutter-md q-mt-sm">
-          <q-input v-model="form.taskSummary" outlined autogrow type="textarea" :label="t('dock.submit.fields.taskSummary.label')" :hint="t('dock.submit.fields.taskSummary.hint')" />
-          <q-input v-model="form.deliverables" outlined autogrow type="textarea" :label="t('dock.submit.fields.deliverables.label')" :hint="t('dock.submit.fields.deliverables.hint')" />
-          <q-input v-model="form.feedback" outlined autogrow type="textarea" :label="t('dock.submit.fields.feedback.label')" :hint="t('dock.submit.fields.feedback.hint')" />
-          <q-input v-model="form.lessons" outlined autogrow type="textarea" :label="t('dock.submit.fields.lessons.label')" :hint="t('dock.submit.fields.lessons.hint')" />
-          <q-input v-model="form.notes" outlined autogrow type="textarea" :label="t('dock.submit.fields.notes.label')" :hint="t('dock.submit.fields.notes.hint')" />
+          <q-input v-model="form.taskSummary" outlined dense autogrow type="textarea" :label="t('dock.submit.fields.taskSummary.label')" :hint="t('dock.submit.fields.taskSummary.hint')" />
+          <q-input v-model="form.deliverables" outlined dense autogrow type="textarea" :label="t('dock.submit.fields.deliverables.label')" :hint="t('dock.submit.fields.deliverables.hint')" />
+          <q-input v-model="form.feedback" outlined dense autogrow type="textarea" :label="t('dock.submit.fields.feedback.label')" :hint="t('dock.submit.fields.feedback.hint')" />
+          <q-input v-model="form.lessons" outlined dense autogrow type="textarea" :label="t('dock.submit.fields.lessons.label')" :hint="t('dock.submit.fields.lessons.hint')" />
+          <q-input v-model="form.notes" outlined dense autogrow type="textarea" :label="t('dock.submit.fields.notes.label')" :hint="t('dock.submit.fields.notes.hint')" />
         </div>
       </section>
     </q-form>
