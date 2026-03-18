@@ -192,14 +192,8 @@ dock:
     details: Use the bottom navigation to move between dedicated search, submission, login, and information pages.
     sections:
       socialNetworks: Social networks
-      contributorControl: Organization contributors
       topContributors: Top contributors
     contributors:
-      organization: 'Organization: {organization}'
-      topPerRepository: Top per repository
-      load: Load
-      refresh: Refresh
-      notLoaded: Choose settings and load contributors.
       loading: Loading contributors...
       loaded: Loaded {contributors} contributors across {repositories} repositories.
       empty: No contributor data found for this organization.

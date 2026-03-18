@@ -183,21 +183,15 @@ dock:
     title: Apie Interview Challenge Archive
     sections:
       socialNetworks: Socialiniai tinklai
-      contributorControl: Organizacijos contributors
-      topContributors: Top contributors
+      topContributors: Aktyviausi prisidėję
     contributors:
-      organization: 'Organization: {organization}'
-      topPerRepository: Top per repository
-      load: Load
-      refresh: Refresh
-      notLoaded: Choose settings and load contributors.
-      loading: Loading contributors...
-      loaded: Loaded {contributors} contributors across {repositories} repositories.
-      empty: No contributor data found for this organization.
+      loading: Kraunami aktyviausi prisidėję...
+      loaded: Įkelta {contributors} prisidėjusių iš {repositories} repozitorijų.
+      empty: Šiai organizacijai prisidėjusių duomenų nerasta.
       errors:
-        organizationNotConfigured: The GitHub organization is not configured.
-        rateLimited: GitHub API rate limit reached. Connect a GitHub account and try again.
-        loadFailed: Failed to load contributors from GitHub.
+        organizationNotConfigured: GitHub organizacija nesukonfigūruota.
+        rateLimited: Pasiektas GitHub API užklausų limitas. Prisijunkite su GitHub paskyra ir bandykite dar kartą.
+        loadFailed: Nepavyko įkelti prisidėjusių duomenų iš GitHub.
     description: |-
       Interview Challenge Archive yra viešas namų užduočių archyvas, kuriame kandidatai gali parodyti, ko įmonės paprašė, ką jie pristatė ir kaip procesas judėjo po pateikimo termino. Pagrindinė idėja yra nepalikti tokio darbo užmiršto, o paversti jį aiškiai matomu ir panaudojamu ateityje.
 
