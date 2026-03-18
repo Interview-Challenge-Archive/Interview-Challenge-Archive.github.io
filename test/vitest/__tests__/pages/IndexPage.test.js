@@ -111,6 +111,36 @@ describe('IndexPage', () => {
     expect(wrapper.text()).not.toContain('Company-specific notes')
   })
 
+  it('shows an empty-state message when active filters return no projects', async () => {
+    mockRoute.query = {
+      query: 'non-existent-project'
+    }
+
+    const wrapper = mountWithApp(IndexPage, { pinia })
+    await nextTick()
+
+    expect(wrapper.text()).toContain('Nothing found for this search')
+    expect(wrapper.findAll('.home-project-tile')).toHaveLength(0)
+    expect(wrapper.findAll('.decorative-placeholder-tile:not(.loading-skeleton-tile)').length).toBeGreaterThan(0)
+    expect(wrapper.find('.home-tiles__sentinel').exists()).toBe(false)
+
+    const emptyActions = wrapper.findAll('.index-page__empty-state-markdown a')
+
+    expect(emptyActions).toHaveLength(2)
+
+    await emptyActions[0].trigger('click')
+    expect(routerPush).toHaveBeenLastCalledWith({
+      name: 'home',
+      query: {
+        query: 'non-existent-project',
+        openTab: 'search'
+      }
+    })
+
+    await emptyActions[1].trigger('click')
+    expect(routerPush).toHaveBeenLastCalledWith({ name: 'home' })
+  })
+
   it('renders decorative placeholder tiles inside the main grid instead of a second layer', () => {
     mockRoute.query = {
       label: 'Vue 3'

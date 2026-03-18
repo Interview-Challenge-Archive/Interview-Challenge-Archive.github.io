@@ -6,6 +6,8 @@ nav:
   about: About
 home:
   loadingMore: Loading more projects
+  emptySearchTitle: Nothing found for this search
+  emptySearchDescriptionMarkdown: Try a different query in the [search tab]({openSearchLink}) or [clear search]({clearSearchLink}).
 maintenance:
   eyebrow: Maintenance mode
   title: We're polishing the experience

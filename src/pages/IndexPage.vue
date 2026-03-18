@@ -1,5 +1,5 @@
 <template>
-  <q-page ref="pageRef" class="index-page q-pa-none">
+  <q-page ref="pageRef" class="index-page q-pa-none relative-position">
     <section ref="tilesGridRef" class="home-tiles">
       <template v-for="tile in renderedTiles" :key="tile.id">
         <HomeProjectTile
@@ -23,6 +23,24 @@
       </template>
     </section>
 
+    <div v-if="isEmptySearchResult" class="index-page__empty-frost absolute-full" aria-hidden="true" />
+
+    <div v-if="isEmptySearchResult" class="index-page__empty-state absolute-center text-center q-px-lg">
+      <div class="index-page__empty-state-card q-px-xl q-py-lg">
+        <div class="text-h5 text-weight-medium">{{ t('home.emptySearchTitle') }}</div>
+        <div
+          class="index-page__empty-state-markdown text-body1 text-grey-7 q-mt-sm"
+          @click.capture="handleEmptyStateLinkClick"
+        >
+          <QMarkdown
+            :src="emptySearchDescriptionMarkdown"
+            no-html
+            no-heading-anchor-links
+          />
+        </div>
+      </div>
+    </div>
+
     <div v-if="showLoadMoreIndicator" class="home-load-more text-grey-1 q-pt-md q-px-md q-pb-sm" aria-live="polite">
       <q-spinner-dots size="32px" color="white" />
       <span class="home-load-more__label text-uppercase text-grey-2">{{ t('home.loadingMore') }}</span>
@@ -38,6 +56,8 @@ import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useMeta } from 'quasar'
+import { QMarkdown } from '@quasar/quasar-ui-qmarkdown'
+import '@quasar/quasar-ui-qmarkdown/dist/index.css'
 import DecorativePlaceholderTile from 'src/components/home-tiles/DecorativePlaceholderTile.vue'
 import HomeProjectTile from 'src/components/home-tiles/HomeProjectTile.vue'
 import LoadingSkeletonTile from 'src/components/home-tiles/LoadingSkeletonTile.vue'
@@ -130,6 +150,11 @@ const displayedTiles = computed(() => {
     return matchesQuery && matchesLabels
   })
 })
+const isEmptySearchResult = computed(() => hasActiveSearch.value && displayedTiles.value.length === 0)
+const emptySearchDescriptionMarkdown = computed(() => t('home.emptySearchDescriptionMarkdown', {
+  openSearchLink: '#open-search',
+  clearSearchLink: '#clear-search'
+}))
 
 useMeta(() => {
   let title = 'Interview Challenge Archive'
@@ -316,6 +341,40 @@ async function openProject (tile) {
   await navigateWithTransition(router, tile.routeLocation)
 }
 
+async function openSearchTab () {
+  await router.push({
+    name: 'home',
+    query: {
+      ...route.query,
+      openTab: 'search'
+    }
+  })
+}
+
+async function clearSearchFilters () {
+  await router.push({ name: 'home' })
+}
+
+async function handleEmptyStateLinkClick (event) {
+  const target = event.target instanceof Element ? event.target.closest('a') : null
+  const href = target?.getAttribute('href') ?? target?.href ?? ''
+
+  if (!href) {
+    return
+  }
+
+  if (href.endsWith('#open-search')) {
+    event.preventDefault()
+    await openSearchTab()
+    return
+  }
+
+  if (href.endsWith('#clear-search')) {
+    event.preventDefault()
+    await clearSearchFilters()
+  }
+}
+
 onMounted(() => {
   updatePageMetrics()
 
@@ -373,6 +432,41 @@ onBeforeUnmount(() => {
 <style scoped lang="scss">
 .index-page {
   transition: opacity 0.3s ease;
+
+  &__empty-frost {
+    z-index: 2;
+    pointer-events: none;
+    background: rgba($grey-1, 0.015);
+    backdrop-filter: blur(4px) saturate(1.02);
+    -webkit-backdrop-filter: blur(4px) saturate(1.02);
+  }
+
+  &__empty-state {
+    z-index: 3;
+    width: min(560px, 100%);
+    transition: top 0.32s cubic-bezier(0.22, 1, 0.36, 1), transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &__empty-state-card {
+    background: rgba($grey-1, 0.9);
+    border: 1px solid rgba($grey-1, 0.72);
+    box-shadow: 0 18px 36px rgba($dark-page, 0.12);
+  }
+
+  &__empty-state-markdown {
+    :deep(p) {
+      margin: 0;
+    }
+
+    :deep(.q-markdown--link) {
+      color: $primary;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+:global(body.home-search-dock-expanded) .index-page__empty-state {
+  top: 28%;
 }
 
 .home-load-more {

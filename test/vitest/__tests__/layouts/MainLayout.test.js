@@ -4,8 +4,9 @@ import MainLayout from 'src/layouts/MainLayout.vue'
 import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
-const { routeState } = vi.hoisted(() => ({
-  routeState: { query: {} }
+const { routeState, routerReplace } = vi.hoisted(() => ({
+  routeState: { query: {} },
+  routerReplace: vi.fn()
 }))
 
 vi.mock('quasar', async () => {
@@ -22,7 +23,8 @@ vi.mock('vue-router', async () => {
 
   return {
     ...actual,
-    useRoute: () => ({ query: routeState.query })
+    useRoute: () => ({ query: routeState.query }),
+    useRouter: () => ({ replace: routerReplace })
   }
 })
 
@@ -65,6 +67,8 @@ function createAuthenticatedPinia () {
 describe('MainLayout', () => {
   afterEach(() => {
     routeState.query = {}
+    routerReplace.mockReset()
+    document.body.classList.remove('home-search-dock-expanded')
   })
 
   it('shows a fixed close button inside the opened desktop panel', async () => {
@@ -84,6 +88,26 @@ describe('MainLayout', () => {
 
     expect(wrapper.find('.bottom-dock__tab--active').exists()).toBe(true)
     expect(wrapper.find('.bottom-dock__panel-close').exists()).toBe(false)
+  })
+
+  it('opens the requested dock tab from route query', async () => {
+    const wrapper = mountLayout({ openTab: 'search' })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.bottom-dock__panel-close').exists()).toBe(true)
+    expect(document.body.classList.contains('home-search-dock-expanded')).toBe(true)
+  })
+
+  it('removes openTab query when the tab is closed', async () => {
+    const wrapper = mountLayout({ openTab: 'search', query: 'vue' })
+
+    await wrapper.vm.$nextTick()
+    await wrapper.find('.bottom-dock__panel-close').trigger('click')
+
+    expect(routerReplace).toHaveBeenCalledWith({
+      query: { query: 'vue' }
+    })
   })
 
   it('shows Login tab and hides Account tab for unauthenticated users', () => {

@@ -6,6 +6,8 @@ nav:
   about: Apie
 home:
   loadingMore: Kraunami kiti projektai
+  emptySearchTitle: Pagal sia paieska nieko nerasta
+  emptySearchDescriptionMarkdown: Pabandykite kita uzklausa per [paieskos skirtuka]({openSearchLink}) arba [isvalyti paieska]({clearSearchLink}).
 maintenance:
   eyebrow: Techninė priežiūra
   title: Tobuliname naudojimo patirtį
