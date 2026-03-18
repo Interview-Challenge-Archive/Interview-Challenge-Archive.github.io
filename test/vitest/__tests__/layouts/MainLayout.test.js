@@ -37,7 +37,7 @@ function mountLayout (query = {}) {
         RouterLink: { template: '<a><slot /></a>' },
         RouterView: true,
         SearchDockPanel: true,
-        SubmitDockPanel: true,
+        SubmissionsDockPanel: true,
         LoginDockPanel: true,
         AccountDockPanel: true,
         AboutDockPanel: true
@@ -127,7 +127,7 @@ describe('MainLayout', () => {
           RouterLink: { template: '<a><slot /></a>' },
           RouterView: true,
           SearchDockPanel: true,
-          SubmitDockPanel: true,
+          SubmissionsDockPanel: true,
           LoginDockPanel: true,
           AccountDockPanel: true,
           AboutDockPanel: true
