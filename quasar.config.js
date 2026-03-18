@@ -3,9 +3,31 @@
 
 import { defineConfig } from '#q-app/wrappers'
 import yaml from '@rollup/plugin-yaml'
+import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const i18nIncludePath = `${fileURLToPath(new URL('./src/i18n', import.meta.url)).replaceAll('\\', '/')}/**/*.{json,json5,yaml,yml}`
+const packageJsonPath = fileURLToPath(new URL('./package.json', import.meta.url))
+const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
+const nodeBuildTarget = resolveNodeBuildTarget(packageJson?.engines?.node)
+
+function resolveNodeBuildTarget(engineRange) {
+  if (typeof engineRange !== 'string') {
+    return 'node20'
+  }
+
+  const versionPattern = /(?:\^|~|>=|>|<=|<)?\s*(\d+)(?:\.\d+){0,2}/g
+  const supportedMajors = Array.from(
+    engineRange.matchAll(versionPattern),
+    ([, major]) => Number.parseInt(major, 10)
+  ).filter((major) => Number.isInteger(major))
+
+  if (supportedMajors.length === 0) {
+    return 'node20'
+  }
+
+  return `node${Math.min(...supportedMajors)}`
+}
 
 export default defineConfig((ctx) => {
   return {
@@ -41,7 +63,7 @@ export default defineConfig((ctx) => {
     build: {
       target: {
         browser: [ 'es2022', 'firefox115', 'chrome115', 'safari14' ],
-        node: 'node20'
+        node: nodeBuildTarget
       },
 
       vueRouterMode: 'hash',
