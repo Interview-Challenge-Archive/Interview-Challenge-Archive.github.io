@@ -208,8 +208,14 @@ dock:
   account:
     label: Paskyra
     title: Paskyra
-    description: Valdykite prijungtus tiekėjus ir paskyrų sesijas vienoje vietoje.
+    description: "Čia rasite viską, kas susiję su jūsų paskyra: prijungtus tiekėjus, aktyvias sesijas ir greitą atsijungimą."
     connectedAccounts: Prijungtos paskyros
+    table:
+      columns:
+        provider: Tiekėjas
+        account: Paskyra
+        status: Būsena
+        actions: Veiksmai
     logout: Atsijungti
     unknownProvider: Nežinomas tiekėjas
     actions:

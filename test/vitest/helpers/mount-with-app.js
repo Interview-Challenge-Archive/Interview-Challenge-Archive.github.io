@@ -250,6 +250,14 @@ const messages = {
         title: 'Account',
         description: 'Manage connected providers and switch account sessions from one place.',
         connectedAccounts: 'Connected accounts',
+        table: {
+          columns: {
+            provider: 'Provider',
+            account: 'Account',
+            status: 'Status',
+            actions: 'Actions'
+          }
+        },
         logout: 'Logout',
         unknownProvider: 'Unknown provider',
         actions: {

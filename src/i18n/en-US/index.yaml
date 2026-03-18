@@ -208,8 +208,14 @@ dock:
   account:
     label: Account
     title: Account
-    description: Manage connected providers and switch account sessions from one place.
+    description: Use this area for everything related to your account, including connected providers, active sessions, and quick sign-out controls.
     connectedAccounts: Connected accounts
+    table:
+      columns:
+        provider: Provider
+        account: Account
+        status: Status
+        actions: Actions
     logout: Logout
     unknownProvider: Unknown provider
     actions:

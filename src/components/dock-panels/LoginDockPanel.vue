@@ -128,9 +128,13 @@ function startLogin (providerConfig) {
   cleanupAuthFlow({ closePopup: true })
 
   const loginUrl = new URL(providerConfig.loginUrl)
+  const scopeValue = resolveProviderScope(providerConfig)
 
   loginUrl.searchParams.set('mode', 'popup')
   loginUrl.searchParams.set('origin', window.location.origin)
+  if (scopeValue) {
+    loginUrl.searchParams.set('scope', scopeValue)
+  }
 
   authPopup = window.open(loginUrl.toString(), appConfig.auth.popup.name, getPopupFeatures())
 
@@ -160,6 +164,20 @@ function startLogin (providerConfig) {
 onBeforeUnmount(() => {
   cleanupAuthFlow({ closePopup: true })
 })
+
+function resolveProviderScope (providerConfig) {
+  const rawScopes = providerConfig?.scopes
+  const normalizedScopes = Array.isArray(rawScopes)
+    ? rawScopes
+    : String(rawScopes ?? '')
+      .split(/[,\s]+/)
+
+  const uniqueScopes = Array.from(new Set(normalizedScopes
+    .map((scope) => String(scope ?? '').trim())
+    .filter(Boolean)))
+
+  return uniqueScopes.join(' ')
+}
 </script>
 
 <style scoped lang="scss">

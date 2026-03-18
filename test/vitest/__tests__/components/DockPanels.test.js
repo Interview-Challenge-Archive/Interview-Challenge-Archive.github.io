@@ -92,7 +92,7 @@ describe('AccountDockPanel', () => {
     const actions = wrapper.findAllComponents({ name: 'QBtn' }).map((button) => button.props('label'))
 
     expect(wrapper.text()).toContain('Account')
-    expect(wrapper.text()).toContain('Connected accounts')
+    expect(wrapper.text()).toContain('Provider')
     expect(wrapper.text()).toContain('GitHub')
     expect(wrapper.text()).toContain('The Octocat')
     expect(actions).toContain('Logout')
