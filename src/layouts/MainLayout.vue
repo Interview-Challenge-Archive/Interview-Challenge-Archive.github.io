@@ -213,10 +213,10 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import AboutDockPanel from 'src/components/dock-panels/AboutDockPanel.vue'
 import AccountDockPanel from 'src/components/dock-panels/AccountDockPanel.vue'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
@@ -227,6 +227,7 @@ import { useSessionStore } from 'src/stores/session-store'
 const $q = useQuasar()
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const sessionStore = useSessionStore()
 
 const expandedTab = ref(null)
@@ -249,6 +250,10 @@ const preferredDockTab = computed(() => {
   const hasLabels = labels.some((label) => typeof label === 'string' && label.trim())
 
   return hasQuery || hasLabels ? 'search' : null
+})
+const requestedDockTab = computed(() => {
+  const tab = Array.isArray(route.query.openTab) ? route.query.openTab[0] : route.query.openTab
+  return typeof tab === 'string' ? tab : null
 })
 
 const isMobile = computed(() => $q.screen.lt.sm)
@@ -278,6 +283,17 @@ function closeActiveTab () {
   expandedTab.value = null
 }
 
+async function removeOpenTabQueryParam () {
+  if (typeof route.query.openTab === 'undefined') {
+    return
+  }
+
+  const nextQuery = { ...route.query }
+  delete nextQuery.openTab
+
+  await router.replace({ query: nextQuery })
+}
+
 watch(isAuthenticated, (authenticated) => {
   if (authenticated && expandedTab.value === 'login') {
     expandedTab.value = 'account'
@@ -285,6 +301,36 @@ watch(isAuthenticated, (authenticated) => {
 
   if (!authenticated && expandedTab.value === 'account') {
     expandedTab.value = 'login'
+  }
+})
+
+watch([requestedDockTab, dockTabs], ([tab, tabs]) => {
+  if (!tab || !tabs.some((dockTab) => dockTab.name === tab)) {
+    return
+  }
+
+  expandedTab.value = tab
+  mobileMenuOpen.value = false
+}, { immediate: true })
+
+watch([isExpanded, expandedTab], ([expanded, tab]) => {
+  if (typeof document === 'undefined') {
+    return
+  }
+
+  const hasSearchDockOverlay = expanded && tab === 'search'
+  document.body.classList.toggle('home-search-dock-expanded', hasSearchDockOverlay)
+}, { immediate: true })
+
+watch(expandedTab, (tab, previousTab) => {
+  if (tab === null && previousTab !== null) {
+    void removeOpenTabQueryParam()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('home-search-dock-expanded')
   }
 })
 </script>

@@ -5,7 +5,11 @@ import { createI18n } from 'vue-i18n'
 const messages = {
   'en-US': {
     app: { title: 'Interview Challenge Archive' },
-    home: { loadingMore: 'Loading more projects' },
+    home: {
+      loadingMore: 'Loading more projects',
+      emptySearchTitle: 'Nothing found for this search',
+      emptySearchDescriptionMarkdown: 'Try a different query in the [search tab]({openSearchLink}) or [clear search]({clearSearchLink}).'
+    },
     maintenance: {
       eyebrow: 'Maintenance mode',
       title: 'We are polishing the experience',
