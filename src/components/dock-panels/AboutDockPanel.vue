@@ -47,10 +47,10 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {{ primaryAuthor.mention }}
+                {{ primaryAuthor.displayName }}
               </a>
               <template v-else>
-                {{ primaryAuthor.mention }}
+                {{ primaryAuthor.displayName }}
               </template>
             </template>
             <template v-else-if="token.type === 'multiverse'">
@@ -61,7 +61,7 @@
                 rel="noopener noreferrer"
                 v-if="multiverseLink?.url"
               >
-                {{ multiverseLink.label }}
+                {{ multiverseLink.label || 'Multiverse theme by HTML5 UP' }}
               </a>
               <template v-else>
                 Multiverse theme by HTML5 UP
@@ -111,30 +111,14 @@ const multiversePlaceholder = '__MULTIVERSE__'
 const placeholderPattern = /(__AI_TOOLS__|__GITHUB__|__LINKEDIN__|__PRIMARY_AUTHOR__|__MULTIVERSE__)/
 
 const socialLinks = computed(() => Object.values(aboutConfig.about.socialLinks ?? {}))
-const multiverseLink = computed(() => ({
-  label: aboutConfig.about.referenceLinks?.multiverse?.label ?? 'Multiverse theme by HTML5 UP',
-  url: aboutConfig.about.referenceLinks?.multiverse?.url ?? ''
-}))
+const multiverseLink = aboutConfig.about.referenceLinks?.multiverse ?? {}
 const socialLinkMap = computed(() =>
   socialLinks.value.reduce((result, socialLink) => {
     result[socialLink.id] = socialLink
     return result
   }, {})
 )
-const authors = computed(() => {
-  if (Array.isArray(packageInfo.authors) && packageInfo.authors.length > 0) {
-    return packageInfo.authors
-  }
-
-  return packageInfo.author ? [packageInfo.author] : []
-})
-const authorEntries = computed(() => authors.value.map((author) => normalizeAuthor(author)))
-const primaryAuthor = computed(() => authorEntries.value[0] ?? {
-  raw: '',
-  mention: '',
-  displayName: '',
-  profileUrl: ''
-})
+const primaryAuthor = normalizeAuthor(packageInfo.author)
 const aiTools = computed(() =>
   Object.entries(packageInfo.aiTools ?? {})
     .map(([name, details]) => ({
@@ -195,72 +179,31 @@ function normalizeAuthor (author) {
   if (!rawAuthor) {
     return {
       raw: '',
-      mention: '',
       displayName: '',
       profileUrl: ''
     }
   }
 
-  const aliasMatch = rawAuthor.match(/\(aka\s+([^)]+)\)/i)
-  const alias = aliasMatch?.[1]?.trim() ?? ''
   const withoutEmail = rawAuthor.replace(/\s*<[^>]*>/g, '').trim()
   const displayName = withoutEmail.replace(/\s*\(aka\s+[^)]+\)/i, '').trim()
-  const mention = alias ? `@${alias}` : displayName
-  const profileUrl = resolveAuthorProfileUrl({
-    alias,
-    explicitUrl: ''
-  })
 
   return {
     raw: rawAuthor,
-    mention,
     displayName,
-    profileUrl
+    profileUrl: ''
   }
 }
 
 function normalizeObjectAuthor (author) {
   const rawAuthor = JSON.stringify(author)
   const name = String(author.name ?? '').trim()
-  const aliasMatch = name.match(/\(aka\s+([^)]+)\)/i)
-  const alias = aliasMatch?.[1]?.trim() ?? ''
   const displayName = name.replace(/\s*\(aka\s+[^)]+\)/i, '').trim()
-  const mentionFromUrl = deriveGithubMentionFromUrl(author.url)
-  const mention = alias ? `@${alias}` : (mentionFromUrl || displayName || name)
-  const profileUrl = resolveAuthorProfileUrl({
-    alias,
-    explicitUrl: String(author.url ?? '').trim()
-  })
 
   return {
     raw: rawAuthor,
-    mention,
     displayName,
-    profileUrl
+    profileUrl: String(author.url ?? '').trim()
   }
-}
-
-function resolveAuthorProfileUrl ({ alias, explicitUrl }) {
-  if (explicitUrl) {
-    return explicitUrl
-  }
-
-  if (alias) {
-    return `https://github.com/${alias}`
-  }
-
-  return ''
-}
-
-function deriveGithubMentionFromUrl (url) {
-  const rawUrl = String(url ?? '').trim()
-
-  if (!rawUrl) {
-    return ''
-  }
-
-  const githubProfileMatch = rawUrl.match(/^https?:\/\/(?:www\.)?github\.com\/([^/\s?#]+)\/?$/i)
-  return githubProfileMatch?.[1] ? `@${githubProfileMatch[1]}` : ''
 }
 </script>
 
