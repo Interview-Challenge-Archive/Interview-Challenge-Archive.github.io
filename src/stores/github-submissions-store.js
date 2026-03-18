@@ -6,7 +6,8 @@ import { useSessionStore } from 'src/stores/session-store'
 const SUBMISSION_MARKER_PATH = '.github/ica-submission.yml'
 const SUBMISSION_BOT_LOGIN = 'InterviewChallengeArchive[bot]'
 const REPOSITORY_PAGE_SIZE = 100
-const PULL_REQUEST_PAGE_SIZE = 100
+const CODE_SEARCH_PAGE_SIZE = 100
+const PULL_REQUEST_SEARCH_PAGE_SIZE = 100
 const REPOSITORY_SCAN_CONCURRENCY = 4
 
 export const useGitHubSubmissionsStore = defineStore('github-submissions', () => {
@@ -70,6 +71,14 @@ export const useGitHubSubmissionsStore = defineStore('github-submissions', () =>
         && !repository.disabled
         && String(repository?.owner?.login ?? '').trim().toLowerCase() === normalizedViewerLogin
       )
+      const repositoriesWithSubmissionFile = await searchRepositoriesWithSubmissionFile(
+        octokit,
+        normalizedViewerLogin
+      )
+      const submissionPullRequestsByRepository = await searchSubmissionPullRequestsByRepository(
+        octokit,
+        normalizedViewerLogin
+      )
       const discoveredSubmissions = []
 
       await mapWithConcurrency(
@@ -83,8 +92,15 @@ export const useGitHubSubmissionsStore = defineStore('github-submissions', () =>
             return
           }
 
-          const hasSubmissionFile = await repositoryHasSubmissionFile(octokit, owner, name)
-          const pullRequest = await fetchSubmissionPullRequest(octokit, owner, name)
+          const normalizedRepoFullName = String(repository.full_name || `${owner}/${name}`)
+            .trim()
+            .toLowerCase()
+          const hasSubmissionFile = repositoriesWithSubmissionFile
+            ? repositoriesWithSubmissionFile.has(normalizedRepoFullName)
+            : await repositoryHasSubmissionFile(octokit, owner, name)
+          const pullRequest = submissionPullRequestsByRepository
+            ? (submissionPullRequestsByRepository.get(normalizedRepoFullName) ?? null)
+            : await fetchSubmissionPullRequest(octokit, owner, name)
 
           if (!hasSubmissionFile && !pullRequest) {
             return
@@ -133,6 +149,91 @@ if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useGitHubSubmissionsStore, import.meta.hot))
 }
 
+async function searchRepositoriesWithSubmissionFile (octokit, viewerLogin) {
+  const normalizedViewerLogin = String(viewerLogin ?? '').trim()
+
+  if (!normalizedViewerLogin) {
+    return new Set()
+  }
+
+  try {
+    const [submissionDirectory, submissionFileName] = SUBMISSION_MARKER_PATH.split('/')
+    const searchResults = await octokit.paginate(
+      octokit.rest.search.code,
+      {
+        q: [
+          `user:${normalizedViewerLogin}`,
+          `path:${submissionDirectory}`,
+          `filename:${submissionFileName}`
+        ].join(' '),
+        per_page: CODE_SEARCH_PAGE_SIZE
+      }
+    )
+
+    return new Set(searchResults
+      .map((item) => String(item?.repository?.full_name ?? '').trim().toLowerCase())
+      .filter(Boolean))
+  } catch (error) {
+    if (isSearchQueryValidationError(error)) {
+      return null
+    }
+
+    throw error
+  }
+}
+
+async function searchSubmissionPullRequestsByRepository (octokit, viewerLogin) {
+  const normalizedViewerLogin = String(viewerLogin ?? '').trim()
+
+  if (!normalizedViewerLogin) {
+    return new Map()
+  }
+
+  let searchResults = []
+
+  try {
+    searchResults = await octokit.paginate(
+      octokit.rest.search.issuesAndPullRequests,
+      {
+        q: [
+          `user:${normalizedViewerLogin}`,
+          'is:pr'
+        ].join(' '),
+        sort: 'updated',
+        order: 'desc',
+        per_page: PULL_REQUEST_SEARCH_PAGE_SIZE
+      }
+    )
+  } catch (error) {
+    if (isSearchQueryValidationError(error)) {
+      return null
+    }
+
+    throw error
+  }
+
+  const pullRequestsByRepository = new Map()
+
+  for (const searchResult of searchResults) {
+    if (String(searchResult?.user?.login ?? '').trim() !== SUBMISSION_BOT_LOGIN) {
+      continue
+    }
+
+    const repositoryFullName = extractRepositoryFullName(searchResult)
+
+    if (!repositoryFullName || pullRequestsByRepository.has(repositoryFullName)) {
+      continue
+    }
+
+    pullRequestsByRepository.set(repositoryFullName, {
+      number: Number(searchResult?.number) || null,
+      url: String(searchResult?.pull_request?.html_url ?? searchResult?.html_url ?? '').trim()
+    })
+  }
+
+  return pullRequestsByRepository
+}
+
 async function repositoryHasSubmissionFile (octokit, owner, repository) {
   try {
     await octokit.rest.repos.getContent({
@@ -161,7 +262,7 @@ async function fetchSubmissionPullRequest (octokit, owner, repository) {
         state: 'all',
         sort: 'updated',
         direction: 'desc',
-        per_page: PULL_REQUEST_PAGE_SIZE
+        per_page: PULL_REQUEST_SEARCH_PAGE_SIZE
       }
     )
     const botPullRequest = pullRequests.find((pullRequest) => pullRequest?.user?.login === SUBMISSION_BOT_LOGIN)
@@ -187,6 +288,39 @@ function isSkippableLookupError (error) {
   const status = Number(error?.status ?? error?.response?.status)
 
   return status === 404 || status === 409
+}
+
+function isSearchQueryValidationError (error) {
+  const status = Number(error?.status ?? error?.response?.status)
+
+  return status === 422
+}
+
+function extractRepositoryFullName (searchResult) {
+  const repositoryFullName = String(searchResult?.repository?.full_name ?? '').trim().toLowerCase()
+
+  if (repositoryFullName) {
+    return repositoryFullName
+  }
+
+  const repositoryUrl = String(searchResult?.repository_url ?? '').trim()
+
+  if (!repositoryUrl) {
+    return ''
+  }
+
+  try {
+    const { pathname } = new URL(repositoryUrl)
+    const pathSegments = pathname.split('/').filter(Boolean)
+
+    if (pathSegments.length < 3 || pathSegments[0] !== 'repos') {
+      return ''
+    }
+
+    return `${pathSegments[1]}/${pathSegments[2]}`.toLowerCase()
+  } catch {
+    return ''
+  }
 }
 
 function sortSubmissionsByUpdatedAt (left, right) {

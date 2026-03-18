@@ -168,15 +168,19 @@ const isSubmitMode = computed(() => props.mode === 'submit')
 const dialogTitle = computed(() => isSubmitMode.value
   ? t('dock.submissions.dialog.title.submit')
   : t('dock.submissions.dialog.title.update'))
-const allOrganizationOptions = computed(() => organizations.value)
+const allOrganizationOptions = computed(() =>
+  [...organizations.value].sort(sortSelectOptionsByLabel))
 const organizationOptions = computed(() =>
   allOrganizationOptions.value.slice(0, organizationOptionsLimit.value))
 const organizationOptionsAvailable = computed(() => allOrganizationOptions.value.length > 0)
 const repositoryRecords = computed(() => githubSubmissionRepositoriesStore.repositoriesForOrganization(organization.value))
-const allRepositoryOptions = computed(() => repositoryRecords.value.map((repositoryRecord) => ({
-  label: repositoryRecord.name,
-  value: repositoryRecord.name
-})))
+const allRepositoryOptions = computed(() =>
+  repositoryRecords.value
+    .map((repositoryRecord) => ({
+      label: repositoryRecord.name,
+      value: repositoryRecord.name
+    }))
+    .sort(sortSelectOptionsByLabel))
 const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, repositoryOptionsLimit.value))
 const isLoadingRepositories = computed(() =>
   githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(organization.value))
@@ -235,7 +239,7 @@ async function ensureInitialSelection () {
 
   if (!organization.value) {
     organization.value = githubSubmissionRepositoriesStore.defaultOrganization
-      || organizations.value[0]?.value
+      || allOrganizationOptions.value[0]?.value
       || ''
   }
 
@@ -284,6 +288,10 @@ function onRepositoriesVirtualScroll ({ to }) {
   }
 
   repositoryOptionsLimit.value += SELECT_PAGE_SIZE
+}
+
+function sortSelectOptionsByLabel (left, right) {
+  return String(left?.label ?? '').localeCompare(String(right?.label ?? ''))
 }
 </script>
 
