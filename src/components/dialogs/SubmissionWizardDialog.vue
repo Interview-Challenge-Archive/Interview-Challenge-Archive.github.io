@@ -131,6 +131,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useDialogPluginComponent } from 'quasar'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
+import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
 
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
@@ -162,11 +163,13 @@ const {
   onDialogOK
 } = useDialogPluginComponent()
 const githubSubmissionRepositoriesStore = useGitHubSubmissionRepositoriesStore()
+const githubSubmissionsStore = useGitHubSubmissionsStore()
 const {
   organizations,
   isLoadingOrganizations,
   errorMessageKey
 } = storeToRefs(githubSubmissionRepositoriesStore)
+const { submissions } = storeToRefs(githubSubmissionsStore)
 
 const step = ref(1)
 const organization = ref(String(props.owner ?? '').trim())
@@ -184,17 +187,24 @@ const organizationOptions = computed(() =>
   allOrganizationOptions.value.slice(0, organizationOptionsLimit.value))
 const organizationOptionsAvailable = computed(() => allOrganizationOptions.value.length > 0)
 const repositoryRecords = computed(() => githubSubmissionRepositoriesStore.repositoriesForOrganization(organization.value))
+const submittedRepositoryKeys = computed(() =>
+  new Set(submissions.value.map((submission) => normalizeRepositoryKey(submission?.owner, submission?.repository))))
 const allRepositoryOptions = computed(() =>
   repositoryRecords.value
     .map((repositoryRecord) => ({
       label: repositoryRecord.name,
-      value: repositoryRecord.name
+      value: repositoryRecord.name,
+      disable: submittedRepositoryKeys.value.has(normalizeRepositoryKey(repositoryRecord.owner, repositoryRecord.name))
     }))
     .sort(sortSelectOptionsByLabel))
 const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, repositoryOptionsLimit.value))
 const isLoadingRepositories = computed(() =>
   githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(organization.value))
-const canGoNext = computed(() => Boolean(organization.value && repository.value))
+const canGoNext = computed(() => Boolean(
+  organization.value
+  && repository.value
+  && !allRepositoryOptions.value.find((option) => option.value === repository.value)?.disable
+))
 const dialogErrorMessage = computed(() => {
   if (!errorMessageKey.value) {
     return ''
@@ -243,6 +253,7 @@ function finishWizard () {
 async function ensureInitialSelection () {
   try {
     await githubSubmissionRepositoriesStore.ensureOrganizationsLoaded()
+    await githubSubmissionsStore.loadSubmissions()
   } catch {
     return
   }
@@ -272,7 +283,7 @@ async function loadRepositoriesForOrganization (organizationLogin) {
   }
 
   if (!repository.value) {
-    repository.value = allRepositoryOptions.value[0]?.value ?? ''
+    repository.value = allRepositoryOptions.value.find((option) => !option.disable)?.value ?? ''
   }
 }
 
@@ -302,6 +313,17 @@ function onRepositoriesVirtualScroll ({ to }) {
 
 function sortSelectOptionsByLabel (left, right) {
   return String(left?.label ?? '').localeCompare(String(right?.label ?? ''))
+}
+
+function normalizeRepositoryKey (owner, repository) {
+  const normalizedOwner = String(owner ?? '').trim().toLowerCase()
+  const normalizedRepository = String(repository ?? '').trim().toLowerCase()
+
+  if (!normalizedOwner || !normalizedRepository) {
+    return ''
+  }
+
+  return `${normalizedOwner}/${normalizedRepository}`
 }
 </script>
 
