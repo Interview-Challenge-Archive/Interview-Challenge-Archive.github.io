@@ -15,50 +15,56 @@
           :done="step > 1"
         >
           <div class="column q-gutter-md">
-            <q-select
-              v-if="isSubmitMode"
-              v-model="organization"
-              outlined
-              dense
-              emit-value
-              map-options
-              :options="organizationOptions"
-              :label="t('dock.submissions.dialog.fields.organization')"
-              :hint="t('dock.submissions.dialog.hints.organization')"
-              :loading="isLoadingOrganizations"
-              @virtual-scroll="onOrganizationsVirtualScroll"
-            />
-            <q-input
-              v-else
-              v-model="organization"
-              outlined
-              dense
-              readonly
-              :label="t('dock.submissions.dialog.fields.organization')"
-            />
+            <div>
+              <label for="submission-dialog-organization" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.organization') }}</label>
+              <q-select
+                v-if="isSubmitMode"
+                v-model="organization"
+                for="submission-dialog-organization"
+                outlined
+                dense
+                emit-value
+                map-options
+                :options="organizationOptions"
+                :hint="t('dock.submissions.dialog.hints.organization')"
+                :loading="isLoadingOrganizations"
+                @virtual-scroll="onOrganizationsVirtualScroll"
+              />
+              <q-input
+                v-else
+                v-model="organization"
+                for="submission-dialog-organization"
+                outlined
+                dense
+                readonly
+              />
+            </div>
 
-            <q-select
-              v-if="isSubmitMode"
-              v-model="repository"
-              outlined
-              dense
-              emit-value
-              map-options
-              :options="repositoryOptions"
-              :label="t('dock.submissions.dialog.fields.repository')"
-              :hint="t('dock.submissions.dialog.hints.repository')"
-              :disable="!organization"
-              :loading="isLoadingRepositories"
-              @virtual-scroll="onRepositoriesVirtualScroll"
-            />
-            <q-input
-              v-else
-              v-model="repository"
-              outlined
-              dense
-              readonly
-              :label="t('dock.submissions.dialog.fields.repository')"
-            />
+            <div>
+              <label for="submission-dialog-repository" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.repository') }}</label>
+              <q-select
+                v-if="isSubmitMode"
+                v-model="repository"
+                for="submission-dialog-repository"
+                outlined
+                dense
+                emit-value
+                map-options
+                :options="repositoryOptions"
+                :hint="t('dock.submissions.dialog.hints.repository')"
+                :disable="!organization"
+                :loading="isLoadingRepositories"
+                @virtual-scroll="onRepositoriesVirtualScroll"
+              />
+              <q-input
+                v-else
+                v-model="repository"
+                for="submission-dialog-repository"
+                outlined
+                dense
+                readonly
+              />
+            </div>
 
             <div v-if="dialogErrorMessage" class="text-negative text-caption">
               {{ dialogErrorMessage }}

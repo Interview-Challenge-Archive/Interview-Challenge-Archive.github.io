@@ -2,31 +2,36 @@
   <div>
     <div class="text-h5 text-uppercase q-mb-sm">{{ t('dock.search.title') }}</div>
     <div class="text-body1 text-grey-7 q-mb-lg">{{ t('dock.search.description') }}</div>
-    <q-input
-      v-model="searchQuery"
-      outlined
-      dense
-      clearable
-      :label="t('dock.search.queryFieldLabel')"
-      :hint="t('dock.search.queryHint')"
-      @keyup.enter="submitSearch"
-    />
+    <div>
+      <label for="search-query-field" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.search.queryFieldLabel') }}</label>
+      <q-input
+        v-model="searchQuery"
+        for="search-query-field"
+        outlined
+        dense
+        clearable
+        :hint="t('dock.search.queryHint')"
+        @keyup.enter="submitSearch"
+      />
+    </div>
 
-    <q-select
-      v-model="selectedLabels"
-      class="q-mt-md"
-      outlined
-      dense
-      clearable
-      multiple
-      use-chips
-      use-input
-      input-debounce="0"
-      :options="filteredLabelOptions"
-      :label="t('dock.search.labelsFieldLabel')"
-      :hint="t('dock.search.labelsHint')"
-      @filter="filterLabelOptions"
-    />
+    <div class="q-mt-md">
+      <label for="search-labels-field" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.search.labelsFieldLabel') }}</label>
+      <q-select
+        v-model="selectedLabels"
+        for="search-labels-field"
+        outlined
+        dense
+        clearable
+        multiple
+        use-chips
+        use-input
+        input-debounce="0"
+        :options="filteredLabelOptions"
+        :hint="t('dock.search.labelsHint')"
+        @filter="filterLabelOptions"
+      />
+    </div>
 
     <div class="row justify-end q-gutter-sm q-mt-md">
       <q-btn flat no-caps :label="t('dock.search.resetAction')" @click="resetSearch" />

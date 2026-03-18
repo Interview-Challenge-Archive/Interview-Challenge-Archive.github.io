@@ -116,29 +116,24 @@ describe('SubmitDockPanel', () => {
     expect(wrapper.text()).toContain('Technical scope')
     expect(wrapper.text()).toContain('Process & outcome')
     expect(wrapper.text()).toContain('Detailed notes')
-    expect(inputs.map((input) => input.props('label'))).toEqual(expect.arrayContaining([
-      'Entry title',
-      'Company',
-      'Role / position',
-      'Source URL',
-      'Time limit or expected effort',
-      'Submission date',
-      'Task summary',
-      'Deliverables and constraints',
-      'Feedback received',
-      'Lessons learned',
-      'Extra notes'
-    ]))
-    expect(selects.map((select) => select.props('label'))).toEqual(expect.arrayContaining([
-      'Hiring stage',
-      'Languages',
-      'Frameworks, tools, and libraries',
-      'Task type',
-      'Difficulty',
-      'Company reaction'
-    ]))
-    expect(selects.find((select) => select.props('label') === 'Languages')?.props('multiple')).toBe(true)
-    expect(selects.find((select) => select.props('label') === 'Frameworks, tools, and libraries')?.props('multiple')).toBe(true)
+    expect(wrapper.text()).toContain('Entry title')
+    expect(wrapper.text()).toContain('Company')
+    expect(wrapper.text()).toContain('Role / position')
+    expect(wrapper.text()).toContain('Source URL')
+    expect(wrapper.text()).toContain('Hiring stage')
+    expect(wrapper.text()).toContain('Languages')
+    expect(wrapper.text()).toContain('Frameworks, tools, and libraries')
+    expect(wrapper.text()).toContain('Task type')
+    expect(wrapper.text()).toContain('Difficulty')
+    expect(wrapper.text()).toContain('Time limit or expected effort')
+    expect(wrapper.text()).toContain('Submission date')
+    expect(wrapper.text()).toContain('Company reaction')
+    expect(wrapper.text()).toContain('Task summary')
+    expect(wrapper.text()).toContain('Deliverables and constraints')
+    expect(wrapper.text()).toContain('Feedback received')
+    expect(wrapper.text()).toContain('Lessons learned')
+    expect(wrapper.text()).toContain('Extra notes')
+    expect(selects.filter((select) => select.props('multiple')).length).toBe(2)
     expect(checkboxes.map((checkbox) => checkbox.props('label'))).toEqual([
       'I submitted work back to the company',
       'The repository can be shared publicly',
