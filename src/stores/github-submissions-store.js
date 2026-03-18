@@ -3,9 +3,10 @@ import { Octokit } from '@octokit/rest'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useSessionStore } from 'src/stores/session-store'
 import githubApiConfig from 'src/config/github_api.yml'
+import submissionsConfig from 'src/config/submissions.yml'
 
-const SUBMISSION_MARKER_PATH = '.github/ica-submission.yml'
-const SUBMISSION_BOT_LOGIN = 'InterviewChallengeArchive[bot]'
+const SUBMISSION_MARKER_PATH = submissionsConfig.markerPath
+const SUBMISSION_BOT_LOGIN = submissionsConfig.botLogin
 const REPOSITORY_PAGE_SIZE = githubApiConfig.repositoryPageSize
 const CODE_SEARCH_PAGE_SIZE = githubApiConfig.codeSearchPageSize
 const PULL_REQUEST_SEARCH_PAGE_SIZE = githubApiConfig.pullRequestSearchPageSize
