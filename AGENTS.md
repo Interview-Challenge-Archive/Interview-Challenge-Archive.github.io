@@ -53,6 +53,7 @@ npm run test
 10. **Error message standards**: Custom errors should have built-in messages and only accept relevant parameters (e.g., hex value, not full message)
 11. **Prefer Quasar CSS utilities**: Always prefer Quasar CSS utility classes (e.g., `q-pa-md`, `q-mt-lg`, `text-center`, `row`, `col`) over defining custom style rules in components
 12. **Nested component styles**: When custom component styles are necessary, write them using nested CSS syntax within the component's `<style>` block
+13. **Translation syntax validation**: After changing any translation files, always run a Vite syntax check (for example `npm run build`) to ensure parsing does not fail
 
 ## Configuration Files
 
