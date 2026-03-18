@@ -321,10 +321,6 @@ async function loadRepositoriesForOrganization (organizationLogin) {
   } catch {
     return
   }
-
-  if (!repository.value) {
-    repository.value = allRepositoryOptions.value.find((option) => !option.disable)?.value ?? ''
-  }
 }
 
 function onOrganizationsVirtualScroll ({ to }) {
