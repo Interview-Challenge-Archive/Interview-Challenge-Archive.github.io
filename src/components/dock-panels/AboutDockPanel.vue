@@ -1,79 +1,81 @@
 <template>
   <div class="about-dock-panel">
     <div class="text-h5 text-uppercase q-mb-sm">{{ t('dock.about.title') }}</div>
-    <div class="about-dock-panel__layout">
-      <div class="about-dock-panel__description text-body2 text-grey-8">
-        <p
-          v-for="(paragraph, paragraphIndex) in descriptionParagraphs"
-          :key="paragraphIndex"
-          class="q-mb-md"
-        >
-          <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${paragraphIndex}-${tokenIndex}`">
-            <template v-if="token.type === 'text'">
-              {{ token.value }}
-            </template>
-            <template v-else-if="token.type === 'aiTools'">
-              <template v-for="(tool, toolIndex) in aiTools" :key="tool.name">
+    <div class="row q-col-gutter-lg items-start">
+      <div class="col-12 col-md">
+        <div class="about-dock-panel__description text-body2 text-grey-8">
+          <p
+            v-for="(paragraph, paragraphIndex) in descriptionParagraphs"
+            :key="paragraphIndex"
+            class="q-mb-md"
+          >
+            <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${paragraphIndex}-${tokenIndex}`">
+              <template v-if="token.type === 'text'">
+                {{ token.value }}
+              </template>
+              <template v-else-if="token.type === 'aiTools'">
+                <template v-for="(tool, toolIndex) in aiTools" :key="tool.name">
+                  <a
+                    class="about-dock-panel__tool-link text-dark"
+                    :href="tool.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ tool.name }}
+                  </a>
+                  <span v-if="toolIndex < aiTools.length - 1">, </span>
+                </template>
+              </template>
+              <template v-else-if="token.type === 'social'">
                 <a
                   class="about-dock-panel__tool-link text-dark"
-                  :href="tool.url"
+                  :href="resolveSocialLink(token.value)?.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  v-if="resolveSocialLink(token.value)?.url"
+                >
+                  {{ resolveSocialLink(token.value).label }}
+                </a>
+                <template v-else>
+                  {{ token.value === 'github' ? 'GitHub' : 'LinkedIn' }}
+                </template>
+              </template>
+              <template v-else-if="token.type === 'primaryAuthor'">
+                <a
+                  v-if="primaryAuthor.profileUrl"
+                  class="about-dock-panel__author-link text-dark"
+                  :href="primaryAuthor.profileUrl"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {{ tool.name }}
+                  {{ primaryAuthor.displayName }}
                 </a>
-                <span v-if="toolIndex < aiTools.length - 1">, </span>
+                <template v-else>
+                  {{ primaryAuthor.displayName }}
+                </template>
+              </template>
+              <template v-else-if="token.type === 'multiverse'">
+                <a
+                  class="about-dock-panel__tool-link text-dark"
+                  :href="multiverseLink.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  v-if="multiverseLink?.url"
+                >
+                  {{ multiverseLink.label || 'Multiverse theme by HTML5 UP' }}
+                </a>
+                <template v-else>
+                  Multiverse theme by HTML5 UP
+                </template>
               </template>
             </template>
-            <template v-else-if="token.type === 'social'">
-              <a
-                class="about-dock-panel__tool-link text-dark"
-                :href="resolveSocialLink(token.value)?.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                v-if="resolveSocialLink(token.value)?.url"
-              >
-                {{ resolveSocialLink(token.value).label }}
-              </a>
-              <template v-else>
-                {{ token.value === 'github' ? 'GitHub' : 'LinkedIn' }}
-              </template>
-            </template>
-            <template v-else-if="token.type === 'primaryAuthor'">
-              <a
-                v-if="primaryAuthor.profileUrl"
-                class="about-dock-panel__author-link text-dark"
-                :href="primaryAuthor.profileUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ primaryAuthor.displayName }}
-              </a>
-              <template v-else>
-                {{ primaryAuthor.displayName }}
-              </template>
-            </template>
-            <template v-else-if="token.type === 'multiverse'">
-              <a
-                class="about-dock-panel__tool-link text-dark"
-                :href="multiverseLink.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                v-if="multiverseLink?.url"
-              >
-                {{ multiverseLink.label || 'Multiverse theme by HTML5 UP' }}
-              </a>
-              <template v-else>
-                Multiverse theme by HTML5 UP
-              </template>
-            </template>
-          </template>
-        </p>
+          </p>
+        </div>
       </div>
 
-      <aside class="about-dock-panel__side">
+      <aside class="col-12 col-md-auto q-mt-md q-mt-md-none">
         <div class="text-subtitle2 text-uppercase text-grey-8 q-mb-sm">{{ t('dock.about.sections.socialNetworks') }}</div>
-        <div class="about-dock-panel__social-links">
+        <div class="row q-gutter-sm">
           <q-btn
             v-for="socialLink in socialLinks"
             :key="socialLink.id"
@@ -208,42 +210,16 @@ function normalizeObjectAuthor (author) {
 </script>
 
 <style scoped lang="scss">
-.about-dock-panel__layout {
-  display: grid;
-  gap: 20px;
-}
-
-.about-dock-panel__description p:last-child {
-  margin-bottom: 0;
-}
-
-.about-dock-panel__side {
-  min-width: 0;
-}
-
-.about-dock-panel__social-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-@media (min-width: 860px) {
-  .about-dock-panel__layout {
-    align-items: start;
-    column-gap: 28px;
-    grid-template-columns: minmax(0, 1fr) auto;
+.about-dock-panel {
+  &__description {
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 
-  .about-dock-panel__side {
-    width: max-content;
+  &__tool-link,
+  &__author-link {
+    text-underline-offset: 3px;
   }
-}
-
-.about-dock-panel__tool-link {
-  text-underline-offset: 3px;
-}
-
-.about-dock-panel__author-link {
-  text-underline-offset: 3px;
 }
 </style>
