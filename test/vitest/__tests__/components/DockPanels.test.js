@@ -8,12 +8,52 @@ import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 describe('AboutDockPanel', () => {
-  it('renders the translated about copy', () => {
+  it('renders project overview, social links, author mention, and linked tools', () => {
     const wrapper = mountWithApp(AboutDockPanel)
+    const socialLinks = wrapper.findAllComponents({ name: 'QBtn' })
+    const aiToolLinks = wrapper.findAll('a.about-dock-panel__tool-link')
+    const authorLinks = wrapper.findAll('a.about-dock-panel__author-link')
 
     expect(wrapper.text()).toContain('About Interview Challenge Archive')
-    expect(wrapper.text()).toContain('Interview Challenge Archive is a place to collect, organize, and review interview and hiring task material.')
-    expect(wrapper.text()).toContain('Use the bottom navigation to move between dedicated search, submission, login, and information pages.')
+    expect(wrapper.text()).toContain('Interview Challenge Archive is a public collection of take-home interview tasks')
+    expect(wrapper.text()).toContain('designed to make them discoverable and searchable on GitHub')
+    expect(wrapper.text()).toContain('The archive is especially useful for people who are just starting out')
+    expect(wrapper.text()).toContain('Using AI during these assignments is acceptable')
+    expect(wrapper.text()).toContain('The only requirement for inclusion is that the submission is made by the candidate')
+    expect(wrapper.text()).toContain('The project started before AI coding assistants were something you could rely on every day')
+    expect(wrapper.text()).toContain('At the time, @MekDrop was not thinking about monetization')
+    expect(wrapper.text()).toContain('run almost entirely on GitHub infrastructure')
+    expect(wrapper.text()).toContain('would have been simpler to build it on a more traditional setup')
+    expect(wrapper.text()).toContain('the design took inspiration from Multiverse theme by HTML5 UP')
+    expect(wrapper.text()).toContain('after adopting vibe coding')
+    expect(wrapper.text()).toContain('interface was rebuilt piece by piece by asking AI tools')
+    expect(wrapper.text()).toContain('This release also moved forward much faster, helped by')
+    expect(wrapper.text()).toContain('Augmented')
+    expect(wrapper.text()).toContain('Zencoder')
+    expect(wrapper.text()).toContain('OpenCode')
+    expect(wrapper.text()).toContain('@MekDrop')
+    expect(wrapper.text()).not.toContain('github@mekdrop.name')
+    expect(wrapper.text()).toContain('OpenAI Codex')
+    expect(wrapper.text()).toContain('Qwen Code')
+    expect(aiToolLinks).toHaveLength(8)
+    expect(authorLinks).toHaveLength(1)
+    expect(authorLinks.map((link) => link.attributes('href'))).toEqual([
+      'https://github.com/MekDrop'
+    ])
+    expect(aiToolLinks.map((link) => link.attributes('href'))).toEqual([
+      'https://github.com/Interview-Challenge-Archive',
+      'https://www.linkedin.com/company/interview-challenge-archive/',
+      'https://html5up.net/multiverse',
+      'https://www.augmentcode.com/',
+      'https://zencoder.ai/',
+      'https://openai.com/codex/',
+      'https://opencode.ai/',
+      'https://github.com/QwenLM/qwen-code'
+    ])
+    expect(socialLinks.map((link) => link.props('icon'))).toEqual([
+      'fa-brands fa-github',
+      'fa-brands fa-linkedin'
+    ])
   })
 })
 

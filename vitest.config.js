@@ -30,7 +30,7 @@ export default defineConfig({
     quasar({
       sassVariables: 'src/css/quasar.variables.scss',
     }),
-    yaml({ include: ['**/src/config/feature-flags.yml', '**/src/config/colors.yml', '**/src/config/auth.yml'] }),
+    yaml({ include: ['**/src/config/feature-flags.yml', '**/src/config/colors.yml', '**/src/config/auth.yml', '**/src/config/about.yml'] }),
     jsconfigPaths(),
   ],
 });

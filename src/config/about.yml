@@ -1,0 +1,17 @@
+about:
+  socialLinks:
+    github:
+      id: github
+      label: GitHub
+      icon: "fa-brands fa-github"
+      url: "https://github.com/Interview-Challenge-Archive"
+    linkedin:
+      id: linkedin
+      label: LinkedIn
+      icon: "fa-brands fa-linkedin"
+      url: "https://www.linkedin.com/company/interview-challenge-archive/"
+  referenceLinks:
+    multiverse:
+      id: multiverse
+      label: Multiverse theme by HTML5 UP
+      url: "https://html5up.net/multiverse"
