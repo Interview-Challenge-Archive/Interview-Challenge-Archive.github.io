@@ -37,6 +37,7 @@
     "test:unit:ci": "vitest run"
   },
   "dependencies": {
+    "@octokit/rest": "^22.0.1",
     "@openfeature/web-sdk": "^1.7.3",
     "@quasar/extras": "^1.16.4",
     "@quasar/quasar-ui-qmarkdown": "^2.0.5",

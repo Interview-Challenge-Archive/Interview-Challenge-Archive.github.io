@@ -192,6 +192,21 @@ dock:
     details: Use the bottom navigation to move between dedicated search, submission, login, and information pages.
     sections:
       socialNetworks: Social networks
+      contributorControl: Organization contributors
+      topContributors: Top contributors
+    contributors:
+      organization: 'Organization: {organization}'
+      topPerRepository: Top per repository
+      load: Load
+      refresh: Refresh
+      notLoaded: Choose settings and load contributors.
+      loading: Loading contributors...
+      loaded: Loaded {contributors} contributors across {repositories} repositories.
+      empty: No contributor data found for this organization.
+      errors:
+        organizationNotConfigured: The GitHub organization is not configured.
+        rateLimited: GitHub API rate limit reached. Connect a GitHub account and try again.
+        loadFailed: Failed to load contributors from GitHub.
 about:
   title: About this starter
   description: Use this project as a clean foundation for the Interview Challenge Archive single-page application.

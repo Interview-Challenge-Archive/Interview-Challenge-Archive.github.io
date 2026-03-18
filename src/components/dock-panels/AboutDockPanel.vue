@@ -21,6 +21,7 @@
       <aside class="col-12 col-md-auto q-mt-md q-mt-md-none">
         <div class="text-subtitle2 text-uppercase text-grey-8 q-mb-sm">{{ t('dock.about.sections.socialNetworks') }}</div>
         <SocialNetworkLinks :social-links="socialLinks" />
+        <OrganizationTopContributorsControl class="q-mt-lg" :organization="githubOrganization" />
       </aside>
     </div>
 
@@ -35,6 +36,7 @@ import { QMarkdown } from '@quasar/quasar-ui-qmarkdown'
 import '@quasar/quasar-ui-qmarkdown/dist/index.css'
 import aboutConfig from 'src/config/about.yml'
 import SocialNetworkLinks from 'src/components/dock-panels/SocialNetworkLinks.vue'
+import OrganizationTopContributorsControl from 'src/components/internal/OrganizationTopContributorsControl.vue'
 import packageInfo from '../../../package.json'
 
 const { t } = useI18n()
@@ -52,6 +54,7 @@ const descriptionContainers = [
 ]
 
 const socialLinks = computed(() => Object.values(aboutConfig.about.socialLinks ?? {}))
+const githubOrganization = computed(() => extractOrganizationFromGitHubUrl(aboutConfig.about.socialLinks?.github?.url))
 const descriptionLinks = aboutConfig.about.descriptionLinks ?? {}
 const githubDescriptionLink = descriptionLinks.github ?? {}
 const linkedinDescriptionLink = descriptionLinks.linkedin ?? {}
@@ -118,6 +121,12 @@ function normalizeHttpUrl (value) {
   } catch {
     return ''
   }
+}
+
+function extractOrganizationFromGitHubUrl (value) {
+  const match = String(value ?? '').trim().match(/^https?:\/\/github\.com\/([^/?#]+)/i)
+
+  return match?.[1] ?? ''
 }
 
 function normalizeAuthor (author) {
