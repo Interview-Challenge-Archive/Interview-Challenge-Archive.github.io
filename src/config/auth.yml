@@ -11,6 +11,10 @@ auth:
       id: "github"
       label: "GitHub"
       icon: "fa-brands fa-github"
+      scopes:
+        - "read:user"
+        - "user:email"
+        - "read:org"
       loginUrl: "https://interview-challenge-archive.raimondas-cc6.workers.dev/login/github"
     linkedin:
       id: "linkedin"
