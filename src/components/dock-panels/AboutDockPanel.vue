@@ -2,75 +2,81 @@
   <div class="about-dock-panel">
     <div class="text-h5 text-uppercase q-mb-sm">{{ t('dock.about.title') }}</div>
     <div class="row q-col-gutter-lg items-start">
-      <div class="col-12 col-md">
-        <div class="about-dock-panel__description text-body2 text-grey-8">
-          <p
-            v-for="(paragraph, paragraphIndex) in descriptionParagraphs"
-            :key="paragraphIndex"
-            class="q-mb-md"
-          >
-            <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${paragraphIndex}-${tokenIndex}`">
-              <template v-if="token.type === 'text'">
-                {{ token.value }}
-              </template>
-              <template v-else-if="token.type === 'aiTools'">
-                <template v-for="(tool, toolIndex) in aiTools" :key="tool.name">
+      <div class="col-12 col-md about-dock-panel__content-col">
+        <component
+          :is="isMobile ? 'div' : QScrollArea"
+          class="about-dock-panel__description-container full-width"
+          :class="{ 'about-dock-panel__scroll-area': !isMobile }"
+        >
+          <div class="about-dock-panel__description text-body2 text-grey-8">
+            <p
+              v-for="(paragraph, paragraphIndex) in descriptionParagraphs"
+              :key="paragraphIndex"
+              class="q-mb-md"
+            >
+              <template v-for="(token, tokenIndex) in paragraph.tokens" :key="`${paragraphIndex}-${tokenIndex}`">
+                <template v-if="token.type === 'text'">
+                  {{ token.value }}
+                </template>
+                <template v-else-if="token.type === 'aiTools'">
+                  <template v-for="(tool, toolIndex) in aiTools" :key="tool.name">
+                    <a
+                      class="about-dock-panel__tool-link text-dark"
+                      :href="tool.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{ tool.name }}
+                    </a>
+                    <span v-if="toolIndex < aiTools.length - 1">, </span>
+                  </template>
+                </template>
+                <template v-else-if="token.type === 'social'">
                   <a
                     class="about-dock-panel__tool-link text-dark"
-                    :href="tool.url"
+                    :href="resolveSocialLink(token.value)?.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    v-if="resolveSocialLink(token.value)?.url"
+                  >
+                    {{ resolveSocialLink(token.value).label }}
+                  </a>
+                  <template v-else>
+                    {{ token.value === 'github' ? 'GitHub' : 'LinkedIn' }}
+                  </template>
+                </template>
+                <template v-else-if="token.type === 'primaryAuthor'">
+                  <a
+                    v-if="primaryAuthor.profileUrl"
+                    class="about-dock-panel__author-link text-dark"
+                    :href="primaryAuthor.profileUrl"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {{ tool.name }}
+                    {{ primaryAuthor.displayName }}
                   </a>
-                  <span v-if="toolIndex < aiTools.length - 1">, </span>
+                  <template v-else>
+                    {{ primaryAuthor.displayName }}
+                  </template>
+                </template>
+                <template v-else-if="token.type === 'multiverse'">
+                  <a
+                    class="about-dock-panel__tool-link text-dark"
+                    :href="multiverseLink.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    v-if="multiverseLink?.url"
+                  >
+                    {{ multiverseLink.label || 'Multiverse theme by HTML5 UP' }}
+                  </a>
+                  <template v-else>
+                    Multiverse theme by HTML5 UP
+                  </template>
                 </template>
               </template>
-              <template v-else-if="token.type === 'social'">
-                <a
-                  class="about-dock-panel__tool-link text-dark"
-                  :href="resolveSocialLink(token.value)?.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  v-if="resolveSocialLink(token.value)?.url"
-                >
-                  {{ resolveSocialLink(token.value).label }}
-                </a>
-                <template v-else>
-                  {{ token.value === 'github' ? 'GitHub' : 'LinkedIn' }}
-                </template>
-              </template>
-              <template v-else-if="token.type === 'primaryAuthor'">
-                <a
-                  v-if="primaryAuthor.profileUrl"
-                  class="about-dock-panel__author-link text-dark"
-                  :href="primaryAuthor.profileUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {{ primaryAuthor.displayName }}
-                </a>
-                <template v-else>
-                  {{ primaryAuthor.displayName }}
-                </template>
-              </template>
-              <template v-else-if="token.type === 'multiverse'">
-                <a
-                  class="about-dock-panel__tool-link text-dark"
-                  :href="multiverseLink.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  v-if="multiverseLink?.url"
-                >
-                  {{ multiverseLink.label || 'Multiverse theme by HTML5 UP' }}
-                </a>
-                <template v-else>
-                  Multiverse theme by HTML5 UP
-                </template>
-              </template>
-            </template>
-          </p>
-        </div>
+            </p>
+          </div>
+        </component>
       </div>
 
       <aside class="col-12 col-md-auto q-mt-md q-mt-md-none">
@@ -100,10 +106,12 @@
 
 <script setup>
 import { computed } from 'vue'
+import { QScrollArea, useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import aboutConfig from 'src/config/about.yml'
 import packageInfo from '../../../package.json'
 
+const $q = useQuasar()
 const { t } = useI18n()
 const aiToolsPlaceholder = '__AI_TOOLS__'
 const githubPlaceholder = '__GITHUB__'
@@ -114,6 +122,7 @@ const placeholderPattern = /(__AI_TOOLS__|__GITHUB__|__LINKEDIN__|__PRIMARY_AUTH
 
 const socialLinks = computed(() => Object.values(aboutConfig.about.socialLinks ?? {}))
 const multiverseLink = aboutConfig.about.referenceLinks?.multiverse ?? {}
+const isMobile = computed(() => $q.screen.lt.sm)
 const socialLinkMap = computed(() =>
   socialLinks.value.reduce((result, socialLink) => {
     result[socialLink.id] = socialLink
@@ -211,6 +220,10 @@ function normalizeObjectAuthor (author) {
 
 <style scoped lang="scss">
 .about-dock-panel {
+  &__scroll-area {
+    height: min(20rem, max(0px, calc(50dvh - 142px)));
+  }
+
   &__description {
     p:last-child {
       margin-bottom: 0;
