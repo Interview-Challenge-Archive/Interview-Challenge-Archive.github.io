@@ -19,24 +19,24 @@
       {{ statusMessage }}
     </div>
 
-    <div class="account-dock-panel__list">
+    <div class="account-dock-panel__list column q-gutter-sm">
       <div
         v-for="row in accountRows"
         :key="row.key"
-        class="account-dock-panel__row bg-grey-1"
+        class="account-dock-panel__row bg-grey-1 row items-center q-col-gutter-md q-pa-md"
       >
-        <div class="account-dock-panel__provider">
+        <div class="account-dock-panel__provider col-12 col-md-3 row items-center no-wrap">
           <q-icon v-if="row.providerIcon" :name="row.providerIcon" size="18px" class="q-mr-sm" />
           <span class="text-subtitle2">{{ row.providerLabel }}</span>
         </div>
 
-        <div class="account-dock-panel__info">
+        <div class="account-dock-panel__info col-12 col-md">
           <div v-if="row.title" class="text-body2 text-weight-medium">{{ row.title }}</div>
           <div v-if="row.subtitle" class="text-caption text-grey-7">{{ row.subtitle }}</div>
           <div v-if="row.meta" class="text-caption text-grey-7">{{ row.meta }}</div>
         </div>
 
-        <div class="account-dock-panel__action">
+        <div class="account-dock-panel__action col-12 col-md-auto row">
           <q-btn
             unelevated
             no-caps
@@ -327,44 +327,22 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.account-dock-panel__list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.account-dock-panel__row {
-  display: grid;
-  grid-template-columns: minmax(140px, 1fr) minmax(220px, 2fr) auto;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid rgba($dark-page, 0.06);
-  padding: 12px;
-}
-
-.account-dock-panel__provider {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
-.account-dock-panel__info {
-  min-width: 0;
-}
-
-.account-dock-panel__action {
-  display: flex;
-  justify-content: flex-end;
-}
-
-@media (max-width: 768px) {
-  .account-dock-panel__row {
-    grid-template-columns: 1fr;
-    gap: 8px;
+.account-dock-panel {
+  &__row {
+    border: 1px solid rgba($dark-page, 0.06);
   }
 
-  .account-dock-panel__action {
+  &__provider,
+  &__info {
+    min-width: 0;
+  }
+
+  &__action {
     justify-content: flex-start;
+
+    @media (min-width: 768px) {
+      justify-content: flex-end;
+    }
   }
 }
 </style>
