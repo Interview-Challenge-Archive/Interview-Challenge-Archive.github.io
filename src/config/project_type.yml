@@ -1,0 +1,97 @@
+# ============================================================
+# Project Type Detector Configuration
+# ============================================================
+# Top-level key = resulting project type value.
+# Keyword item formats:
+# - plain string -> default score = 1
+# - object       -> { term: <keyword>, score: <number> }
+# Detection rule:
+# - sum all matched keyword scores per project type
+# - select project type with highest total score
+
+software-development:
+  - .net
+  - android
+  - api
+  - back-end
+  - backend
+  - django
+  - dotnet
+  - flask
+  - flutter
+  - front-end
+  - term: frontend
+    score: 2
+  - full-stack
+  - fullstack
+  - go
+  - ios
+  - java
+  - term: javascript
+    score: 2
+  - laravel
+  - microservice
+  - mobile
+  - node
+  - term: php
+    score: 3
+  - python
+  - rails
+  - react
+  - react-native
+  - server
+  - spring
+  - term: symfony
+    score: 6
+  - typescript
+  - term: vue
+    score: 3
+
+qa-testing:
+  - cypress
+  - playwright
+  - qa
+  - quality-assurance
+  - selenium
+  - test-automation
+
+devops-infrastructure:
+  - ansible
+  - ci/cd
+  - devops
+  - term: docker
+    score: 1
+  - github-actions
+  - gitlab-ci
+  - helm
+  - infrastructure
+  - jenkins
+  - term: kubernetes
+    score: 4
+  - platform
+  - sre
+  - term: terraform
+    score: 4
+
+data-ml:
+  - ai
+  - analytics
+  - data
+  - machine-learning
+  - ml
+
+ui-ux-design:
+  - design
+  - designer
+  - figma
+  - prototype
+  - ui
+  - ux
+  - visual
+  - wireframe
+
+security:
+  - cybersecurity
+  - infosec
+  - pentest
+  - security

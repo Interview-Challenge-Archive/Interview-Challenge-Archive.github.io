@@ -2,15 +2,7 @@ import { computed, ref } from 'vue'
 import { Octokit } from '@octokit/rest'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { useSessionStore } from 'src/stores/session-store'
-
-const PROJECT_TYPE_MATCHERS = [
-  { value: 'take-home', keywords: ['take-home', 'takehome', 'homework', 'assignment', 'interview-task'] },
-  { value: 'live-coding', keywords: ['live-coding', 'pair-programming', 'pairing'] },
-  { value: 'system-design', keywords: ['system-design', 'architecture', 'scalability', 'distributed-systems'] },
-  { value: 'bug-fix', keywords: ['bug-fix', 'bugfix', 'hotfix', 'fix'] },
-  { value: 'feature-build', keywords: ['feature-build', 'feature', 'implementation', 'build'] },
-  { value: 'research', keywords: ['research', 'analysis', 'spike', 'investigation'] }
-]
+import { detectProjectType } from 'src/utils/project-type-detector'
 
 const POSITION_MATCHERS = [
   { label: 'Frontend Engineer', keywords: ['frontend', 'front-end', 'ui', 'vue', 'react', 'angular'] },
@@ -142,7 +134,12 @@ function normalizeProjectInfo ({
     summary,
     topics,
     languages: languageEntries.map((languageRecord) => languageRecord.name),
-    projectType: resolveProjectType(topics, summary, repository),
+    projectType: detectProjectType({
+      topics,
+      summary,
+      repository,
+      languages: languageEntries.map((languageRecord) => languageRecord.name)
+    }),
     companyName: organizationName,
     companyLinkedInUrl: linkedInUrl,
     positionTitle: resolvePositionTitle(topics, summary, repository)
@@ -169,22 +166,6 @@ async function fetchOwnerProfile (octokit, owner, ownerType) {
   })
 
   return response.data ?? {}
-}
-
-function resolveProjectType (topics, summary, repository) {
-  const normalizedText = [
-    ...(Array.isArray(topics) ? topics : []),
-    String(summary ?? '').trim().toLowerCase(),
-    String(repository ?? '').trim().toLowerCase()
-  ].join(' ')
-
-  for (const matcher of PROJECT_TYPE_MATCHERS) {
-    if (matcher.keywords.some((keyword) => normalizedText.includes(keyword))) {
-      return matcher.value
-    }
-  }
-
-  return ''
 }
 
 function resolveCompanyName (ownerProfile, ownerType, ownerLogin) {

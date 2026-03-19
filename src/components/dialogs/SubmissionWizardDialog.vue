@@ -180,22 +180,26 @@
             </div>
 
             <template v-else>
-              <div class="text-caption text-grey-7">
-                {{ t('dock.submissions.dialog.autofill.readyHint') }}
-              </div>
-
               <div>
                 <label for="submission-dialog-project-type" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.projectType') }}</label>
-                <q-select
+                <q-option-group
                   v-model="projectType"
-                  for="submission-dialog-project-type"
-                  outlined
-                  dense
-                  emit-value
-                  map-options
+                  type="radio"
+                  color="dark"
                   :options="projectTypeOptions"
-                  :hint="t('dock.submissions.dialog.hints.projectType')"
                 />
+                <q-banner
+                  v-if="isProjectTypeAutofilled"
+                  dense
+                  rounded
+                  inline-actions
+                  class="bg-grey-2 text-grey-9 q-mt-sm"
+                >
+                  <template #avatar>
+                    <q-icon name="info" />
+                  </template>
+                  {{ t('dock.submissions.dialog.autofill.projectTypeDetected') }}
+                </q-banner>
               </div>
             </template>
 
@@ -417,6 +421,8 @@ const step = ref(1)
 const organization = ref(String(props.owner ?? '').trim())
 const repository = ref(String(props.repository ?? '').trim())
 const projectType = ref('')
+const isProjectTypeAutofilled = ref(false)
+const autofilledProjectTypeValue = ref('')
 const companyName = ref('')
 const companyLinkedInUrl = ref('')
 const positionTitle = ref('')
@@ -473,12 +479,12 @@ const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, rep
 const isLoadingRepositories = computed(() =>
   githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(organization.value))
 const projectTypeOptions = computed(() => [
-  { label: t('dock.submissions.dialog.projectTypeOptions.takeHome'), value: 'take-home' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.liveCoding'), value: 'live-coding' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.systemDesign'), value: 'system-design' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.bugFix'), value: 'bug-fix' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.featureBuild'), value: 'feature-build' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.research'), value: 'research' }
+  { label: t('dock.submissions.dialog.projectTypeOptions.softwareDevelopment'), value: 'software-development' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.uiUxDesign'), value: 'ui-ux-design' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.qaTesting'), value: 'qa-testing' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.devOpsInfrastructure'), value: 'devops-infrastructure' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.dataMl'), value: 'data-ml' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.security'), value: 'security' }
 ])
 const recruiterOutcomeOptions = computed(() => [
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.offer'), value: 'offer' },
@@ -547,6 +553,19 @@ watch(repository, (nextRepository, previousRepository) => {
 
   resetDetailsForm()
   githubSubmissionProjectInfoStore.reset()
+})
+
+watch(projectType, (nextProjectType, previousProjectType) => {
+  if (nextProjectType === previousProjectType || !isProjectTypeAutofilled.value) {
+    return
+  }
+
+  if (String(nextProjectType ?? '').trim() === autofilledProjectTypeValue.value) {
+    return
+  }
+
+  isProjectTypeAutofilled.value = false
+  autofilledProjectTypeValue.value = ''
 })
 
 onMounted(async () => {
@@ -655,7 +674,11 @@ async function refetchProjectInfoAndAutofill () {
       repository.value
     )
 
-    autofillField(projectType, projectInfo.projectType)
+    const wasProjectTypeAutofilled = autofillField(projectType, projectInfo.projectType)
+    isProjectTypeAutofilled.value = wasProjectTypeAutofilled
+    autofilledProjectTypeValue.value = wasProjectTypeAutofilled
+      ? String(projectType.value ?? '').trim()
+      : ''
     autofillField(companyName, projectInfo.companyName)
     autofillField(companyLinkedInUrl, projectInfo.companyLinkedInUrl)
     autofillField(positionTitle, projectInfo.positionTitle)
@@ -706,6 +729,8 @@ function normalizeRepositoryKey (owner, repository) {
 
 function resetDetailsForm () {
   projectType.value = ''
+  isProjectTypeAutofilled.value = false
+  autofilledProjectTypeValue.value = ''
   companyName.value = ''
   companyLinkedInUrl.value = ''
   positionTitle.value = ''
@@ -719,16 +744,17 @@ function autofillField (fieldReference, value) {
   const currentValue = String(fieldReference.value ?? '').trim()
 
   if (currentValue) {
-    return
+    return false
   }
 
   const normalizedValue = String(value ?? '').trim()
 
   if (!normalizedValue) {
-    return
+    return false
   }
 
   fieldReference.value = normalizedValue
+  return true
 }
 </script>
 

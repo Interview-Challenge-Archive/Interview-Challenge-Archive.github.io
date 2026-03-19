@@ -97,12 +97,50 @@ describe('useGitHubSubmissionProjectInfoStore', () => {
     const projectInfo = await projectInfoStore.refetchProjectInfo('octo-org', 'repo-a')
 
     expect(mocks.octokitInstances[0].options.auth).toBe('github-oauth-token')
-    expect(projectInfo.projectType).toBe('take-home')
+    expect(projectInfo.projectType).toBe('software-development')
     expect(projectInfo.companyName).toBe('Octo Corp')
     expect(projectInfo.companyLinkedInUrl).toBe('https://www.linkedin.com/company/octo-corp/')
     expect(projectInfo.positionTitle).toBe('Frontend Engineer')
     expect(projectInfo.summary).toBe('Frontend take-home assignment focused on Vue UI')
     expect(projectInfo.languages).toEqual(['JavaScript', 'Vue'])
+  })
+
+  it('prefers software development project type for Symfony repositories even when docker is present', async () => {
+    mocks.reposGet.mockResolvedValue({
+      data: {
+        html_url: 'https://github.com/octo-org/symfony-task',
+        description: 'Take-home assignment for Symfony API development with Docker setup',
+        topics: ['take-home', 'symfony', 'docker'],
+        owner: { type: 'Organization' }
+      }
+    })
+    mocks.reposListLanguages.mockResolvedValue({
+      data: {
+        PHP: 2400,
+        Dockerfile: 500
+      }
+    })
+    mocks.orgsGet.mockResolvedValue({
+      data: {
+        login: 'octo-org',
+        name: 'Octo Corp'
+      }
+    })
+
+    const { sessionStore, projectInfoStore } = createStores()
+
+    sessionStore.setSession({
+      provider: 'github',
+      accessToken: 'github-oauth-token',
+      authenticatedAt: '2026-03-19T08:00:00.000Z',
+      user: {
+        login: 'octocat'
+      }
+    })
+
+    const projectInfo = await projectInfoStore.refetchProjectInfo('octo-org', 'symfony-task')
+
+    expect(projectInfo.projectType).toBe('software-development')
   })
 
   it('marks loading errors with translated rate-limit message key', async () => {

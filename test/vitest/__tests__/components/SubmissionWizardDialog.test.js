@@ -16,9 +16,9 @@ function setupStores (pinia, {
     repository: 'repo-a',
     repositoryUrl: 'https://github.com/octo-org/repo-a',
     summary: 'Project summary',
-    topics: ['take-home'],
+    topics: ['frontend'],
     languages: ['JavaScript'],
-    projectType: 'take-home',
+    projectType: 'software-development',
     companyName: 'Octo Corp',
     companyLinkedInUrl: 'https://www.linkedin.com/company/octo-corp/',
     positionTitle: 'Frontend Engineer'

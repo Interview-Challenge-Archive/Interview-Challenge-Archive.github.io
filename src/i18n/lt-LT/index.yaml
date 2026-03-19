@@ -186,7 +186,6 @@ dock:
       hints:
         organization: Pasirinkite organizaciją, kurioje esate savininkas.
         repository: Pasirinkite vieną iš savo viešų repozitorijų.
-        projectType: Pasirinkite, kokio tipo buvo ši užduotis.
         companyName: Įmonė, kuri pateikė šią užduotį.
         companyLinkedInUrl: Neprivaloma įmonės LinkedIn nuoroda.
         positionTitle: Kokiai pozicijai buvo skirta užduotis.
@@ -196,14 +195,14 @@ dock:
         negativeFeedback: Ką recruiter'is ar interviuotojas įvardino kaip trūkumus.
       autofill:
         loading: Kraunama projekto informacija iš GitHub...
-        readyHint: Laukai žemiau bus automatiškai užpildyti, jei GitHub'e yra duomenų.
+        projectTypeDetected: Projekto tipas automatiškai nustatytas pagal GitHub projekto duomenis.
       projectTypeOptions:
-        takeHome: Namų užduotis
-        liveCoding: Live coding
-        systemDesign: Sistemos dizainas
-        bugFix: Bug fix
-        featureBuild: Feature kūrimas
-        research: Tyrimas
+        softwareDevelopment: Programinės įrangos kūrimas
+        uiUxDesign: UI/UX dizainas
+        qaTesting: QA ir testavimas
+        devOpsInfrastructure: DevOps ir infrastruktūra
+        dataMl: Duomenys ir mašininis mokymasis
+        security: Saugumas
       recruiterOutcomeOptions:
         offer: Gautas darbo pasiūlymas
         nextRound: Perėta į kitą interviu etapą

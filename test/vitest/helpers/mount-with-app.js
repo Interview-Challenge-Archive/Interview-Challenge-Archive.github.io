@@ -215,7 +215,6 @@ const messages = {
           hints: {
             organization: 'Select an organization where you are an owner.',
             repository: 'Select one of your public repositories.',
-            projectType: 'Select what kind of project this was.',
             companyName: 'Company that gave this assignment.',
             companyLinkedInUrl: 'Optional LinkedIn company profile link.',
             positionTitle: 'What position this task was for.',
@@ -226,15 +225,15 @@ const messages = {
           },
           autofill: {
             loading: 'Loading project details from GitHub...',
-            readyHint: 'Fields below are auto-filled when GitHub data is available.'
+            projectTypeDetected: 'Project type was auto-detected from GitHub project data.'
           },
           projectTypeOptions: {
-            takeHome: 'Take-home assignment',
-            liveCoding: 'Live coding',
-            systemDesign: 'System design',
-            bugFix: 'Bug fix',
-            featureBuild: 'Feature build',
-            research: 'Research'
+            softwareDevelopment: 'Software development',
+            uiUxDesign: 'UI/UX design',
+            qaTesting: 'QA and testing',
+            devOpsInfrastructure: 'DevOps and infrastructure',
+            dataMl: 'Data and machine learning',
+            security: 'Security'
           },
           recruiterOutcomeOptions: {
             offer: 'Received job offer',
