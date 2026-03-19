@@ -1,5 +1,5 @@
 <template>
-  <q-dialog ref="dialogRef" persistent @hide="onDialogHide">
+  <q-dialog ref="dialogRef" persistent :maximized="isMobileDialogFullScreen" @hide="onDialogHide">
     <q-card class="submission-wizard-dialog q-pa-md">
       <div class="submission-wizard-dialog__header row items-center no-wrap q-mb-md">
         <div class="text-h6 text-uppercase">{{ dialogTitle }}</div>
@@ -434,6 +434,7 @@ const dialogTitle = computed(() => isSubmitMode.value
 const totalSteps = computed(() => TOTAL_STEPS)
 const isDesktopWizardLayout = computed(() => $q.screen.gt.sm)
 const isContractedStepper = computed(() => $q.screen.lt.sm)
+const isMobileDialogFullScreen = computed(() => $q.screen.lt.sm)
 const stepperHeaderClass = computed(() => {
   if (isDesktopWizardLayout.value) {
     return 'hidden'
@@ -834,8 +835,11 @@ function autofillField (fieldReference, value) {
 
 @media (max-width: 599px) {
   .submission-wizard-dialog {
-    height: 96vh;
-    max-height: 96vh;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
 
     &__layout {
       height: auto;
@@ -862,6 +866,10 @@ function autofillField (fieldReference, value) {
 
       :deep(.q-stepper__header--contracted .q-stepper__tab:last-child .q-stepper__dot) {
         transform: translateX(-16px);
+      }
+
+      :deep(.q-stepper__step-inner) {
+        padding: 0;
       }
     }
   }
