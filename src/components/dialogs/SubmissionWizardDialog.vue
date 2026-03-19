@@ -326,38 +326,44 @@
         </div>
       </q-scroll-area>
 
-      <div class="submission-wizard-dialog__actions row items-center q-gutter-sm q-mt-md">
-        <q-space />
-        <q-btn
-          v-if="step === 1"
-          flat
-          no-caps
-          :label="t('dock.submissions.dialog.actions.cancel')"
-          @click="onDialogCancel"
-        />
-        <q-btn
-          v-if="step < totalSteps"
-          color="dark"
-          no-caps
-          :label="t('dock.submissions.dialog.actions.next')"
-          :disable="!canGoNext"
-          @click="goToNextStep"
-        />
-        <q-btn
-          v-if="step > 1"
-          flat
-          no-caps
-          :label="t('dock.submissions.dialog.actions.back')"
-          @click="goToPreviousStep"
-        />
-        <q-btn
-          v-if="step === totalSteps"
-          color="dark"
-          no-caps
-          :label="t('dock.submissions.dialog.actions.finish')"
-          :disable="!canFinish"
-          @click="finishWizard"
-        />
+      <div class="submission-wizard-dialog__actions row items-center justify-between q-mt-md">
+        <div class="row items-center q-gutter-sm">
+          <q-btn
+            flat
+            no-caps
+            :label="t('dock.submissions.dialog.actions.cancel')"
+            @click="onDialogCancel"
+          />
+        </div>
+
+        <div class="row items-center q-gutter-sm">
+          <q-btn
+            v-if="step > 1"
+            flat
+            no-caps
+            icon="chevron_left"
+            :label="t('dock.submissions.dialog.actions.back')"
+            @click="goToPreviousStep"
+          />
+          <q-btn
+            v-if="step < totalSteps"
+            color="dark"
+            no-caps
+            :label="t('dock.submissions.dialog.actions.next')"
+            icon-right="chevron_right"
+            :disable="!canGoNext"
+            @click="goToNextStep"
+          />
+          <q-btn
+            v-else
+            color="dark"
+            no-caps
+            icon-right="check"
+            :label="t('dock.submissions.dialog.actions.finish')"
+            :disable="!canFinish"
+            @click="finishWizard"
+          />
+        </div>
       </div>
     </q-card>
   </q-dialog>
