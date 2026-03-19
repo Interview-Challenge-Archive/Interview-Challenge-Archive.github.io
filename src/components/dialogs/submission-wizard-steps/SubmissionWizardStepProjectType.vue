@@ -44,10 +44,6 @@ import { useI18n } from 'vue-i18n'
 import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 
 const props = defineProps({
-  projectTypeOptions: {
-    type: Array,
-    default: () => []
-  },
   isLoadingProjectInfo: {
     type: Boolean,
     default: false
@@ -67,6 +63,14 @@ const emit = defineEmits(['validity-change'])
 const { t } = useI18n()
 const submissionWizardStore = useSubmissionWizardStore()
 const { projectType } = storeToRefs(submissionWizardStore)
+const projectTypeOptions = computed(() => [
+  { label: t('dock.submissions.dialog.projectTypeOptions.softwareDevelopment'), value: 'software-development' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.uiUxDesign'), value: 'ui-ux-design' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.qaTesting'), value: 'qa-testing' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.devOpsInfrastructure'), value: 'devops-infrastructure' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.dataMl'), value: 'data-ml' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.security'), value: 'security' }
+])
 const draftProjectType = ref(projectType.value)
 const isDirty = ref(false)
 const isHydratingFromStore = ref(false)

@@ -91,7 +91,6 @@
         >
           <SubmissionWizardStepProjectType
             ref="stepProjectTypeRef"
-            :project-type-options="projectTypeOptions"
             :is-loading-project-info="isLoadingProjectInfo"
             :is-project-type-autofilled="isProjectTypeAutofilled"
             :project-info-error-message="projectInfoErrorMessage"
@@ -107,9 +106,6 @@
         >
           <SubmissionWizardStepCompany
             ref="stepCompanyRef"
-            :project-type="projectType"
-            :position-title-options="positionTitleOptions"
-            :position-level-options="positionLevelOptions"
             @validity-change="setStepValidity(3, $event)"
           />
         </q-step>
@@ -133,7 +129,6 @@
         >
           <SubmissionWizardStepFeedback
             ref="stepFeedbackRef"
-            :recruiter-outcome-options="recruiterOutcomeOptions"
             @validity-change="setStepValidity(5, $event)"
           />
         </q-step>
@@ -341,14 +336,6 @@ const allRepositoryOptions = computed(() =>
 const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, repositoryOptionsLimit.value))
 const isLoadingRepositories = computed(() =>
   githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(repositoryLookupOrganization.value))
-const projectTypeOptions = computed(() => [
-  { label: t('dock.submissions.dialog.projectTypeOptions.softwareDevelopment'), value: 'software-development' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.uiUxDesign'), value: 'ui-ux-design' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.qaTesting'), value: 'qa-testing' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.devOpsInfrastructure'), value: 'devops-infrastructure' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.dataMl'), value: 'data-ml' },
-  { label: t('dock.submissions.dialog.projectTypeOptions.security'), value: 'security' }
-])
 const positionTitleOptionKeys = computed(() => {
   const normalizedProjectType = String(projectType.value ?? '').trim()
 
@@ -360,19 +347,6 @@ const positionTitleOptionKeys = computed(() => {
 
   return Array.isArray(configuredOptions)
     ? configuredOptions
-    : []
-})
-const positionLevelOptionKeys = computed(() => {
-  const normalizedProjectType = String(projectType.value ?? '').trim()
-  const optionsByProjectType = positionRolesConfig?.positionLevelsByProjectType ?? {}
-  const projectSpecificOptions = optionsByProjectType[normalizedProjectType]
-
-  if (Array.isArray(projectSpecificOptions) && projectSpecificOptions.length) {
-    return projectSpecificOptions
-  }
-
-  return Array.isArray(optionsByProjectType.default)
-    ? optionsByProjectType.default
     : []
 })
 const positionTitleOptions = computed(() =>
@@ -388,17 +362,6 @@ const allPositionTitleOptionKeys = computed(() => {
     .flat()
   return [...new Set(allOptionKeys)]
 })
-const positionLevelOptions = computed(() =>
-  positionLevelOptionKeys.value.map((optionKey) =>
-    ({
-      label: t(`dock.submissions.dialog.positionLevelOptions.${optionKey}`),
-      value: encodePredefinedSelectValue(optionKey)
-    })))
-const recruiterOutcomeOptions = computed(() => [
-  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.offer'), value: 'offer' },
-  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
-  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.stopped'), value: 'stopped' }
-])
 const canGoNext = computed(() => {
   return Boolean(stepValidityMap.value[String(step.value)])
 })

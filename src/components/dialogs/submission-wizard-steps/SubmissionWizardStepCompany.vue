@@ -76,27 +76,15 @@ import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
-
-const props = defineProps({
-  projectType: {
-    type: String,
-    default: ''
-  },
-  positionTitleOptions: {
-    type: Array,
-    default: () => []
-  },
-  positionLevelOptions: {
-    type: Array,
-    default: () => []
-  }
-})
+import positionRolesConfig from 'src/config/position_roles.yml'
 
 const emit = defineEmits(['validity-change'])
+const PREDEFINED_SELECT_VALUE_PREFIX = '::'
 
 const { t } = useI18n()
 const submissionWizardStore = useSubmissionWizardStore()
 const {
+  projectType,
   companyName,
   companyLinkedInUrl,
   positionTitle,
@@ -111,6 +99,42 @@ const roleInputValue = ref('')
 const levelInputValue = ref('')
 const isDirty = ref(false)
 const isHydratingFromStore = ref(false)
+const positionTitleOptionKeys = computed(() => {
+  const normalizedProjectType = String(projectType.value ?? '').trim()
+
+  if (!normalizedProjectType) {
+    return []
+  }
+
+  const configuredOptions = positionRolesConfig?.positionTitlesByProjectType?.[normalizedProjectType]
+
+  return Array.isArray(configuredOptions)
+    ? configuredOptions
+    : []
+})
+const positionLevelOptionKeys = computed(() => {
+  const normalizedProjectType = String(projectType.value ?? '').trim()
+  const optionsByProjectType = positionRolesConfig?.positionLevelsByProjectType ?? {}
+  const projectSpecificOptions = optionsByProjectType[normalizedProjectType]
+
+  if (Array.isArray(projectSpecificOptions) && projectSpecificOptions.length) {
+    return projectSpecificOptions
+  }
+
+  return Array.isArray(optionsByProjectType.default)
+    ? optionsByProjectType.default
+    : []
+})
+const positionTitleOptions = computed(() =>
+  positionTitleOptionKeys.value.map((optionKey) => ({
+    label: t(`dock.submissions.dialog.positionTitleOptions.${optionKey}`),
+    value: encodePredefinedSelectValue(optionKey)
+  })))
+const positionLevelOptions = computed(() =>
+  positionLevelOptionKeys.value.map((optionKey) => ({
+    label: t(`dock.submissions.dialog.positionLevelOptions.${optionKey}`),
+    value: encodePredefinedSelectValue(optionKey)
+  })))
 
 watch(companyName, (value) => {
   if (!isDirty.value) {
@@ -198,19 +222,19 @@ function onLevelInputValue (value) {
 }
 
 function onRoleNewValue (value, done) {
-  onCustomSelectValue(draftPositionTitle, roleInputValue, props.positionTitleOptions, value, done)
+  onCustomSelectValue(draftPositionTitle, roleInputValue, positionTitleOptions.value, value, done)
 }
 
 function onLevelNewValue (value, done) {
-  onCustomSelectValue(draftPositionLevel, levelInputValue, props.positionLevelOptions, value, done)
+  onCustomSelectValue(draftPositionLevel, levelInputValue, positionLevelOptions.value, value, done)
 }
 
 function onRoleBlur () {
-  commitSelectInputValue(draftPositionTitle, roleInputValue, props.positionTitleOptions)
+  commitSelectInputValue(draftPositionTitle, roleInputValue, positionTitleOptions.value)
 }
 
 function onLevelBlur () {
-  commitSelectInputValue(draftPositionLevel, levelInputValue, props.positionLevelOptions)
+  commitSelectInputValue(draftPositionLevel, levelInputValue, positionLevelOptions.value)
 }
 
 function commitSelectInputValue (fieldReference, inputReference, options) {
@@ -279,6 +303,10 @@ function resolveOptionValueByLabel (options, label) {
   return options.find((option) =>
     String(option?.label ?? '').trim().toLowerCase() === normalizedLabel
   )?.value ?? ''
+}
+
+function encodePredefinedSelectValue (optionKey) {
+  return `${PREDEFINED_SELECT_VALUE_PREFIX}${String(optionKey ?? '').trim()}`
 }
 
 function getCanProceed () {

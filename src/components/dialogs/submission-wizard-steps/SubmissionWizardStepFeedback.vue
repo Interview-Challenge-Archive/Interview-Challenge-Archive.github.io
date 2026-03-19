@@ -48,17 +48,15 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 
-defineProps({
-  recruiterOutcomeOptions: {
-    type: Array,
-    default: () => []
-  }
-})
-
 const emit = defineEmits(['validity-change'])
 
 const { t } = useI18n()
 const submissionWizardStore = useSubmissionWizardStore()
+const recruiterOutcomeOptions = computed(() => [
+  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.offer'), value: 'offer' },
+  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
+  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.stopped'), value: 'stopped' }
+])
 const {
   recruiterOutcome,
   positiveFeedback,
