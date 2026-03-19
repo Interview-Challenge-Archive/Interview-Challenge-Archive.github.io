@@ -67,109 +67,20 @@
           icon="folder"
           :done="step > 1"
         >
-          <div class="column q-gutter-md">
-            <div>
-              <label for="submission-dialog-organization" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.organization') }}</label>
-              <q-select
-                v-if="isSubmitMode"
-                v-model="organization"
-                for="submission-dialog-organization"
-                outlined
-                dense
-                emit-value
-                map-options
-                :options="organizationOptions"
-                :hint="t('dock.submissions.dialog.hints.organization')"
-                :loading="isLoadingOrganizations"
-                @virtual-scroll="onOrganizationsVirtualScroll"
-              >
-                <template #option="scope">
-                  <q-item v-bind="scope.itemProps">
-                    <q-item-section side class="q-pr-sm">
-                      <q-avatar v-if="scope.opt.avatarUrl" size="22px">
-                        <img :src="scope.opt.avatarUrl" :alt="scope.opt.label">
-                      </q-avatar>
-                      <q-icon v-else name="domain" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{ scope.opt.label }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-                <template #selected-item="scope">
-                  <div class="row items-center no-wrap">
-                    <q-avatar v-if="scope.opt.avatarUrl" size="18px" class="q-mr-xs">
-                      <img :src="scope.opt.avatarUrl" :alt="scope.opt.label">
-                    </q-avatar>
-                    <q-icon v-else name="domain" class="q-mr-xs" />
-                    <span>{{ scope.opt.label }}</span>
-                  </div>
-                </template>
-              </q-select>
-              <q-input
-                v-else
-                v-model="organization"
-                for="submission-dialog-organization"
-                outlined
-                dense
-                readonly
-              />
-            </div>
-
-            <div>
-              <label for="submission-dialog-repository" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.repository') }}</label>
-              <q-select
-                v-if="isSubmitMode"
-                v-model="selectedRepository"
-                for="submission-dialog-repository"
-                outlined
-                dense
-                emit-value
-                map-options
-                :options="repositoryOptions"
-                :hint="t('dock.submissions.dialog.hints.repository')"
-                :disable="!organization"
-                :loading="isLoadingRepositories"
-                @virtual-scroll="onRepositoriesVirtualScroll"
-              >
-                <template #option="scope">
-                  <q-item v-bind="scope.itemProps">
-                    <q-item-section side class="q-pr-sm">
-                      <q-icon name="folder" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{ scope.opt.label }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-                <template #selected-item="scope">
-                  <div class="row items-center no-wrap">
-                    <q-icon name="folder" class="q-mr-xs" />
-                    <span>{{ scope.opt.label }}</span>
-                  </div>
-                </template>
-              </q-select>
-              <q-input
-                v-else
-                v-model="selectedRepository"
-                for="submission-dialog-repository"
-                outlined
-                dense
-                readonly
-              />
-            </div>
-
-            <div v-if="dialogErrorMessage" class="text-negative text-caption">
-              {{ dialogErrorMessage }}
-            </div>
-
-            <div v-if="!organizationOptionsAvailable && isSubmitMode" class="text-caption text-grey-7">
-              {{ t('dock.submissions.dialog.empty.organizations') }}
-            </div>
-            <div v-else-if="organization && !repositoryOptions.length && isSubmitMode && !isLoadingRepositories" class="text-caption text-grey-7">
-              {{ t('dock.submissions.dialog.empty.repositories') }}
-            </div>
-          </div>
+          <SubmissionWizardStepRepository
+            ref="stepRepositoryRef"
+            :is-submit-mode="isSubmitMode"
+            :organization-options="organizationOptions"
+            :repository-options="repositoryOptions"
+            :is-loading-organizations="isLoadingOrganizations"
+            :is-loading-repositories="isLoadingRepositories"
+            :organization-options-available="organizationOptionsAvailable"
+            :dialog-error-message="dialogErrorMessage"
+            @organizations-virtual-scroll="onOrganizationsVirtualScroll"
+            @repositories-virtual-scroll="onRepositoriesVirtualScroll"
+            @draft-organization-change="handleRepositoryStepOrganizationDraftChange"
+            @validity-change="setStepValidity(1, $event)"
+          />
         </q-step>
 
         <q-step
@@ -178,42 +89,14 @@
           icon="category"
           :done="step > 2"
         >
-          <div class="column q-gutter-md">
-            <div v-if="isLoadingProjectInfo" class="column items-center justify-center q-gutter-sm q-py-xl">
-              <q-spinner-dots color="dark" size="2em" />
-              <div class="text-caption text-grey-7">
-                {{ t('dock.submissions.dialog.autofill.loading') }}
-              </div>
-            </div>
-
-            <template v-else>
-              <div>
-                <label for="submission-dialog-project-type" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.projectType') }}</label>
-                <q-option-group
-                  v-model="projectType"
-                  type="radio"
-                  color="dark"
-                  :options="projectTypeOptions"
-                />
-                <q-banner
-                  v-if="isProjectTypeAutofilled"
-                  dense
-                  rounded
-                  inline-actions
-                  class="bg-grey-2 text-grey-9 q-mt-sm"
-                >
-                  <template #avatar>
-                    <q-icon name="info" />
-                  </template>
-                  {{ t('dock.submissions.dialog.autofill.projectTypeDetected') }}
-                </q-banner>
-              </div>
-            </template>
-
-            <div v-if="projectInfoErrorMessage" class="text-negative text-caption">
-              {{ projectInfoErrorMessage }}
-            </div>
-          </div>
+          <SubmissionWizardStepProjectType
+            ref="stepProjectTypeRef"
+            :project-type-options="projectTypeOptions"
+            :is-loading-project-info="isLoadingProjectInfo"
+            :is-project-type-autofilled="isProjectTypeAutofilled"
+            :project-info-error-message="projectInfoErrorMessage"
+            @validity-change="setStepValidity(2, $event)"
+          />
         </q-step>
 
         <q-step
@@ -222,76 +105,13 @@
           icon="business"
           :done="step > 3"
         >
-          <div class="column q-gutter-md">
-            <div>
-              <label for="submission-dialog-company-name" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.companyName') }}</label>
-              <q-input
-                v-model="companyName"
-                for="submission-dialog-company-name"
-                outlined
-                dense
-                :hint="t('dock.submissions.dialog.hints.companyName')"
-              />
-            </div>
-
-            <div>
-              <label for="submission-dialog-company-linkedin" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.companyLinkedInUrl') }}</label>
-              <q-input
-                v-model="companyLinkedInUrl"
-                for="submission-dialog-company-linkedin"
-                outlined
-                dense
-                type="url"
-                :hint="t('dock.submissions.dialog.hints.companyLinkedInUrl')"
-              />
-            </div>
-
-            <div>
-              <label for="submission-dialog-role" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionTitle') }}</label>
-              <q-select
-                v-model="positionTitle"
-                for="submission-dialog-role"
-                outlined
-                dense
-                use-input
-                fill-input
-                hide-selected
-                input-debounce="0"
-                new-value-mode="add-unique"
-                emit-value
-                map-options
-                :options="positionTitleOptions"
-                :disable="!projectType"
-                :hint="t('dock.submissions.dialog.hints.positionTitle')"
-                @input-value="onRoleInputValue"
-                @new-value="onRoleNewValue"
-                @blur="onRoleBlur"
-              />
-            </div>
-
-            <div>
-              <label for="submission-dialog-level" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionLevel') }}</label>
-              <q-select
-                v-model="positionLevel"
-                for="submission-dialog-level"
-                outlined
-                dense
-                use-input
-                fill-input
-                hide-selected
-                input-debounce="0"
-                new-value-mode="add-unique"
-                emit-value
-                map-options
-                :options="positionLevelOptions"
-                :disable="!projectType"
-                :hint="t('dock.submissions.dialog.hints.positionLevel')"
-                @input-value="onLevelInputValue"
-                @new-value="onLevelNewValue"
-                @blur="onLevelBlur"
-              />
-            </div>
-          </div>
+          <SubmissionWizardStepCompany
+            ref="stepCompanyRef"
+            :project-type="projectType"
+            :position-title-options="positionTitleOptions"
+            :position-level-options="positionLevelOptions"
+            @validity-change="setStepValidity(3, $event)"
+          />
         </q-step>
 
         <q-step
@@ -300,53 +120,10 @@
           icon="description"
           :done="step > 4"
         >
-          <div class="column q-gutter-md">
-            <div>
-              <label for="submission-dialog-task-summary" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.taskSummary') }}</label>
-              <div class="row items-center q-col-gutter-sm q-row-gutter-xs q-mb-sm">
-                <div class="col-auto">
-                  <q-btn
-                    dense
-                    outline
-                    icon="upload_file"
-                    :label="t('dock.submissions.dialog.actions.importTaskSummaryFile')"
-                    :loading="isTaskSummaryImporting"
-                    @click="openTaskSummaryImportDialog"
-                  />
-                  <input
-                    ref="taskSummaryImportInputRef"
-                    type="file"
-                    class="hidden"
-                    :accept="taskSummaryImportAccept"
-                    @change="onTaskSummaryImportChange"
-                  >
-                </div>
-                <div v-if="taskSummaryImportedFileName" class="col text-caption text-grey-7 ellipsis">
-                  {{ taskSummaryImportedFileName }}
-                </div>
-              </div>
-
-              <q-banner
-                v-if="taskSummaryImportErrorMessage"
-                dense
-                rounded
-                class="bg-red-1 text-negative q-mb-sm"
-              >
-                {{ taskSummaryImportErrorMessage }}
-              </q-banner>
-
-              <q-editor
-                id="submission-dialog-task-summary"
-                v-model="taskSummary"
-                dense
-                min-height="220px"
-                :toolbar="taskSummaryEditorToolbar"
-              />
-              <div class="text-caption text-grey-7 q-mt-xs">
-                {{ t('dock.submissions.dialog.hints.taskSummary') }}
-              </div>
-            </div>
-          </div>
+          <SubmissionWizardStepSummary
+            ref="stepSummaryRef"
+            @validity-change="setStepValidity(4, $event)"
+          />
         </q-step>
 
         <q-step
@@ -354,47 +131,11 @@
           :title="t('dock.submissions.dialog.steps.feedback')"
           icon="chat"
         >
-          <div class="column q-gutter-md">
-            <div>
-              <label for="submission-dialog-recruiter-outcome" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.recruiterOutcome') }}</label>
-              <q-select
-                v-model="recruiterOutcome"
-                for="submission-dialog-recruiter-outcome"
-                outlined
-                dense
-                emit-value
-                map-options
-                :options="recruiterOutcomeOptions"
-                :hint="t('dock.submissions.dialog.hints.recruiterOutcome')"
-              />
-            </div>
-
-            <div>
-              <label for="submission-dialog-positive-feedback" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positiveFeedback') }}</label>
-              <q-input
-                v-model="positiveFeedback"
-                for="submission-dialog-positive-feedback"
-                outlined
-                dense
-                autogrow
-                type="textarea"
-                :hint="t('dock.submissions.dialog.hints.positiveFeedback')"
-              />
-            </div>
-
-            <div>
-              <label for="submission-dialog-negative-feedback" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.negativeFeedback') }}</label>
-              <q-input
-                v-model="negativeFeedback"
-                for="submission-dialog-negative-feedback"
-                outlined
-                dense
-                autogrow
-                type="textarea"
-                :hint="t('dock.submissions.dialog.hints.negativeFeedback')"
-              />
-            </div>
-          </div>
+          <SubmissionWizardStepFeedback
+            ref="stepFeedbackRef"
+            :recruiter-outcome-options="recruiterOutcomeOptions"
+            @validity-change="setStepValidity(5, $event)"
+          />
         </q-step>
             </q-stepper>
           </div>
@@ -454,11 +195,12 @@ import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submissi
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
 import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 import positionRolesConfig from 'src/config/position_roles.yml'
-import {
-  importTaskSummaryFile,
-  normalizeTextSummaryToHtml,
-  TASK_SUMMARY_IMPORT_ACCEPT
-} from 'src/utils/task-summary-importer'
+import SubmissionWizardStepRepository from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepRepository.vue'
+import SubmissionWizardStepProjectType from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepProjectType.vue'
+import SubmissionWizardStepCompany from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepCompany.vue'
+import SubmissionWizardStepSummary from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepSummary.vue'
+import SubmissionWizardStepFeedback from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepFeedback.vue'
+import { normalizeTextSummaryToHtml } from 'src/utils/task-summary-importer'
 
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
@@ -524,12 +266,20 @@ const {
 } = storeToRefs(submissionWizardStore)
 const organizationOptionsLimit = ref(SELECT_PAGE_SIZE)
 const repositoryOptionsLimit = ref(SELECT_PAGE_SIZE)
-const roleInputValue = ref('')
-const levelInputValue = ref('')
-const taskSummaryImportInputRef = ref(null)
-const isTaskSummaryImporting = ref(false)
-const taskSummaryImportErrorKey = ref('')
-const taskSummaryImportedFileName = ref('')
+const stepRepositoryRef = ref(null)
+const stepProjectTypeRef = ref(null)
+const stepCompanyRef = ref(null)
+const stepSummaryRef = ref(null)
+const stepFeedbackRef = ref(null)
+const repositoryLookupOrganization = ref(String(organization.value ?? '').trim())
+const skipOrganizationResetOnSave = ref(false)
+const stepValidityMap = ref({
+  1: false,
+  2: false,
+  3: false,
+  4: false,
+  5: false
+})
 
 const isSubmitMode = computed(() => props.mode === 'submit')
 const dialogTitle = computed(() => isSubmitMode.value
@@ -576,7 +326,8 @@ const allOrganizationOptions = computed(() =>
 const organizationOptions = computed(() =>
   allOrganizationOptions.value.slice(0, organizationOptionsLimit.value))
 const organizationOptionsAvailable = computed(() => allOrganizationOptions.value.length > 0)
-const repositoryRecords = computed(() => githubSubmissionRepositoriesStore.repositoriesForOrganization(organization.value))
+const repositoryRecords = computed(() =>
+  githubSubmissionRepositoriesStore.repositoriesForOrganization(repositoryLookupOrganization.value))
 const submittedRepositoryKeys = computed(() =>
   new Set(submissions.value.map((submission) => normalizeRepositoryKey(submission?.owner, submission?.repository))))
 const allRepositoryOptions = computed(() =>
@@ -589,7 +340,7 @@ const allRepositoryOptions = computed(() =>
     .sort(sortSelectOptionsByLabel))
 const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, repositoryOptionsLimit.value))
 const isLoadingRepositories = computed(() =>
-  githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(organization.value))
+  githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(repositoryLookupOrganization.value))
 const projectTypeOptions = computed(() => [
   { label: t('dock.submissions.dialog.projectTypeOptions.softwareDevelopment'), value: 'software-development' },
   { label: t('dock.submissions.dialog.projectTypeOptions.uiUxDesign'), value: 'ui-ux-design' },
@@ -648,41 +399,10 @@ const recruiterOutcomeOptions = computed(() => [
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.stopped'), value: 'stopped' }
 ])
-const taskSummaryImportAccept = TASK_SUMMARY_IMPORT_ACCEPT
-const taskSummaryEditorToolbar = [
-  ['bold', 'italic', 'underline', 'strike'],
-  ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
-  ['link'],
-  ['undo', 'redo'],
-  ['viewsource']
-]
-const hasTaskSummaryContent = computed(() => hasRichTextContent(taskSummary.value))
 const canGoNext = computed(() => {
-  if (step.value === 1) {
-    return Boolean(
-      organization.value
-      && selectedRepository.value
-      && !allRepositoryOptions.value.find((option) => option.value === selectedRepository.value)?.disable
-    )
-  }
-
-  if (step.value === 2) {
-    return Boolean(projectType.value) && !isLoadingProjectInfo.value
-  }
-
-  if (step.value === 3) {
-    return Boolean(String(companyName.value ?? '').trim())
-      && Boolean(String(positionTitle.value ?? '').trim())
-      && Boolean(String(positionLevel.value ?? '').trim())
-  }
-
-  if (step.value === 4) {
-    return hasTaskSummaryContent.value
-  }
-
-  return false
+  return Boolean(stepValidityMap.value[String(step.value)])
 })
-const canFinish = computed(() => Boolean(recruiterOutcome.value))
+const canFinish = computed(() => Boolean(stepValidityMap.value['5']))
 const dialogErrorMessage = computed(() => {
   if (!errorMessageKey.value) {
     return ''
@@ -697,15 +417,6 @@ const projectInfoErrorMessage = computed(() => {
 
   return t(projectInfoErrorMessageKey.value)
 })
-const taskSummaryImportErrorMessage = computed(() => {
-  if (!taskSummaryImportErrorKey.value) {
-    return ''
-  }
-
-  return t(taskSummaryImportErrorKey.value, {
-    formats: taskSummaryImportAccept
-  })
-})
 
 watch(organization, async (nextOrganization, previousOrganization) => {
   if (!isSubmitMode.value) {
@@ -713,6 +424,14 @@ watch(organization, async (nextOrganization, previousOrganization) => {
   }
 
   if (nextOrganization !== previousOrganization) {
+    repositoryLookupOrganization.value = String(nextOrganization ?? '').trim()
+
+    if (skipOrganizationResetOnSave.value) {
+      skipOrganizationResetOnSave.value = false
+      await loadRepositoriesForOrganization(nextOrganization)
+      return
+    }
+
     selectedRepository.value = ''
     repositoryOptionsLimit.value = SELECT_PAGE_SIZE
     resetDetailsForm()
@@ -759,6 +478,8 @@ async function goToNextStep () {
     return
   }
 
+  saveCurrentStepDraft()
+
   if (step.value === 1) {
     step.value = 2
     await refetchProjectInfoAndAutofill()
@@ -790,10 +511,46 @@ function goToStep (targetStep) {
   step.value = Number(targetStep)
 }
 
+function setStepValidity (stepNumber, isValid) {
+  stepValidityMap.value[String(stepNumber)] = Boolean(isValid)
+}
+
+function saveCurrentStepDraft () {
+  if (step.value === 1) {
+    skipOrganizationResetOnSave.value = true
+    stepRepositoryRef.value?.save?.()
+    return
+  }
+
+  if (step.value === 2) {
+    stepProjectTypeRef.value?.save?.()
+    return
+  }
+
+  if (step.value === 3) {
+    stepCompanyRef.value?.save?.()
+    return
+  }
+
+  if (step.value === 4) {
+    stepSummaryRef.value?.save?.()
+  }
+}
+
+function resetStepDrafts () {
+  stepRepositoryRef.value?.resetDraft?.()
+  stepProjectTypeRef.value?.resetDraft?.()
+  stepCompanyRef.value?.resetDraft?.()
+  stepSummaryRef.value?.resetDraft?.()
+  stepFeedbackRef.value?.resetDraft?.()
+}
+
 function finishWizard () {
   if (!canFinish.value) {
     return
   }
+
+  stepFeedbackRef.value?.save?.()
 
   onDialogOKPlugin({
     mode: props.mode,
@@ -837,7 +594,8 @@ async function ensureInitialSelection () {
       || ''
   }
 
-  await loadRepositoriesForOrganization(organization.value)
+  repositoryLookupOrganization.value = String(organization.value ?? '').trim()
+  await loadRepositoriesForOrganization(repositoryLookupOrganization.value)
 }
 
 async function loadRepositoriesForOrganization (organizationLogin) {
@@ -854,6 +612,12 @@ async function loadRepositoriesForOrganization (organizationLogin) {
   } catch {
     return
   }
+}
+
+async function handleRepositoryStepOrganizationDraftChange (organizationLogin) {
+  repositoryLookupOrganization.value = String(organizationLogin ?? '').trim()
+  repositoryOptionsLimit.value = SELECT_PAGE_SIZE
+  await loadRepositoriesForOrganization(repositoryLookupOrganization.value)
 }
 
 async function refetchProjectInfoAndAutofill () {
@@ -929,9 +693,9 @@ function resetDetailsForm () {
   recruiterOutcome.value = 'stopped'
   positiveFeedback.value = ''
   negativeFeedback.value = ''
-  roleInputValue.value = ''
-  levelInputValue.value = ''
-  resetTaskSummaryImportState()
+  repositoryLookupOrganization.value = String(organization.value ?? '').trim()
+  resetStepDrafts()
+  resetStepValidity()
 }
 
 function initializeWizardSession () {
@@ -939,9 +703,10 @@ function initializeWizardSession () {
     owner: props.owner,
     repository: props.repository
   })
-  roleInputValue.value = ''
-  levelInputValue.value = ''
-  resetTaskSummaryImportState()
+  repositoryLookupOrganization.value = String(organization.value ?? '').trim()
+  skipOrganizationResetOnSave.value = false
+  resetStepDrafts()
+  resetStepValidity()
   organizationOptionsLimit.value = SELECT_PAGE_SIZE
   repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   githubSubmissionProjectInfoStore.reset()
@@ -949,132 +714,23 @@ function initializeWizardSession () {
 
 function clearWizardSession () {
   submissionWizardStore.reset()
-  roleInputValue.value = ''
-  levelInputValue.value = ''
-  resetTaskSummaryImportState()
+  repositoryLookupOrganization.value = String(organization.value ?? '').trim()
+  skipOrganizationResetOnSave.value = false
+  resetStepDrafts()
+  resetStepValidity()
   organizationOptionsLimit.value = SELECT_PAGE_SIZE
   repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   githubSubmissionProjectInfoStore.reset()
 }
 
-function openTaskSummaryImportDialog () {
-  taskSummaryImportInputRef.value?.click()
-}
-
-async function onTaskSummaryImportChange (event) {
-  const fileInputElement = event?.target
-  const selectedFile = fileInputElement?.files?.[0]
-
-  if (!selectedFile) {
-    return
+function resetStepValidity () {
+  stepValidityMap.value = {
+    1: Boolean(stepRepositoryRef.value?.getCanProceed?.()),
+    2: Boolean(stepProjectTypeRef.value?.getCanProceed?.()),
+    3: Boolean(stepCompanyRef.value?.getCanProceed?.()),
+    4: Boolean(stepSummaryRef.value?.getCanProceed?.()),
+    5: Boolean(stepFeedbackRef.value?.getCanProceed?.())
   }
-
-  isTaskSummaryImporting.value = true
-  taskSummaryImportErrorKey.value = ''
-
-  try {
-    const importedHtml = await importTaskSummaryFile(selectedFile)
-    taskSummary.value = importedHtml
-    taskSummaryImportedFileName.value = selectedFile.name
-  } catch (error) {
-    taskSummaryImportErrorKey.value = String(error?.message ?? '') === 'unsupported-format'
-      ? 'dock.submissions.dialog.errors.taskSummaryImportUnsupportedFormat'
-      : 'dock.submissions.dialog.errors.taskSummaryImportFailed'
-  } finally {
-    isTaskSummaryImporting.value = false
-
-    if (fileInputElement) {
-      fileInputElement.value = ''
-    }
-  }
-}
-
-function resetTaskSummaryImportState () {
-  isTaskSummaryImporting.value = false
-  taskSummaryImportErrorKey.value = ''
-  taskSummaryImportedFileName.value = ''
-
-  if (taskSummaryImportInputRef.value) {
-    taskSummaryImportInputRef.value.value = ''
-  }
-}
-
-function onRoleInputValue (value) {
-  onSelectInputValue(roleInputValue, value)
-}
-
-function onLevelInputValue (value) {
-  onSelectInputValue(levelInputValue, value)
-}
-
-function onRoleNewValue (value, done) {
-  onCustomSelectValue(positionTitle, roleInputValue, positionTitleOptions, value, done)
-}
-
-function onLevelNewValue (value, done) {
-  onCustomSelectValue(positionLevel, levelInputValue, positionLevelOptions, value, done)
-}
-
-function onRoleBlur () {
-  commitSelectInputValue(positionTitle, roleInputValue, positionTitleOptions)
-}
-
-function onLevelBlur () {
-  commitSelectInputValue(positionLevel, levelInputValue, positionLevelOptions)
-}
-
-function onSelectInputValue (inputReference, value) {
-  inputReference.value = String(value ?? '')
-}
-
-function commitSelectInputValue (fieldReference, inputReference, optionsReference) {
-  const normalizedInput = String(inputReference.value ?? '').trim()
-
-  if (!normalizedInput) {
-    return
-  }
-
-  const normalizedSelectedValue = String(fieldReference.value ?? '').trim()
-
-  if (normalizedSelectedValue) {
-    const selectedLabel = resolveOptionLabelByValue(optionsReference.value, normalizedSelectedValue)
-
-    if (selectedLabel && selectedLabel === normalizedInput) {
-      inputReference.value = ''
-      return
-    }
-
-    if (!selectedLabel && normalizedSelectedValue === normalizedInput) {
-      inputReference.value = ''
-      return
-    }
-  }
-
-  applyCustomSelectValue(fieldReference, inputReference, optionsReference, normalizedInput)
-}
-
-function onCustomSelectValue (fieldReference, inputReference, optionsReference, value, done) {
-  const normalizedValue = applyCustomSelectValue(fieldReference, inputReference, optionsReference, value)
-
-  if (!normalizedValue) {
-    done(null)
-    return
-  }
-
-  done(normalizedValue)
-}
-
-function applyCustomSelectValue (fieldReference, inputReference, optionsReference, value) {
-  const normalizedValue = String(value ?? '').trim()
-
-  if (!normalizedValue) {
-    return ''
-  }
-
-  const predefinedValue = resolveOptionValueByLabel(optionsReference.value, normalizedValue)
-  fieldReference.value = predefinedValue || normalizedValue
-  inputReference.value = ''
-  return fieldReference.value
 }
 
 function alignPositionTitleWithProjectType () {
@@ -1118,12 +774,6 @@ function decodePredefinedSelectValue (value) {
   return normalizedValue.slice(PREDEFINED_SELECT_VALUE_PREFIX.length).trim()
 }
 
-function resolveOptionLabelByValue (options, value) {
-  const normalizedValue = String(value ?? '').trim()
-
-  return options.find((option) => option.value === normalizedValue)?.label ?? ''
-}
-
 function resolveOptionValueByLabel (options, label) {
   const normalizedLabel = String(label ?? '').trim().toLowerCase()
 
@@ -1134,28 +784,6 @@ function resolveOptionValueByLabel (options, label) {
   return options.find((option) =>
     String(option?.label ?? '').trim().toLowerCase() === normalizedLabel
   )?.value ?? ''
-}
-
-function hasRichTextContent (value) {
-  const normalizedValue = String(value ?? '').trim()
-
-  if (!normalizedValue) {
-    return false
-  }
-
-  const plainText = normalizedValue
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/\u00a0/g, ' ')
-    .replace(/&nbsp;|&#160;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, ' ')
-    .trim()
-
-  return Boolean(plainText)
 }
 
 function autofillField (fieldReference, value) {

@@ -106,7 +106,7 @@ describe('SubmissionWizardDialog', () => {
     expect(findNextButton(wrapper).props('disable')).toBe(false)
   })
 
-  it('refetches project info when moving from repository step to project type step and shows loading state', async () => {
+  it('refetches project info when moving from repository step to project type step', async () => {
     const pinia = createPinia()
 
     setActivePinia(pinia)
@@ -124,13 +124,11 @@ describe('SubmissionWizardDialog', () => {
     repositorySelect.vm.$emit('update:modelValue', 'repo-a')
     await flushPromises()
 
-    projectInfoStore.isLoading = true
-
     await findNextButton(wrapper).trigger('click')
     await flushPromises()
 
     expect(projectInfoStore.refetchProjectInfo).toHaveBeenCalledWith('octo-org', 'repo-a')
-    expect(wrapper.text()).toContain('Loading project details from GitHub...')
+    expect(wrapper.text()).toContain('Project type')
   })
 
   it('keeps next action disabled when selected repository is already submitted', async () => {
@@ -253,6 +251,12 @@ describe('SubmissionWizardDialog', () => {
     await flushPromises()
 
     expect(wizardStore.positionTitle).toBe('::frontendEngineer')
+    expect(wizardStore.positionLevel).toBe('')
+
+    wrapper.findComponent({ name: 'SubmissionWizardStepCompany' }).vm.save()
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('::frontendEngineer')
     expect(wizardStore.positionLevel).toBe('::senior')
   })
 
@@ -292,6 +296,12 @@ describe('SubmissionWizardDialog', () => {
     roleSelect.vm.$emit('blur')
     levelSelect.vm.$emit('input-value', 'Expert')
     levelSelect.vm.$emit('blur')
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('::frontendEngineer')
+    expect(wizardStore.positionLevel).toBe('')
+
+    wrapper.findComponent({ name: 'SubmissionWizardStepCompany' }).vm.save()
     await flushPromises()
 
     expect(wizardStore.positionTitle).toBe('Solutions Architect')
