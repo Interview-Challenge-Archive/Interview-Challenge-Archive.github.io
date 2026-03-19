@@ -3,14 +3,45 @@
     <q-card class="submission-wizard-dialog q-pa-md">
       <div class="text-h6 q-mb-md">{{ dialogTitle }}</div>
 
-      <q-stepper
-        v-model="step"
-        flat
-        animated
-        :contracted="isContractedStepper"
-        :header-class="isContractedStepper ? 'q-pa-none' : ''"
-        class="bg-transparent submission-wizard-dialog__stepper"
-      >
+      <div class="submission-wizard-dialog__layout row no-wrap">
+        <aside v-if="isDesktopWizardLayout" class="submission-wizard-dialog__sidebar col-auto">
+          <div class="submission-wizard-dialog__step-nav column">
+            <button
+              v-for="wizardStep in wizardSteps"
+              :key="wizardStep.name"
+              type="button"
+              class="submission-wizard-dialog__step-link row items-center no-wrap"
+              :class="{
+                'submission-wizard-dialog__step-link--active': step === wizardStep.name,
+                'submission-wizard-dialog__step-link--done': step > wizardStep.name
+              }"
+              :disabled="!canNavigateToStep(wizardStep.name)"
+              @click="goToStep(wizardStep.name)"
+            >
+              <q-avatar
+                size="24px"
+                class="q-mr-sm"
+                :class="step > wizardStep.name ? 'bg-positive text-white' : (step === wizardStep.name ? 'bg-dark text-white' : 'bg-grey-3 text-grey-8')"
+              >
+                <q-icon :name="step > wizardStep.name ? 'check' : wizardStep.icon" size="14px" />
+              </q-avatar>
+              <div class="column">
+                <div class="text-caption text-grey-6">Step {{ wizardStep.name }}</div>
+                <div class="text-body2">{{ wizardStep.title }}</div>
+              </div>
+            </button>
+          </div>
+        </aside>
+
+        <div class="col">
+          <q-stepper
+            v-model="step"
+            flat
+            animated
+            :contracted="isContractedStepper"
+            :header-class="stepperHeaderClass"
+            class="bg-transparent submission-wizard-dialog__stepper"
+          >
         <q-step
           :name="1"
           :title="t('dock.submissions.dialog.steps.repository')"
@@ -274,7 +305,9 @@
             </div>
           </div>
         </q-step>
-      </q-stepper>
+          </q-stepper>
+        </div>
+      </div>
 
       <div class="row items-center q-gutter-sm q-mt-md">
         <q-space />
@@ -386,7 +419,26 @@ const dialogTitle = computed(() => isSubmitMode.value
   ? t('dock.submissions.dialog.title.submit')
   : t('dock.submissions.dialog.title.update'))
 const totalSteps = computed(() => TOTAL_STEPS)
+const isDesktopWizardLayout = computed(() => $q.screen.gt.sm)
 const isContractedStepper = computed(() => $q.screen.lt.sm)
+const stepperHeaderClass = computed(() => {
+  if (isDesktopWizardLayout.value) {
+    return 'hidden'
+  }
+
+  if (isContractedStepper.value) {
+    return 'q-pa-none'
+  }
+
+  return ''
+})
+const wizardSteps = computed(() => [
+  { name: 1, title: t('dock.submissions.dialog.steps.repository'), icon: 'folder' },
+  { name: 2, title: t('dock.submissions.dialog.steps.projectType'), icon: 'category' },
+  { name: 3, title: t('dock.submissions.dialog.steps.company'), icon: 'business' },
+  { name: 4, title: t('dock.submissions.dialog.steps.summary'), icon: 'description' },
+  { name: 5, title: t('dock.submissions.dialog.steps.feedback'), icon: 'chat' }
+])
 const allOrganizationOptions = computed(() =>
   [...organizations.value].sort(sortSelectOptionsByLabel))
 const organizationOptions = computed(() =>
@@ -513,6 +565,18 @@ function goToPreviousStep () {
   }
 
   step.value -= 1
+}
+
+function canNavigateToStep (targetStep) {
+  return Number(targetStep) <= step.value
+}
+
+function goToStep (targetStep) {
+  if (!canNavigateToStep(targetStep)) {
+    return
+  }
+
+  step.value = Number(targetStep)
 }
 
 function finishWizard () {
@@ -659,6 +723,51 @@ function autofillField (fieldReference, value) {
   width: min(860px, 96vw);
   max-width: 96vw;
 
+  &__layout {
+    min-height: 520px;
+  }
+
+  &__sidebar {
+    width: 248px;
+    border-right: 1px solid #e0e0e0;
+    margin-right: 16px;
+    padding-right: 16px;
+  }
+
+  &__step-nav {
+    gap: 6px;
+  }
+
+  &__step-link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    padding: 6px 2px 6px 10px;
+    color: inherit;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: border-color 120ms ease;
+
+    &:hover:not(:disabled) {
+      border-left-color: #bdbdbd;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__step-link--active {
+    border-left-color: #212121;
+    font-weight: 600;
+  }
+
+  &__step-link--done {
+    border-left-color: #66bb6a;
+  }
+
   &__stepper {
     :deep(.q-stepper__header) {
       flex-wrap: nowrap;
@@ -687,6 +796,14 @@ function autofillField (fieldReference, value) {
 
 @media (max-width: 599px) {
   .submission-wizard-dialog {
+    &__layout {
+      min-height: 0;
+    }
+
+    &__sidebar {
+      display: none;
+    }
+
     &__stepper {
       :deep(.q-stepper__header--contracted) {
         min-height: 56px;
