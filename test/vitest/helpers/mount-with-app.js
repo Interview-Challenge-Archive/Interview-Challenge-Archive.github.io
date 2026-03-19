@@ -247,6 +247,7 @@ const messages = {
           },
           actions: {
             cancel: 'Cancel',
+            close: 'Close',
             next: 'Next',
             back: 'Back',
             finish: 'Finish'

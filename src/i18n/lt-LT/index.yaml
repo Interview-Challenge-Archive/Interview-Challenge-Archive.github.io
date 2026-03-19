@@ -213,6 +213,7 @@ dock:
         repositories: Pasirinktoje organizacijoje viešų repozitorijų nerasta.
       actions:
         cancel: Atšaukti
+        close: Uždaryti
         next: Toliau
         back: Atgal
         finish: Užbaigti

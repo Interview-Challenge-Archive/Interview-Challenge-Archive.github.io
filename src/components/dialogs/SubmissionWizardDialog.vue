@@ -1,7 +1,18 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide">
+  <q-dialog ref="dialogRef" persistent @hide="onDialogHide">
     <q-card class="submission-wizard-dialog q-pa-md">
-      <div class="submission-wizard-dialog__header text-h6 q-mb-md">{{ dialogTitle }}</div>
+      <div class="submission-wizard-dialog__header row items-center no-wrap q-mb-md">
+        <div class="text-h6 text-uppercase">{{ dialogTitle }}</div>
+        <q-space />
+        <q-btn
+          flat
+          round
+          dense
+          icon="close"
+          :aria-label="t('dock.submissions.dialog.actions.close')"
+          @click="onDialogCancel"
+        />
+      </div>
 
       <q-scroll-area class="submission-wizard-dialog__scroll">
         <div class="submission-wizard-dialog__layout row no-wrap">

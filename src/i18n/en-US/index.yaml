@@ -213,6 +213,7 @@ dock:
         repositories: No public repositories were found for the selected organization.
       actions:
         cancel: Cancel
+        close: Close
         next: Next
         back: Back
         finish: Finish
