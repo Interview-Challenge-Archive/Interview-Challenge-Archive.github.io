@@ -1,5 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import appConfig from 'src/config/auth.yml'
 import AccountDockPanel from 'src/components/dock-panels/AccountDockPanel.vue'
 import { useSessionStore } from 'src/stores/session-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
@@ -18,6 +20,15 @@ function seedConnectedAccount (sessionStore, { provider, login, name, accessToke
 }
 
 describe('AccountDockPanel', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    window.sessionStorage.clear()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('disconnects only the selected account row', async () => {
     const pinia = createPinia()
 
@@ -117,5 +128,33 @@ describe('AccountDockPanel', () => {
     const actionButton = linkedinRow?.findAllComponents({ name: 'QBtn' })[0]
 
     expect(actionButton?.props('label')).toBe('Connect')
+  })
+
+  it('passes GitHub scope in OAuth popup query params when connecting', async () => {
+    const pinia = createPinia()
+    const popup = {
+      closed: false,
+      close: vi.fn()
+    }
+    const openSpy = vi.spyOn(window, 'open').mockReturnValue(popup)
+
+    setActivePinia(pinia)
+    const wrapper = mountWithApp(AccountDockPanel, { pinia })
+    const githubRow = wrapper.findAll('.account-dock-panel__row')
+      .find((row) => row.text().includes('GitHub'))
+    const connectButton = githubRow?.findAllComponents({ name: 'QBtn' })
+      .find((button) => button.props('label') === 'Connect')
+
+    await connectButton?.vm.$emit('click')
+    await nextTick()
+
+    expect(openSpy).toHaveBeenCalledTimes(1)
+    const [popupUrl] = openSpy.mock.calls[0]
+    const parsedUrl = new URL(popupUrl)
+
+    expect(`${parsedUrl.origin}${parsedUrl.pathname}`).toBe(appConfig.auth.providers.github.loginUrl)
+    expect(parsedUrl.searchParams.get('scope')).toBe('read:user user:email read:org')
+
+    wrapper.unmount()
   })
 })
