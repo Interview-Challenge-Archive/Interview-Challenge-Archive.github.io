@@ -47,6 +47,7 @@ describe('LoginDockPanel auth flow', () => {
     expect(`${parsedUrl.origin}${parsedUrl.pathname}`).toBe(appConfig.auth.providers.github.loginUrl)
     expect(parsedUrl.searchParams.get('mode')).toBe('popup')
     expect(parsedUrl.searchParams.get('origin')).toBe(window.location.origin)
+    expect(parsedUrl.searchParams.get('scope')).toBe('read:user user:email read:org')
     expect(popupName).toBe(appConfig.auth.popup.name)
 
     window.dispatchEvent(new MessageEvent('message', {

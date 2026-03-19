@@ -145,6 +145,48 @@ dock:
       positiveFeedback: Tik pozityvus feedback'as
       rejected: Atmesta po peržiūros
     action: Ruošti pateikimą
+  submissions:
+    label: Pateikimai
+    title: Pateikimai
+    description: "Lentelėje greitai matote, kas jau paviešinta ir ką dar verta atnaujinti prieš peržiūrą. Šioje vietoje patogu palaikyti aiškų užduoties įrašą per laiką: pirmiausia pateikite vieną repozitoriją, o vėliau sugrįžkite, kai norite pridėti pažangą, atsiliepimus ar kontekstą, kad visas darbas išliktų lengvai suprantamas."
+    actions:
+      submit: Pateikti
+      update: Atnaujinti
+    table:
+      columns:
+        repo: Repozitorija
+        pullRequest: Pull request
+        update: Veiksmai
+      loading: Kraunami pateikti projektai...
+      empty: Pateiktų repozitorijų dar nerasta.
+      noPullRequest: Nėra
+    status:
+      loaded: Įkelta {count} pateiktų repozitorijų.
+    dialog:
+      title:
+        submit: Pateikti repozitoriją
+        update: Atnaujinti repozitoriją
+      steps:
+        repository: Repozitorija
+        details: Detalės
+      fields:
+        organization: Organizacija
+        repository: Repozitorija
+      hints:
+        organization: Pasirinkite organizaciją, kurioje esate savininkas.
+        repository: Pasirinkite vieną iš savo viešų repozitorijų.
+      empty:
+        organizations: Šiai paskyrai nerasta organizacijų, kurias valdote.
+        repositories: Pasirinktoje organizacijoje viešų repozitorijų nerasta.
+      nextStepPlaceholder: Kitas vedlio žingsnis dar neįgyvendintas.
+      actions:
+        cancel: Atšaukti
+        next: Toliau
+        back: Atgal
+        close: Uždaryti
+    errors:
+      rateLimited: Pasiektas GitHub API užklausų limitas. Prisijunkite per GitHub ir pabandykite vėliau.
+      loadFailed: Nepavyko įkelti pateikimų iš GitHub.
   login:
     label: Login
     title: Prisijungimas prie paskyros
@@ -166,8 +208,14 @@ dock:
   account:
     label: Paskyra
     title: Paskyra
-    description: Valdykite prijungtus tiekėjus ir paskyrų sesijas vienoje vietoje.
+    description: "Čia rasite viską, kas susiję su jūsų paskyra: prijungtus tiekėjus, aktyvias sesijas ir greitą atsijungimą."
     connectedAccounts: Prijungtos paskyros
+    table:
+      columns:
+        provider: Tiekėjas
+        account: Paskyra
+        status: Būsena
+        actions: Veiksmai
     logout: Atsijungti
     unknownProvider: Nežinomas tiekėjas
     actions:

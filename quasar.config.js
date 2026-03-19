@@ -86,7 +86,7 @@ export default defineConfig((ctx) => {
       // viteVuePluginOptions: {},
 
       vitePlugins: [
-        yaml({ include: ['**/src/config/feature-flags.yml', '**/src/config/colors.yml', '**/src/config/auth.yml', '**/src/config/about.yml'] }),
+        yaml({ include: ['**/src/config/**/*.{yml,yaml}'] }),
 
         ['@intlify/unplugin-vue-i18n/vite', {
           // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
@@ -133,7 +133,7 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Meta']
+      plugins: ['Meta', 'Dialog']
     },
 
     // animations: 'all', // --- includes all animations

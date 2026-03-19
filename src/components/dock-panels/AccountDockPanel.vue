@@ -1,53 +1,75 @@
 <template>
-  <div class="account-dock-panel">
-    <div class="text-h5 text-uppercase q-mb-sm">{{ t('dock.account.title') }}</div>
-    <div class="text-body1 text-grey-7 q-mb-lg">{{ t('dock.account.description') }}</div>
+  <div class="account-dock-panel column no-wrap">
+    <div class="text-h5 text-uppercase q-mb-lg">{{ t('dock.account.title') }}</div>
 
-    <div class="row items-center justify-between q-mb-md">
-      <div class="text-subtitle2 text-grey-8">{{ t('dock.account.connectedAccounts') }}</div>
-      <q-btn
-        flat
-        no-caps
-        color="dark"
-        :label="t('dock.account.logout')"
-        :disable="!accountRows.some((row) => row.connected)"
-        @click="logoutAll"
-      />
-    </div>
+    <div class="account-dock-panel__content row">
+      <section class="account-dock-panel__table-col col-12 col-md-7">
+        <q-table
+          class="account-dock-panel__table"
+          flat
+          bordered
+          dense
+          row-key="key"
+          :rows="accountRows"
+          :columns="columns"
+          hide-pagination
+          :rows-per-page-options="[0]"
+          :pagination="{ rowsPerPage: 0 }"
+        >
+          <template #body="props">
+            <q-tr :props="props" :class="rowClass(props.row)">
+              <q-td key="provider" :props="props" class="account-dock-panel__provider">
+                <div class="row items-center no-wrap">
+                  <q-icon v-if="props.row.providerIcon" :name="props.row.providerIcon" size="18px" class="q-mr-sm" />
+                  <span class="text-subtitle2">{{ props.row.providerLabel }}</span>
+                </div>
+              </q-td>
 
-    <div v-if="statusMessage" class="text-body2 q-mb-md" :class="statusClass">
-      {{ statusMessage }}
-    </div>
+              <q-td key="account" :props="props" class="account-dock-panel__info">
+                <div v-if="props.row.title" class="text-body2 text-weight-medium">{{ props.row.title }}</div>
+                <div v-if="props.row.subtitle" class="text-caption text-grey-7">{{ props.row.subtitle }}</div>
+              </q-td>
 
-    <div class="account-dock-panel__list column q-gutter-sm">
-      <div
-        v-for="row in accountRows"
-        :key="row.key"
-        class="account-dock-panel__row bg-grey-1 row items-center q-col-gutter-md q-pa-md"
-      >
-        <div class="account-dock-panel__provider col-12 col-md-3 row items-center no-wrap">
-          <q-icon v-if="row.providerIcon" :name="row.providerIcon" size="18px" class="q-mr-sm" />
-          <span class="text-subtitle2">{{ row.providerLabel }}</span>
+              <q-td key="status" :props="props" class="text-caption text-grey-7">
+                {{ props.row.meta }}
+              </q-td>
+
+              <q-td key="actions" :props="props" class="account-dock-panel__action text-right">
+                <q-btn
+                  unelevated
+                  no-caps
+                  color="dark"
+                  :label="props.row.connected ? t('dock.account.actions.disconnect') : t('dock.account.actions.connect')"
+                  :loading="activeProviderId === props.row.providerId && !props.row.connected"
+                  :disable="actionDisabled(props.row)"
+                  @click="handleRowAction(props.row)"
+                />
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
+      </section>
+
+      <section class="account-dock-panel__info-col col-12 col-md">
+        <div class="column q-gutter-md">
+          <div class="text-body2 text-grey-7">{{ t('dock.account.description') }}</div>
+          <div>
+            <q-btn
+              unelevated
+              no-caps
+              color="warning"
+              text-color="dark"
+              :label="t('dock.account.logout')"
+              :disable="!accountRows.some((row) => row.connected)"
+              @click="logoutAll"
+            />
+          </div>
+
+          <div v-if="statusMessage" class="text-caption" :class="statusClass">
+            {{ statusMessage }}
+          </div>
         </div>
-
-        <div class="account-dock-panel__info col-12 col-md">
-          <div v-if="row.title" class="text-body2 text-weight-medium">{{ row.title }}</div>
-          <div v-if="row.subtitle" class="text-caption text-grey-7">{{ row.subtitle }}</div>
-          <div v-if="row.meta" class="text-caption text-grey-7">{{ row.meta }}</div>
-        </div>
-
-        <div class="account-dock-panel__action col-12 col-md-auto row">
-          <q-btn
-            unelevated
-            no-caps
-            color="dark"
-            :label="row.connected ? t('dock.account.actions.disconnect') : t('dock.account.actions.connect')"
-            :loading="activeProviderId === row.providerId && !row.connected"
-            :disable="actionDisabled(row)"
-            @click="handleRowAction(row)"
-          />
-        </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>
@@ -63,8 +85,36 @@ const sessionStore = useSessionStore()
 
 const authProviders = computed(() => Object.values(appConfig.auth.providers))
 const activeProviderId = ref(null)
+const animatedProviderId = ref('')
+const rowAnimationTone = ref('positive')
 const statusMessage = ref('')
 const statusTone = ref('info')
+const columns = computed(() => [
+  {
+    name: 'provider',
+    align: 'left',
+    label: t('dock.account.table.columns.provider'),
+    field: 'providerLabel'
+  },
+  {
+    name: 'account',
+    align: 'left',
+    label: t('dock.account.table.columns.account'),
+    field: 'title'
+  },
+  {
+    name: 'status',
+    align: 'left',
+    label: t('dock.account.table.columns.status'),
+    field: 'meta'
+  },
+  {
+    name: 'actions',
+    align: 'right',
+    label: t('dock.account.table.columns.actions'),
+    field: 'actions'
+  }
+])
 
 const accountRows = computed(() => {
   const providerIdsInRows = new Set()
@@ -103,26 +153,31 @@ const accountRows = computed(() => {
       providerIcon: providerConfig.icon,
       providerLabel: providerConfig.label,
       connected: false,
-      title: t('dock.account.rows.notConnected'),
+      title: '',
       subtitle: '',
-      meta: ''
+      meta: t('dock.account.rows.notConnected')
     })
   }
 
-  return rows.sort((first, second) => {
-    if (first.connected !== second.connected) {
-      return first.connected ? -1 : 1
-    }
-
-    return first.providerLabel.localeCompare(second.providerLabel)
-  })
+  return rows.sort((first, second) => first.providerLabel.localeCompare(second.providerLabel))
 })
 
-const statusClass = computed(() => `text-${statusTone.value}`)
+const statusClass = computed(() => {
+  if (statusTone.value === 'negative') {
+    return 'text-negative'
+  }
+
+  if (statusTone.value === 'warning') {
+    return 'text-warning'
+  }
+
+  return 'text-grey-7'
+})
 
 let authPopup = null
 let closePollTimer = null
 let authListener = null
+let rowAnimationTimer = null
 
 function resolveProvider (providerId) {
   return authProviders.value.find((providerConfig) => providerConfig.id === providerId) ?? null
@@ -168,9 +223,9 @@ function isConnectedAccount (store) {
 function buildAccountDetails (store, connected) {
   if (!store?.user || typeof store.user !== 'object') {
     return {
-      title: t('dock.account.rows.notConnected'),
+      title: '',
       subtitle: '',
-      meta: ''
+      meta: t('dock.account.rows.notConnected')
     }
   }
 
@@ -245,10 +300,9 @@ function handleAuthMessage (event) {
   }
 
   sessionStore.setSession(message.payload)
-  statusTone.value = 'positive'
-  statusMessage.value = t('dock.account.status.connected', {
-    provider: resolveProvider(message.payload.provider)?.label ?? message.payload.provider
-  })
+  statusTone.value = 'info'
+  statusMessage.value = ''
+  animateProviderRow(message.payload.provider, 'positive')
 }
 
 function startLogin (providerId) {
@@ -265,8 +319,12 @@ function startLogin (providerId) {
   cleanupAuthFlow({ closePopup: true })
 
   const loginUrl = new URL(providerConfig.loginUrl)
+  const scopeValue = resolveProviderScope(providerConfig)
   loginUrl.searchParams.set('mode', 'popup')
   loginUrl.searchParams.set('origin', window.location.origin)
+  if (scopeValue) {
+    loginUrl.searchParams.set('scope', scopeValue)
+  }
 
   authPopup = window.open(loginUrl.toString(), appConfig.auth.popup.name, getPopupFeatures())
 
@@ -304,9 +362,11 @@ function actionDisabled (row) {
 
 function handleRowAction (row) {
   if (row.connected) {
+    const providerId = row.providerId
     sessionStore.clearSession(row.accountId)
     statusTone.value = 'info'
-    statusMessage.value = t('dock.account.status.disconnected', { provider: row.providerLabel })
+    statusMessage.value = ''
+    animateProviderRow(providerId, 'positive')
     return
   }
 
@@ -323,13 +383,87 @@ function logoutAll () {
 
 onBeforeUnmount(() => {
   cleanupAuthFlow({ closePopup: true })
+  clearRowAnimation()
 })
+
+function resolveProviderScope (providerConfig) {
+  const rawScopes = providerConfig?.scopes
+  const normalizedScopes = Array.isArray(rawScopes)
+    ? rawScopes
+    : String(rawScopes ?? '')
+      .split(/[,\s]+/)
+
+  const uniqueScopes = Array.from(new Set(normalizedScopes
+    .map((scope) => String(scope ?? '').trim())
+    .filter(Boolean)))
+
+  return uniqueScopes.join(' ')
+}
+
+function rowClass (row) {
+  return [
+    'account-dock-panel__row',
+    animatedProviderId.value === row.providerId
+      ? `account-dock-panel__row--pulse-${rowAnimationTone.value}`
+      : ''
+  ]
+}
+
+function animateProviderRow (providerId, tone = 'positive') {
+  clearRowAnimation()
+  animatedProviderId.value = providerId || ''
+  rowAnimationTone.value = tone
+  rowAnimationTimer = window.setTimeout(() => {
+    clearRowAnimation()
+  }, 1100)
+}
+
+function clearRowAnimation () {
+  if (rowAnimationTimer && typeof window !== 'undefined') {
+    window.clearTimeout(rowAnimationTimer)
+  }
+
+  rowAnimationTimer = null
+  animatedProviderId.value = ''
+}
 </script>
 
 <style scoped lang="scss">
 .account-dock-panel {
+  height: 100%;
+  min-height: 0;
+
+  &__content {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  &__table-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__table {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  &__info-col {
+    @media (min-width: 1024px) {
+      padding-left: 24px;
+    }
+  }
+
   &__row {
-    border: 1px solid rgba($dark-page, 0.06);
+    :deep(td) {
+      border-bottom: 1px solid rgba($dark-page, 0.06);
+      vertical-align: middle;
+    }
+  }
+
+  &__row--pulse-positive {
+    animation: row-pulse-positive 1.1s ease-out;
   }
 
   &__provider,
@@ -343,6 +477,16 @@ onBeforeUnmount(() => {
     @media (min-width: 768px) {
       justify-content: flex-end;
     }
+  }
+}
+
+@keyframes row-pulse-positive {
+  0% {
+    background-color: rgba($positive, 0.18);
+  }
+
+  100% {
+    background-color: transparent;
   }
 }
 </style>

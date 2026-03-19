@@ -1,7 +1,5 @@
 about:
   contributors:
-    maxRepositoriesPerRequest: 100
-    maxContributorRequestsInParallel: 6
     topPerRepository: 50
     topContributorsLimit: 500
     cacheTtlMs: 604800000

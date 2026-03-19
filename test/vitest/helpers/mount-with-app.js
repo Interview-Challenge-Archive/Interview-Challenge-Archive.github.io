@@ -167,6 +167,61 @@ const messages = {
         },
         action: 'Prepare submission'
       },
+      submissions: {
+        label: 'Submissions',
+        title: 'Submissions',
+        description: 'The table gives you a quick view of what is already shared and what still needs an update before anyone reviews it. Use this space to keep each challenge entry clear over time: start by submitting one repository, then return whenever you want to add progress, feedback, or context so your work stays understandable and easy to follow.',
+        actions: {
+          submit: 'Submit',
+          update: 'Update'
+        },
+        table: {
+          columns: {
+            repo: 'Repo',
+            pullRequest: 'Pull request',
+            update: 'Actions'
+          },
+          loading: 'Loading submitted repositories...',
+          empty: 'No submitted repositories were found yet.',
+          noPullRequest: 'Not available'
+        },
+        status: {
+          loaded: 'Loaded {count} submitted repositories.'
+        },
+        dialog: {
+          title: {
+            submit: 'Submit repository',
+            update: 'Update repository'
+          },
+          steps: {
+            repository: 'Repository',
+            details: 'Details'
+          },
+          fields: {
+            organization: 'Organization',
+            repository: 'Repository'
+          },
+          hints: {
+            organization: 'Select an organization where you are an owner.',
+            repository: 'Select one of your public repositories.'
+          },
+          empty: {
+            organizations: 'No owned organizations are available for this account.',
+            repositories: 'No public repositories were found for the selected organization.'
+          },
+          nextStepPlaceholder: 'Next wizard step is not implemented yet.',
+          actions: {
+            cancel: 'Cancel',
+            next: 'Next',
+            back: 'Back',
+            close: 'Close'
+          }
+        },
+        errors: {
+          rateLimited: 'GitHub API rate limit reached. Connect GitHub and try again later.',
+          loadFailed: 'Failed to load submissions from GitHub.'
+        }
+      },
       login: {
         label: 'Login',
         title: 'Login to your account',
@@ -195,6 +250,14 @@ const messages = {
         title: 'Account',
         description: 'Manage connected providers and switch account sessions from one place.',
         connectedAccounts: 'Connected accounts',
+        table: {
+          columns: {
+            provider: 'Provider',
+            account: 'Account',
+            status: 'Status',
+            actions: 'Actions'
+          }
+        },
         logout: 'Logout',
         unknownProvider: 'Unknown provider',
         actions: {

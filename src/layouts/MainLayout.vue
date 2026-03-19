@@ -42,16 +42,19 @@
 
         <div
           class="bottom-dock__panel-scroll"
-          :class="{ 'bottom-dock__panel-scroll--lock': expandedTab === 'about' }"
+          :class="{ 'bottom-dock__panel-scroll--lock': ['about', 'submissions'].includes(expandedTab) }"
         >
-          <div class="bottom-dock__panel-inner q-mr-auto q-pa-lg q-pl-md">
+          <div
+            class="bottom-dock__panel-inner q-mr-auto q-pa-lg q-pl-md"
+            :class="{ 'bottom-dock__panel-inner--wide': expandedTab === 'submissions' }"
+          >
             <q-tab-panels v-model="expandedTab" animated class="bottom-dock__panels bg-transparent text-dark">
               <q-tab-panel name="search" class="q-pa-none">
                 <SearchDockPanel @submitted="closeActiveTab" />
               </q-tab-panel>
 
-              <q-tab-panel name="submit" class="q-pa-none">
-                <SubmitDockPanel />
+              <q-tab-panel v-if="hasGitHubSession" name="submissions" class="q-pa-none submissions-tab-panel">
+                <SubmissionsDockPanel />
               </q-tab-panel>
 
               <q-tab-panel v-if="!isAuthenticated" name="login" class="q-pa-none">
@@ -190,8 +193,8 @@
               <SearchDockPanel @submitted="closeActiveTab" />
             </q-tab-panel>
 
-            <q-tab-panel name="submit" class="q-pa-none">
-              <SubmitDockPanel />
+            <q-tab-panel v-if="hasGitHubSession" name="submissions" class="q-pa-none submissions-tab-panel">
+              <SubmissionsDockPanel />
             </q-tab-panel>
 
             <q-tab-panel v-if="!isAuthenticated" name="login" class="q-pa-none">
@@ -221,7 +224,7 @@ import AboutDockPanel from 'src/components/dock-panels/AboutDockPanel.vue'
 import AccountDockPanel from 'src/components/dock-panels/AccountDockPanel.vue'
 import LoginDockPanel from 'src/components/dock-panels/LoginDockPanel.vue'
 import SearchDockPanel from 'src/components/dock-panels/SearchDockPanel.vue'
-import SubmitDockPanel from 'src/components/dock-panels/SubmitDockPanel.vue'
+import SubmissionsDockPanel from 'src/components/dock-panels/SubmissionsDockPanel.vue'
 import { useSessionStore } from 'src/stores/session-store'
 
 const $q = useQuasar()
@@ -233,10 +236,13 @@ const sessionStore = useSessionStore()
 const expandedTab = ref(null)
 const mobileMenuOpen = ref(false)
 const isAuthenticated = computed(() => sessionStore.isAuthenticated)
+const hasGitHubSession = computed(() => Boolean(sessionStore.getActiveAccessToken('github')))
 
 const dockTabs = computed(() => [
   { name: 'search', label: t('dock.search.label') },
-  { name: 'submit', label: t('dock.submit.label') },
+  ...(hasGitHubSession.value
+    ? [{ name: 'submissions', label: t('dock.submissions.label') }]
+    : []),
   isAuthenticated.value
     ? { name: 'account', label: t('dock.account.label') }
     : { name: 'login', label: t('dock.login.label') },
@@ -253,7 +259,9 @@ const preferredDockTab = computed(() => {
 })
 const requestedDockTab = computed(() => {
   const tab = Array.isArray(route.query.openTab) ? route.query.openTab[0] : route.query.openTab
-  return typeof tab === 'string' ? tab : null
+  const normalizedTab = typeof tab === 'string' ? tab : null
+
+  return normalizedTab === 'submit' ? 'submissions' : normalizedTab
 })
 
 const isMobile = computed(() => $q.screen.lt.sm)
@@ -301,6 +309,12 @@ watch(isAuthenticated, (authenticated) => {
 
   if (!authenticated && expandedTab.value === 'account') {
     expandedTab.value = 'login'
+  }
+})
+
+watch(hasGitHubSession, (isActive) => {
+  if (!isActive && expandedTab.value === 'submissions') {
+    expandedTab.value = null
   }
 })
 
@@ -429,6 +443,10 @@ onBeforeUnmount(() => {
   &__panel-inner {
     max-width: 960px;
     min-height: 100%;
+
+    &--wide {
+      max-width: min(1800px, calc(100vw - 48px));
+    }
   }
 
   &__panel-tab {
@@ -453,6 +471,12 @@ onBeforeUnmount(() => {
 
   &__panels {
     min-height: 100%;
+    height: 100%;
+
+    :deep(.q-tab-panels__content),
+    :deep(.q-panel) {
+      height: 100%;
+    }
   }
 
   &__bar {
@@ -548,6 +572,13 @@ onBeforeUnmount(() => {
       transform: scale(1);
     }
   }
+}
+
+.submissions-tab-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .brand-lockup {
