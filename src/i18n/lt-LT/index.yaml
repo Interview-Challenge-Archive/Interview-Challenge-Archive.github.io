@@ -168,22 +168,54 @@ dock:
         update: Atnaujinti repozitoriją
       steps:
         repository: Repozitorija
-        details: Detalės
+        projectType: Projekto tipas
+        company: Įmonė
+        summary: Užduoties santrauka
+        feedback: Recruiterio feedback
       fields:
         organization: Organizacija
         repository: Repozitorija
+        projectType: Projekto tipas
+        companyName: Įmonės pavadinimas
+        companyLinkedInUrl: Įmonės LinkedIn puslapis
+        positionTitle: Pozicija
+        taskSummary: Užduoties santrauka
+        recruiterOutcome: Recruiterio rezultatas
+        positiveFeedback: Kas buvo įvardinta kaip gerai
+        negativeFeedback: Kas buvo įvardinta kaip blogai
       hints:
         organization: Pasirinkite organizaciją, kurioje esate savininkas.
         repository: Pasirinkite vieną iš savo viešų repozitorijų.
+        projectType: Pasirinkite, kokio tipo buvo ši užduotis.
+        companyName: Įmonė, kuri pateikė šią užduotį.
+        companyLinkedInUrl: Neprivaloma įmonės LinkedIn nuoroda.
+        positionTitle: Kokiai pozicijai buvo skirta užduotis.
+        taskSummary: Trumpa užduoties reikalavimų santrauka.
+        recruiterOutcome: Ar gavote pasiūlymą, kitą etapą ar procesas sustojo?
+        positiveFeedback: Ką recruiter'is ar interviuotojas išskyrė kaip stiprybę.
+        negativeFeedback: Ką recruiter'is ar interviuotojas įvardino kaip trūkumus.
+      autofill:
+        loading: Kraunama projekto informacija iš GitHub...
+        readyHint: Laukai žemiau bus automatiškai užpildyti, jei GitHub'e yra duomenų.
+      projectTypeOptions:
+        takeHome: Namų užduotis
+        liveCoding: Live coding
+        systemDesign: Sistemos dizainas
+        bugFix: Bug fix
+        featureBuild: Feature kūrimas
+        research: Tyrimas
+      recruiterOutcomeOptions:
+        offer: Gautas darbo pasiūlymas
+        nextRound: Perėta į kitą interviu etapą
+        stopped: Procesas sustojo
       empty:
         organizations: Šiai paskyrai nerasta organizacijų, kurias valdote.
         repositories: Pasirinktoje organizacijoje viešų repozitorijų nerasta.
-      nextStepPlaceholder: Kitas vedlio žingsnis dar neįgyvendintas.
       actions:
         cancel: Atšaukti
         next: Toliau
         back: Atgal
-        close: Uždaryti
+        finish: Užbaigti
     errors:
       rateLimited: Pasiektas GitHub API užklausų limitas. Prisijunkite per GitHub ir pabandykite vėliau.
       loadFailed: Nepavyko įkelti pateikimų iš GitHub.

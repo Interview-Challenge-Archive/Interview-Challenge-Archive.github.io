@@ -121,10 +121,150 @@
 
         <q-step
           :name="2"
-          :title="t('dock.submissions.dialog.steps.details')"
+          :title="t('dock.submissions.dialog.steps.projectType')"
+          :done="step > 2"
         >
-          <div class="text-body2 text-grey-7">
-            {{ t('dock.submissions.dialog.nextStepPlaceholder') }}
+          <div class="column q-gutter-md">
+            <div v-if="isLoadingProjectInfo" class="column items-center justify-center q-gutter-sm q-py-xl">
+              <q-spinner-dots color="dark" size="2em" />
+              <div class="text-caption text-grey-7">
+                {{ t('dock.submissions.dialog.autofill.loading') }}
+              </div>
+            </div>
+
+            <template v-else>
+              <div class="text-caption text-grey-7">
+                {{ t('dock.submissions.dialog.autofill.readyHint') }}
+              </div>
+
+              <div>
+                <label for="submission-dialog-project-type" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.projectType') }}</label>
+                <q-select
+                  v-model="projectType"
+                  for="submission-dialog-project-type"
+                  outlined
+                  dense
+                  emit-value
+                  map-options
+                  :options="projectTypeOptions"
+                  :hint="t('dock.submissions.dialog.hints.projectType')"
+                />
+              </div>
+            </template>
+
+            <div v-if="projectInfoErrorMessage" class="text-negative text-caption">
+              {{ projectInfoErrorMessage }}
+            </div>
+          </div>
+        </q-step>
+
+        <q-step
+          :name="3"
+          :title="t('dock.submissions.dialog.steps.company')"
+          :done="step > 3"
+        >
+          <div class="column q-gutter-md">
+            <div>
+              <label for="submission-dialog-company-name" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.companyName') }}</label>
+              <q-input
+                v-model="companyName"
+                for="submission-dialog-company-name"
+                outlined
+                dense
+                :hint="t('dock.submissions.dialog.hints.companyName')"
+              />
+            </div>
+
+            <div>
+              <label for="submission-dialog-company-linkedin" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.companyLinkedInUrl') }}</label>
+              <q-input
+                v-model="companyLinkedInUrl"
+                for="submission-dialog-company-linkedin"
+                outlined
+                dense
+                type="url"
+                :hint="t('dock.submissions.dialog.hints.companyLinkedInUrl')"
+              />
+            </div>
+
+            <div>
+              <label for="submission-dialog-position-title" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionTitle') }}</label>
+              <q-input
+                v-model="positionTitle"
+                for="submission-dialog-position-title"
+                outlined
+                dense
+                :hint="t('dock.submissions.dialog.hints.positionTitle')"
+              />
+            </div>
+          </div>
+        </q-step>
+
+        <q-step
+          :name="4"
+          :title="t('dock.submissions.dialog.steps.summary')"
+          :done="step > 4"
+        >
+          <div class="column q-gutter-md">
+            <div>
+              <label for="submission-dialog-task-summary" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.taskSummary') }}</label>
+              <q-input
+                v-model="taskSummary"
+                for="submission-dialog-task-summary"
+                outlined
+                dense
+                autogrow
+                type="textarea"
+                :hint="t('dock.submissions.dialog.hints.taskSummary')"
+              />
+            </div>
+          </div>
+        </q-step>
+
+        <q-step
+          :name="5"
+          :title="t('dock.submissions.dialog.steps.feedback')"
+        >
+          <div class="column q-gutter-md">
+            <div>
+              <label for="submission-dialog-recruiter-outcome" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.recruiterOutcome') }}</label>
+              <q-select
+                v-model="recruiterOutcome"
+                for="submission-dialog-recruiter-outcome"
+                outlined
+                dense
+                emit-value
+                map-options
+                :options="recruiterOutcomeOptions"
+                :hint="t('dock.submissions.dialog.hints.recruiterOutcome')"
+              />
+            </div>
+
+            <div>
+              <label for="submission-dialog-positive-feedback" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positiveFeedback') }}</label>
+              <q-input
+                v-model="positiveFeedback"
+                for="submission-dialog-positive-feedback"
+                outlined
+                dense
+                autogrow
+                type="textarea"
+                :hint="t('dock.submissions.dialog.hints.positiveFeedback')"
+              />
+            </div>
+
+            <div>
+              <label for="submission-dialog-negative-feedback" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.negativeFeedback') }}</label>
+              <q-input
+                v-model="negativeFeedback"
+                for="submission-dialog-negative-feedback"
+                outlined
+                dense
+                autogrow
+                type="textarea"
+                :hint="t('dock.submissions.dialog.hints.negativeFeedback')"
+              />
+            </div>
           </div>
         </q-step>
       </q-stepper>
@@ -139,7 +279,7 @@
           @click="onDialogCancel"
         />
         <q-btn
-          v-if="step === 1"
+          v-if="step < totalSteps"
           color="dark"
           no-caps
           :label="t('dock.submissions.dialog.actions.next')"
@@ -147,17 +287,18 @@
           @click="goToNextStep"
         />
         <q-btn
-          v-if="step === 2"
+          v-if="step > 1"
           flat
           no-caps
           :label="t('dock.submissions.dialog.actions.back')"
-          @click="step = 1"
+          @click="goToPreviousStep"
         />
         <q-btn
-          v-if="step === 2"
+          v-if="step === totalSteps"
           color="dark"
           no-caps
-          :label="t('dock.submissions.dialog.actions.close')"
+          :label="t('dock.submissions.dialog.actions.finish')"
+          :disable="!canFinish"
           @click="finishWizard"
         />
       </div>
@@ -170,11 +311,13 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useDialogPluginComponent } from 'quasar'
+import { useGitHubSubmissionProjectInfoStore } from 'src/stores/github-submission-project-info-store'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
 
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
+const TOTAL_STEPS = 5
 
 const props = defineProps({
   mode: {
@@ -202,8 +345,13 @@ const {
   onDialogCancel,
   onDialogOK
 } = useDialogPluginComponent()
+const githubSubmissionProjectInfoStore = useGitHubSubmissionProjectInfoStore()
 const githubSubmissionRepositoriesStore = useGitHubSubmissionRepositoriesStore()
 const githubSubmissionsStore = useGitHubSubmissionsStore()
+const {
+  isLoading: isLoadingProjectInfo,
+  errorMessageKey: projectInfoErrorMessageKey
+} = storeToRefs(githubSubmissionProjectInfoStore)
 const {
   organizations,
   isLoadingOrganizations,
@@ -214,6 +362,14 @@ const { submissions } = storeToRefs(githubSubmissionsStore)
 const step = ref(1)
 const organization = ref(String(props.owner ?? '').trim())
 const repository = ref(String(props.repository ?? '').trim())
+const projectType = ref('')
+const companyName = ref('')
+const companyLinkedInUrl = ref('')
+const positionTitle = ref('')
+const taskSummary = ref('')
+const recruiterOutcome = ref('stopped')
+const positiveFeedback = ref('')
+const negativeFeedback = ref('')
 const organizationOptionsLimit = ref(SELECT_PAGE_SIZE)
 const repositoryOptionsLimit = ref(SELECT_PAGE_SIZE)
 
@@ -221,6 +377,7 @@ const isSubmitMode = computed(() => props.mode === 'submit')
 const dialogTitle = computed(() => isSubmitMode.value
   ? t('dock.submissions.dialog.title.submit')
   : t('dock.submissions.dialog.title.update'))
+const totalSteps = computed(() => TOTAL_STEPS)
 const allOrganizationOptions = computed(() =>
   [...organizations.value].sort(sortSelectOptionsByLabel))
 const organizationOptions = computed(() =>
@@ -240,17 +397,57 @@ const allRepositoryOptions = computed(() =>
 const repositoryOptions = computed(() => allRepositoryOptions.value.slice(0, repositoryOptionsLimit.value))
 const isLoadingRepositories = computed(() =>
   githubSubmissionRepositoriesStore.isLoadingRepositoriesForOrganization(organization.value))
-const canGoNext = computed(() => Boolean(
-  organization.value
-  && repository.value
-  && !allRepositoryOptions.value.find((option) => option.value === repository.value)?.disable
-))
+const projectTypeOptions = computed(() => [
+  { label: t('dock.submissions.dialog.projectTypeOptions.takeHome'), value: 'take-home' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.liveCoding'), value: 'live-coding' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.systemDesign'), value: 'system-design' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.bugFix'), value: 'bug-fix' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.featureBuild'), value: 'feature-build' },
+  { label: t('dock.submissions.dialog.projectTypeOptions.research'), value: 'research' }
+])
+const recruiterOutcomeOptions = computed(() => [
+  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.offer'), value: 'offer' },
+  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
+  { label: t('dock.submissions.dialog.recruiterOutcomeOptions.stopped'), value: 'stopped' }
+])
+const canGoNext = computed(() => {
+  if (step.value === 1) {
+    return Boolean(
+      organization.value
+      && repository.value
+      && !allRepositoryOptions.value.find((option) => option.value === repository.value)?.disable
+    )
+  }
+
+  if (step.value === 2) {
+    return Boolean(projectType.value) && !isLoadingProjectInfo.value
+  }
+
+  if (step.value === 3) {
+    return Boolean(String(companyName.value ?? '').trim())
+      && Boolean(String(positionTitle.value ?? '').trim())
+  }
+
+  if (step.value === 4) {
+    return Boolean(String(taskSummary.value ?? '').trim())
+  }
+
+  return false
+})
+const canFinish = computed(() => Boolean(recruiterOutcome.value))
 const dialogErrorMessage = computed(() => {
   if (!errorMessageKey.value) {
     return ''
   }
 
   return t(errorMessageKey.value)
+})
+const projectInfoErrorMessage = computed(() => {
+  if (!projectInfoErrorMessageKey.value) {
+    return ''
+  }
+
+  return t(projectInfoErrorMessageKey.value)
 })
 
 watch(organization, async (nextOrganization, previousOrganization) => {
@@ -261,9 +458,20 @@ watch(organization, async (nextOrganization, previousOrganization) => {
   if (nextOrganization !== previousOrganization) {
     repository.value = ''
     repositoryOptionsLimit.value = SELECT_PAGE_SIZE
+    resetDetailsForm()
+    githubSubmissionProjectInfoStore.reset()
   }
 
   await loadRepositoriesForOrganization(nextOrganization)
+})
+
+watch(repository, (nextRepository, previousRepository) => {
+  if (nextRepository === previousRepository) {
+    return
+  }
+
+  resetDetailsForm()
+  githubSubmissionProjectInfoStore.reset()
 })
 
 onMounted(async () => {
@@ -274,19 +482,49 @@ onMounted(async () => {
   await ensureInitialSelection()
 })
 
-function goToNextStep () {
+async function goToNextStep () {
   if (!canGoNext.value) {
     return
   }
 
-  step.value = 2
+  if (step.value === 1) {
+    step.value = 2
+    await refetchProjectInfoAndAutofill()
+    return
+  }
+
+  if (step.value < TOTAL_STEPS) {
+    step.value += 1
+  }
+}
+
+function goToPreviousStep () {
+  if (step.value <= 1) {
+    return
+  }
+
+  step.value -= 1
 }
 
 function finishWizard () {
+  if (!canFinish.value) {
+    return
+  }
+
   onDialogOK({
     mode: props.mode,
     owner: organization.value,
-    repository: repository.value
+    repository: repository.value,
+    details: {
+      projectType: projectType.value,
+      companyName: companyName.value,
+      companyLinkedInUrl: companyLinkedInUrl.value,
+      positionTitle: positionTitle.value,
+      taskSummary: taskSummary.value,
+      recruiterOutcome: recruiterOutcome.value,
+      positiveFeedback: positiveFeedback.value,
+      negativeFeedback: negativeFeedback.value
+    }
   })
 }
 
@@ -318,6 +556,23 @@ async function loadRepositoriesForOrganization (organizationLogin) {
 
   try {
     await githubSubmissionRepositoriesStore.ensureRepositoriesLoaded(normalizedOrganizationLogin)
+  } catch {
+    return
+  }
+}
+
+async function refetchProjectInfoAndAutofill () {
+  try {
+    const projectInfo = await githubSubmissionProjectInfoStore.refetchProjectInfo(
+      organization.value,
+      repository.value
+    )
+
+    autofillField(projectType, projectInfo.projectType)
+    autofillField(companyName, projectInfo.companyName)
+    autofillField(companyLinkedInUrl, projectInfo.companyLinkedInUrl)
+    autofillField(positionTitle, projectInfo.positionTitle)
+    autofillField(taskSummary, projectInfo.summary)
   } catch {
     return
   }
@@ -360,6 +615,33 @@ function normalizeRepositoryKey (owner, repository) {
   }
 
   return `${normalizedOwner}/${normalizedRepository}`
+}
+
+function resetDetailsForm () {
+  projectType.value = ''
+  companyName.value = ''
+  companyLinkedInUrl.value = ''
+  positionTitle.value = ''
+  taskSummary.value = ''
+  recruiterOutcome.value = 'stopped'
+  positiveFeedback.value = ''
+  negativeFeedback.value = ''
+}
+
+function autofillField (fieldReference, value) {
+  const currentValue = String(fieldReference.value ?? '').trim()
+
+  if (currentValue) {
+    return
+  }
+
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    return
+  }
+
+  fieldReference.value = normalizedValue
 }
 </script>
 

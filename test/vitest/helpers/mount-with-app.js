@@ -195,26 +195,61 @@ const messages = {
           },
           steps: {
             repository: 'Repository',
-            details: 'Details'
+            projectType: 'Project type',
+            company: 'Company',
+            summary: 'Task summary',
+            feedback: 'Recruiter feedback'
           },
           fields: {
             organization: 'Organization',
-            repository: 'Repository'
+            repository: 'Repository',
+            projectType: 'Project type',
+            companyName: 'Company name',
+            companyLinkedInUrl: 'Company LinkedIn page',
+            positionTitle: 'Position',
+            taskSummary: 'Task summary',
+            recruiterOutcome: 'Recruiter outcome',
+            positiveFeedback: 'What they said was good',
+            negativeFeedback: 'What they said was bad'
           },
           hints: {
             organization: 'Select an organization where you are an owner.',
-            repository: 'Select one of your public repositories.'
+            repository: 'Select one of your public repositories.',
+            projectType: 'Select what kind of project this was.',
+            companyName: 'Company that gave this assignment.',
+            companyLinkedInUrl: 'Optional LinkedIn company profile link.',
+            positionTitle: 'What position this task was for.',
+            taskSummary: 'Short summary of the assignment requirements.',
+            recruiterOutcome: 'Did you get an offer, next round, or did the process stop?',
+            positiveFeedback: 'Notes about strong parts mentioned by recruiter/interviewer.',
+            negativeFeedback: 'Notes about weak parts or missing areas mentioned in feedback.'
+          },
+          autofill: {
+            loading: 'Loading project details from GitHub...',
+            readyHint: 'Fields below are auto-filled when GitHub data is available.'
+          },
+          projectTypeOptions: {
+            takeHome: 'Take-home assignment',
+            liveCoding: 'Live coding',
+            systemDesign: 'System design',
+            bugFix: 'Bug fix',
+            featureBuild: 'Feature build',
+            research: 'Research'
+          },
+          recruiterOutcomeOptions: {
+            offer: 'Received job offer',
+            nextRound: 'Advanced to next interview round',
+            stopped: 'Process stopped'
           },
           empty: {
             organizations: 'No owned organizations are available for this account.',
             repositories: 'No public repositories were found for the selected organization.'
           },
-          nextStepPlaceholder: 'Next wizard step is not implemented yet.',
           actions: {
             cancel: 'Cancel',
             next: 'Next',
             back: 'Back',
-            close: 'Close'
+            finish: 'Finish'
           }
         },
         errors: {
