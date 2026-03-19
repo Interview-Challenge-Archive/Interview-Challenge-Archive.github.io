@@ -220,7 +220,7 @@ const messages = {
             companyLinkedInUrl: 'Optional LinkedIn company profile link.',
             positionTitle: 'Role options depend on selected project type.',
             positionLevel: 'Seniority level for this role.',
-            taskSummary: 'Short summary of the assignment requirements.',
+            taskSummary: 'Write a structured summary or import an existing file (Markdown, RTF, Word, LibreOffice).',
             recruiterOutcome: 'Did you get an offer, next round, or did the process stop?',
             positiveFeedback: 'Notes about strong parts mentioned by recruiter/interviewer.',
             negativeFeedback: 'Notes about weak parts or missing areas mentioned in feedback.'
@@ -284,7 +284,12 @@ const messages = {
             close: 'Close',
             next: 'Next',
             back: 'Back',
-            finish: 'Finish'
+            finish: 'Finish',
+            importTaskSummaryFile: 'Import file'
+          },
+          errors: {
+            taskSummaryImportFailed: 'Failed to import task summary file.',
+            taskSummaryImportUnsupportedFormat: 'Unsupported file format. Supported: {formats}'
           }
         },
         errors: {

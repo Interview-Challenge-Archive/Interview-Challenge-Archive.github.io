@@ -191,7 +191,7 @@ dock:
         companyLinkedInUrl: Neprivaloma įmonės LinkedIn nuoroda.
         positionTitle: Rolės pasirinkimai priklauso nuo pasirinkto projekto tipo.
         positionLevel: Šios rolės seniority lygis.
-        taskSummary: Trumpa užduoties reikalavimų santrauka.
+        taskSummary: Parašykite struktūruotą santrauką arba importuokite failą (Markdown, RTF, Word, LibreOffice).
         recruiterOutcome: Ar gavote pasiūlymą, kitą etapą ar procesas sustojo?
         positiveFeedback: Ką recruiter'is ar interviuotojas išskyrė kaip stiprybę.
         negativeFeedback: Ką recruiter'is ar interviuotojas įvardino kaip trūkumus.
@@ -249,6 +249,10 @@ dock:
         next: Toliau
         back: Atgal
         finish: Užbaigti
+        importTaskSummaryFile: Importuoti failą
+      errors:
+        taskSummaryImportFailed: Nepavyko importuoti užduoties santraukos failo.
+        taskSummaryImportUnsupportedFormat: "Nepalaikomas failo formatas. Palaikomi: {formats}"
     errors:
       rateLimited: Pasiektas GitHub API užklausų limitas. Prisijunkite per GitHub ir pabandykite vėliau.
       loadFailed: Nepavyko įkelti pateikimų iš GitHub.

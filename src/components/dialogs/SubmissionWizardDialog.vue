@@ -303,15 +303,48 @@
           <div class="column q-gutter-md">
             <div>
               <label for="submission-dialog-task-summary" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.taskSummary') }}</label>
-              <q-input
-                v-model="taskSummary"
-                for="submission-dialog-task-summary"
-                outlined
+              <div class="row items-center q-col-gutter-sm q-row-gutter-xs q-mb-sm">
+                <div class="col-auto">
+                  <q-btn
+                    dense
+                    outline
+                    icon="upload_file"
+                    :label="t('dock.submissions.dialog.actions.importTaskSummaryFile')"
+                    :loading="isTaskSummaryImporting"
+                    @click="openTaskSummaryImportDialog"
+                  />
+                  <input
+                    ref="taskSummaryImportInputRef"
+                    type="file"
+                    class="hidden"
+                    :accept="taskSummaryImportAccept"
+                    @change="onTaskSummaryImportChange"
+                  >
+                </div>
+                <div v-if="taskSummaryImportedFileName" class="col text-caption text-grey-7 ellipsis">
+                  {{ taskSummaryImportedFileName }}
+                </div>
+              </div>
+
+              <q-banner
+                v-if="taskSummaryImportErrorMessage"
                 dense
-                autogrow
-                type="textarea"
-                :hint="t('dock.submissions.dialog.hints.taskSummary')"
+                rounded
+                class="bg-red-1 text-negative q-mb-sm"
+              >
+                {{ taskSummaryImportErrorMessage }}
+              </q-banner>
+
+              <q-editor
+                id="submission-dialog-task-summary"
+                v-model="taskSummary"
+                dense
+                min-height="220px"
+                :toolbar="taskSummaryEditorToolbar"
               />
+              <div class="text-caption text-grey-7 q-mt-xs">
+                {{ t('dock.submissions.dialog.hints.taskSummary') }}
+              </div>
             </div>
           </div>
         </q-step>
@@ -421,6 +454,11 @@ import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submissi
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
 import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 import positionRolesConfig from 'src/config/position_roles.yml'
+import {
+  importTaskSummaryFile,
+  normalizeTextSummaryToHtml,
+  TASK_SUMMARY_IMPORT_ACCEPT
+} from 'src/utils/task-summary-importer'
 
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
@@ -488,6 +526,10 @@ const organizationOptionsLimit = ref(SELECT_PAGE_SIZE)
 const repositoryOptionsLimit = ref(SELECT_PAGE_SIZE)
 const roleInputValue = ref('')
 const levelInputValue = ref('')
+const taskSummaryImportInputRef = ref(null)
+const isTaskSummaryImporting = ref(false)
+const taskSummaryImportErrorKey = ref('')
+const taskSummaryImportedFileName = ref('')
 
 const isSubmitMode = computed(() => props.mode === 'submit')
 const dialogTitle = computed(() => isSubmitMode.value
@@ -606,6 +648,15 @@ const recruiterOutcomeOptions = computed(() => [
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.stopped'), value: 'stopped' }
 ])
+const taskSummaryImportAccept = TASK_SUMMARY_IMPORT_ACCEPT
+const taskSummaryEditorToolbar = [
+  ['bold', 'italic', 'underline', 'strike'],
+  ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+  ['link'],
+  ['undo', 'redo'],
+  ['viewsource']
+]
+const hasTaskSummaryContent = computed(() => hasRichTextContent(taskSummary.value))
 const canGoNext = computed(() => {
   if (step.value === 1) {
     return Boolean(
@@ -626,7 +677,7 @@ const canGoNext = computed(() => {
   }
 
   if (step.value === 4) {
-    return Boolean(String(taskSummary.value ?? '').trim())
+    return hasTaskSummaryContent.value
   }
 
   return false
@@ -645,6 +696,15 @@ const projectInfoErrorMessage = computed(() => {
   }
 
   return t(projectInfoErrorMessageKey.value)
+})
+const taskSummaryImportErrorMessage = computed(() => {
+  if (!taskSummaryImportErrorKey.value) {
+    return ''
+  }
+
+  return t(taskSummaryImportErrorKey.value, {
+    formats: taskSummaryImportAccept
+  })
 })
 
 watch(organization, async (nextOrganization, previousOrganization) => {
@@ -812,7 +872,7 @@ async function refetchProjectInfoAndAutofill () {
     autofillField(companyLinkedInUrl, projectInfo.companyLinkedInUrl)
     autofillField(positionTitle, normalizeAutofilledPositionTitle(projectInfo.positionTitle))
     alignPositionTitleWithProjectType()
-    autofillField(taskSummary, projectInfo.summary)
+    autofillField(taskSummary, normalizeTextSummaryToHtml(projectInfo.summary))
   } catch {
     return
   }
@@ -871,6 +931,7 @@ function resetDetailsForm () {
   negativeFeedback.value = ''
   roleInputValue.value = ''
   levelInputValue.value = ''
+  resetTaskSummaryImportState()
 }
 
 function initializeWizardSession () {
@@ -880,6 +941,7 @@ function initializeWizardSession () {
   })
   roleInputValue.value = ''
   levelInputValue.value = ''
+  resetTaskSummaryImportState()
   organizationOptionsLimit.value = SELECT_PAGE_SIZE
   repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   githubSubmissionProjectInfoStore.reset()
@@ -889,9 +951,52 @@ function clearWizardSession () {
   submissionWizardStore.reset()
   roleInputValue.value = ''
   levelInputValue.value = ''
+  resetTaskSummaryImportState()
   organizationOptionsLimit.value = SELECT_PAGE_SIZE
   repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   githubSubmissionProjectInfoStore.reset()
+}
+
+function openTaskSummaryImportDialog () {
+  taskSummaryImportInputRef.value?.click()
+}
+
+async function onTaskSummaryImportChange (event) {
+  const fileInputElement = event?.target
+  const selectedFile = fileInputElement?.files?.[0]
+
+  if (!selectedFile) {
+    return
+  }
+
+  isTaskSummaryImporting.value = true
+  taskSummaryImportErrorKey.value = ''
+
+  try {
+    const importedHtml = await importTaskSummaryFile(selectedFile)
+    taskSummary.value = importedHtml
+    taskSummaryImportedFileName.value = selectedFile.name
+  } catch (error) {
+    taskSummaryImportErrorKey.value = String(error?.message ?? '') === 'unsupported-format'
+      ? 'dock.submissions.dialog.errors.taskSummaryImportUnsupportedFormat'
+      : 'dock.submissions.dialog.errors.taskSummaryImportFailed'
+  } finally {
+    isTaskSummaryImporting.value = false
+
+    if (fileInputElement) {
+      fileInputElement.value = ''
+    }
+  }
+}
+
+function resetTaskSummaryImportState () {
+  isTaskSummaryImporting.value = false
+  taskSummaryImportErrorKey.value = ''
+  taskSummaryImportedFileName.value = ''
+
+  if (taskSummaryImportInputRef.value) {
+    taskSummaryImportInputRef.value.value = ''
+  }
 }
 
 function onRoleInputValue (value) {
@@ -1029,6 +1134,28 @@ function resolveOptionValueByLabel (options, label) {
   return options.find((option) =>
     String(option?.label ?? '').trim().toLowerCase() === normalizedLabel
   )?.value ?? ''
+}
+
+function hasRichTextContent (value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    return false
+  }
+
+  const plainText = normalizedValue
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\u00a0/g, ' ')
+    .replace(/&nbsp;|&#160;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return Boolean(plainText)
 }
 
 function autofillField (fieldReference, value) {
