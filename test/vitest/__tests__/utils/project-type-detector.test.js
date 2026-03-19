@@ -38,6 +38,24 @@ describe('project type utils', () => {
     })).toBe('devops-infrastructure')
   })
 
+  it('does not match short keywords inside unrelated words', () => {
+    expect(detectProjectType({
+      topics: [],
+      summary: 'Build and maintain release notes for challenge repository',
+      repository: 'project-notes',
+      languages: ['Markdown']
+    })).toBe('')
+  })
+
+  it('classifies GameMaker projects as software development', () => {
+    expect(detectProjectType({
+      topics: ['gamemaker'],
+      summary: 'Build a 2D game prototype',
+      repository: 'gamemaker-challenge',
+      languages: ['GML']
+    })).toBe('software-development')
+  })
+
   it('returns empty value when project type cannot be detected', () => {
     expect(detectProjectType({
       topics: ['take-home'],

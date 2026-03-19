@@ -24,6 +24,16 @@ software-development:
     score: 2
   - full-stack
   - fullstack
+  - term: game-development
+    score: 3
+  - term: gamedev
+    score: 3
+  - term: gamemaker
+    score: 6
+  - term: gml
+    score: 4
+  - term: godot
+    score: 3
   - go
   - ios
   - java
@@ -44,6 +54,10 @@ software-development:
   - term: symfony
     score: 6
   - typescript
+  - term: unity
+    score: 3
+  - term: unreal
+    score: 3
   - term: vue
     score: 3
 

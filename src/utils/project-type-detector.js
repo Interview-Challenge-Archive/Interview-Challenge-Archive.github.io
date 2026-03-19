@@ -8,6 +8,14 @@ function normalizeDetectionParts (parts) {
     .filter(Boolean)
 }
 
+function escapeRegExp (value) {
+  return String(value ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function createKeywordPattern (term) {
+  return new RegExp(`(^|[^a-z0-9])${escapeRegExp(term)}($|[^a-z0-9])`)
+}
+
 function normalizeKeyword (keywordConfig) {
   if (typeof keywordConfig === 'string') {
     const [term] = normalizeDetectionParts([keywordConfig])
@@ -18,7 +26,8 @@ function normalizeKeyword (keywordConfig) {
 
     return {
       term,
-      score: DEFAULT_KEYWORD_SCORE
+      score: DEFAULT_KEYWORD_SCORE,
+      pattern: createKeywordPattern(term)
     }
   }
 
@@ -35,7 +44,8 @@ function normalizeKeyword (keywordConfig) {
       term,
       score: Number.isFinite(numericScore) && numericScore > 0
         ? numericScore
-        : DEFAULT_KEYWORD_SCORE
+        : DEFAULT_KEYWORD_SCORE,
+      pattern: createKeywordPattern(term)
     }
   }
 
@@ -99,7 +109,7 @@ export function detectProjectType ({
     let matcherScore = 0
 
     for (const keyword of matcher.keywords) {
-      if (normalizedText.includes(keyword.term)) {
+      if (keyword.pattern.test(normalizedText)) {
         matcherScore += keyword.score
       }
     }
