@@ -179,6 +179,7 @@ dock:
         companyName: Įmonės pavadinimas
         companyLinkedInUrl: Įmonės LinkedIn puslapis
         positionTitle: Pozicija
+        positionLevel: Pozicijos lygis
         taskSummary: Užduoties santrauka
         recruiterOutcome: Recruiterio rezultatas
         positiveFeedback: Kas buvo įvardinta kaip gerai
@@ -188,7 +189,8 @@ dock:
         repository: Pasirinkite vieną iš savo viešų repozitorijų.
         companyName: Įmonė, kuri pateikė šią užduotį.
         companyLinkedInUrl: Neprivaloma įmonės LinkedIn nuoroda.
-        positionTitle: Kokiai pozicijai buvo skirta užduotis.
+        positionTitle: Pozicijos pasirinkimai priklauso nuo pasirinkto projekto tipo.
+        positionLevel: Koks buvo šios pozicijos seniority lygis.
         taskSummary: Trumpa užduoties reikalavimų santrauka.
         recruiterOutcome: Ar gavote pasiūlymą, kitą etapą ar procesas sustojo?
         positiveFeedback: Ką recruiter'is ar interviuotojas išskyrė kaip stiprybę.
@@ -203,6 +205,37 @@ dock:
         devOpsInfrastructure: DevOps ir infrastruktūra
         dataMl: Duomenys ir mašininis mokymasis
         security: Saugumas
+      positionTitleOptions:
+        applicationSecurityEngineer: Application Security inžinierius
+        backendEngineer: Backend programuotojas
+        dataEngineer: Data inžinierius
+        dataScientist: Duomenų mokslininkas
+        devOpsEngineer: DevOps inžinierius
+        frontendEngineer: Frontend programuotojas
+        fullStackEngineer: Full Stack programuotojas
+        gameDeveloper: Žaidimų programuotojas
+        interactionDesigner: Sąveikos dizaineris
+        machineLearningEngineer: Mašininio mokymosi inžinierius
+        mobileEngineer: Mobile programuotojas
+        penetrationTester: Penetracinio testavimo specialistas
+        platformEngineer: Platformos inžinierius
+        productDesigner: Produkto dizaineris
+        qaEngineer: QA inžinierius
+        qualityEngineer: Kokybės inžinierius
+        securityEngineer: Saugumo inžinierius
+        sreEngineer: SRE inžinierius
+        testAutomationEngineer: Testų automatizavimo inžinierius
+        uiUxDesigner: UI/UX dizaineris
+        visualDesigner: Vizualinis dizaineris
+      positionLevelOptions:
+        intern: Praktikantas
+        junior: Junior
+        mid: Mid
+        senior: Senior
+        lead: Lead
+        staff: Staff
+        principal: Principal
+        manager: Vadovas
       recruiterOutcomeOptions:
         offer: Gautas darbo pasiūlymas
         nextRound: Perėta į kitą interviu etapą

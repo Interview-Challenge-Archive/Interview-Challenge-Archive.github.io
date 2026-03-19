@@ -105,6 +105,47 @@ describe('useGitHubSubmissionProjectInfoStore', () => {
     expect(projectInfo.languages).toEqual(['JavaScript', 'Vue'])
   })
 
+  it('does not autofill company name from personal profile name when repository owner is a user', async () => {
+    mocks.reposGet.mockResolvedValue({
+      data: {
+        html_url: 'https://github.com/octocat/repo-a',
+        description: 'Take-home assignment',
+        topics: ['take-home', 'frontend'],
+        owner: { type: 'User' }
+      }
+    })
+    mocks.reposListLanguages.mockResolvedValue({
+      data: {
+        JavaScript: 1200
+      }
+    })
+    mocks.usersGetByUsername.mockResolvedValue({
+      data: {
+        login: 'octocat',
+        name: 'Octo Cat',
+        company: ''
+      }
+    })
+
+    const { sessionStore, projectInfoStore } = createStores()
+
+    sessionStore.setSession({
+      provider: 'github',
+      accessToken: 'github-oauth-token',
+      authenticatedAt: '2026-03-19T08:00:00.000Z',
+      user: {
+        login: 'octocat'
+      }
+    })
+
+    const projectInfo = await projectInfoStore.refetchProjectInfo('octocat', 'repo-a')
+
+    expect(projectInfo.companyName).toBe('')
+    expect(mocks.usersGetByUsername).toHaveBeenCalledWith({
+      username: 'octocat'
+    })
+  })
+
   it('prefers software development project type for Symfony repositories even when docker is present', async () => {
     mocks.reposGet.mockResolvedValue({
       data: {

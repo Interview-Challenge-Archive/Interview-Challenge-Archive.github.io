@@ -179,6 +179,7 @@ dock:
         companyName: Company name
         companyLinkedInUrl: Company LinkedIn page
         positionTitle: Position
+        positionLevel: Position level
         taskSummary: Task summary
         recruiterOutcome: Recruiter outcome
         positiveFeedback: What they said was good
@@ -188,7 +189,8 @@ dock:
         repository: Select one of your public repositories.
         companyName: Company that gave this assignment.
         companyLinkedInUrl: Optional LinkedIn company profile link.
-        positionTitle: What position this task was for.
+        positionTitle: Position options depend on selected project type.
+        positionLevel: What seniority level this position had.
         taskSummary: Short summary of the assignment requirements.
         recruiterOutcome: Did you get an offer, next round, or did the process stop?
         positiveFeedback: Notes about strong parts mentioned by recruiter/interviewer.
@@ -203,6 +205,37 @@ dock:
         devOpsInfrastructure: DevOps and infrastructure
         dataMl: Data and machine learning
         security: Security
+      positionTitleOptions:
+        applicationSecurityEngineer: Application Security Engineer
+        backendEngineer: Backend Engineer
+        dataEngineer: Data Engineer
+        dataScientist: Data Scientist
+        devOpsEngineer: DevOps Engineer
+        frontendEngineer: Frontend Engineer
+        fullStackEngineer: Full Stack Engineer
+        gameDeveloper: Game Developer
+        interactionDesigner: Interaction Designer
+        machineLearningEngineer: Machine Learning Engineer
+        mobileEngineer: Mobile Engineer
+        penetrationTester: Penetration Tester
+        platformEngineer: Platform Engineer
+        productDesigner: Product Designer
+        qaEngineer: QA Engineer
+        qualityEngineer: Quality Engineer
+        securityEngineer: Security Engineer
+        sreEngineer: SRE Engineer
+        testAutomationEngineer: Test Automation Engineer
+        uiUxDesigner: UI/UX Designer
+        visualDesigner: Visual Designer
+      positionLevelOptions:
+        intern: Intern
+        junior: Junior
+        mid: Mid
+        senior: Senior
+        lead: Lead
+        staff: Staff
+        principal: Principal
+        manager: Manager
       recruiterOutcomeOptions:
         offer: Received job offer
         nextRound: Advanced to next interview round

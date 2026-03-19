@@ -1,0 +1,68 @@
+# Position and level options mapped by project type.
+# Values are i18n keys under:
+# - dock.submissions.dialog.positionTitleOptions
+# - dock.submissions.dialog.positionLevelOptions
+
+positionTitlesByProjectType:
+  software-development:
+    - frontendEngineer
+    - backendEngineer
+    - fullStackEngineer
+    - mobileEngineer
+    - gameDeveloper
+  ui-ux-design:
+    - uiUxDesigner
+    - productDesigner
+    - visualDesigner
+    - interactionDesigner
+  qa-testing:
+    - qaEngineer
+    - testAutomationEngineer
+    - qualityEngineer
+  devops-infrastructure:
+    - devOpsEngineer
+    - sreEngineer
+    - platformEngineer
+  data-ml:
+    - dataEngineer
+    - dataScientist
+    - machineLearningEngineer
+  security:
+    - securityEngineer
+    - applicationSecurityEngineer
+    - penetrationTester
+
+positionLevelsByProjectType:
+  default:
+    - intern
+    - junior
+    - mid
+    - senior
+    - lead
+    - manager
+  software-development:
+    - intern
+    - junior
+    - mid
+    - senior
+    - lead
+    - staff
+    - principal
+    - manager
+  data-ml:
+    - intern
+    - junior
+    - mid
+    - senior
+    - lead
+    - staff
+    - principal
+    - manager
+  security:
+    - junior
+    - mid
+    - senior
+    - lead
+    - staff
+    - principal
+    - manager

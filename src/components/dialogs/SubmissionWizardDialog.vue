@@ -241,12 +241,36 @@
 
             <div>
               <label for="submission-dialog-position-title" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionTitle') }}</label>
-              <q-input
+              <q-select
                 v-model="positionTitle"
                 for="submission-dialog-position-title"
                 outlined
                 dense
+                use-input
+                fill-input
+                hide-selected
+                input-debounce="0"
+                :options="positionTitleOptions"
+                :disable="!projectType"
                 :hint="t('dock.submissions.dialog.hints.positionTitle')"
+              />
+            </div>
+
+            <div>
+              <label for="submission-dialog-position-level" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionLevel') }}</label>
+              <q-select
+                v-model="positionLevel"
+                for="submission-dialog-position-level"
+                outlined
+                dense
+                use-input
+                fill-input
+                hide-selected
+                input-debounce="0"
+                :options="positionLevelOptions"
+                :disable="!projectType"
+                :hint="t('dock.submissions.dialog.hints.positionLevel')"
+                @new-value="(value, done) => onCustomSelectValue(positionLevel, value, done)"
               />
             </div>
           </div>
@@ -377,6 +401,7 @@ import { useDialogPluginComponent, useQuasar } from 'quasar'
 import { useGitHubSubmissionProjectInfoStore } from 'src/stores/github-submission-project-info-store'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
+import positionRolesConfig from 'src/config/position_roles.yml'
 
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
@@ -432,6 +457,7 @@ const autofilledProjectTypeValue = ref('')
 const companyName = ref('')
 const companyLinkedInUrl = ref('')
 const positionTitle = ref('')
+const positionLevel = ref('')
 const taskSummary = ref('')
 const recruiterOutcome = ref('stopped')
 const positiveFeedback = ref('')
@@ -492,6 +518,38 @@ const projectTypeOptions = computed(() => [
   { label: t('dock.submissions.dialog.projectTypeOptions.dataMl'), value: 'data-ml' },
   { label: t('dock.submissions.dialog.projectTypeOptions.security'), value: 'security' }
 ])
+const positionTitleOptionKeys = computed(() => {
+  const normalizedProjectType = String(projectType.value ?? '').trim()
+
+  if (!normalizedProjectType) {
+    return []
+  }
+
+  const configuredOptions = positionRolesConfig?.positionTitlesByProjectType?.[normalizedProjectType]
+
+  return Array.isArray(configuredOptions)
+    ? configuredOptions
+    : []
+})
+const positionLevelOptionKeys = computed(() => {
+  const normalizedProjectType = String(projectType.value ?? '').trim()
+  const optionsByProjectType = positionRolesConfig?.positionLevelsByProjectType ?? {}
+  const projectSpecificOptions = optionsByProjectType[normalizedProjectType]
+
+  if (Array.isArray(projectSpecificOptions) && projectSpecificOptions.length) {
+    return projectSpecificOptions
+  }
+
+  return Array.isArray(optionsByProjectType.default)
+    ? optionsByProjectType.default
+    : []
+})
+const positionTitleOptions = computed(() =>
+  positionTitleOptionKeys.value.map((optionKey) =>
+    t(`dock.submissions.dialog.positionTitleOptions.${optionKey}`)))
+const positionLevelOptions = computed(() =>
+  positionLevelOptionKeys.value.map((optionKey) =>
+    t(`dock.submissions.dialog.positionLevelOptions.${optionKey}`)))
 const recruiterOutcomeOptions = computed(() => [
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.offer'), value: 'offer' },
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
@@ -513,6 +571,7 @@ const canGoNext = computed(() => {
   if (step.value === 3) {
     return Boolean(String(companyName.value ?? '').trim())
       && Boolean(String(positionTitle.value ?? '').trim())
+      && Boolean(String(positionLevel.value ?? '').trim())
   }
 
   if (step.value === 4) {
@@ -562,16 +621,16 @@ watch(repository, (nextRepository, previousRepository) => {
 })
 
 watch(projectType, (nextProjectType, previousProjectType) => {
-  if (nextProjectType === previousProjectType || !isProjectTypeAutofilled.value) {
-    return
+  if (
+    nextProjectType !== previousProjectType
+    && isProjectTypeAutofilled.value
+    && String(nextProjectType ?? '').trim() !== autofilledProjectTypeValue.value
+  ) {
+    isProjectTypeAutofilled.value = false
+    autofilledProjectTypeValue.value = ''
   }
 
-  if (String(nextProjectType ?? '').trim() === autofilledProjectTypeValue.value) {
-    return
-  }
-
-  isProjectTypeAutofilled.value = false
-  autofilledProjectTypeValue.value = ''
+  alignPositionTitleWithProjectType()
 })
 
 onMounted(async () => {
@@ -632,6 +691,7 @@ function finishWizard () {
       companyName: companyName.value,
       companyLinkedInUrl: companyLinkedInUrl.value,
       positionTitle: positionTitle.value,
+      positionLevel: positionLevel.value,
       taskSummary: taskSummary.value,
       recruiterOutcome: recruiterOutcome.value,
       positiveFeedback: positiveFeedback.value,
@@ -688,6 +748,7 @@ async function refetchProjectInfoAndAutofill () {
     autofillField(companyName, projectInfo.companyName)
     autofillField(companyLinkedInUrl, projectInfo.companyLinkedInUrl)
     autofillField(positionTitle, projectInfo.positionTitle)
+    alignPositionTitleWithProjectType()
     autofillField(taskSummary, projectInfo.summary)
   } catch {
     return
@@ -740,10 +801,37 @@ function resetDetailsForm () {
   companyName.value = ''
   companyLinkedInUrl.value = ''
   positionTitle.value = ''
+  positionLevel.value = ''
   taskSummary.value = ''
   recruiterOutcome.value = 'stopped'
   positiveFeedback.value = ''
   negativeFeedback.value = ''
+}
+
+function onCustomSelectValue (fieldReference, value, done) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    done(null)
+    return
+  }
+
+  fieldReference.value = normalizedValue
+  done(normalizedValue)
+}
+
+function alignPositionTitleWithProjectType () {
+  const normalizedPositionTitle = String(positionTitle.value ?? '').trim()
+
+  if (!normalizedPositionTitle) {
+    return
+  }
+
+  if (positionTitleOptions.value.includes(normalizedPositionTitle)) {
+    return
+  }
+
+  positionTitle.value = ''
 }
 
 function autofillField (fieldReference, value) {

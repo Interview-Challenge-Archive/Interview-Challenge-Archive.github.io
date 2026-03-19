@@ -179,4 +179,39 @@ describe('SubmissionWizardDialog', () => {
     expect(readonlyInputs[0].props('modelValue')).toBe('octo-org')
     expect(readonlyInputs[1].props('modelValue')).toBe('repo-a')
   })
+
+  it('filters position options by selected project type', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    setupStores(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    wrapper.findComponent({ name: 'QOptionGroup' }).vm.$emit('update:modelValue', 'ui-ux-design')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    const positionSelect = wrapper
+      .findAllComponents({ name: 'QSelect' })
+      .find((select) => select.props('for') === 'submission-dialog-position-title')
+
+    expect(positionSelect).toBeDefined()
+    expect(positionSelect.props('options')).toContain('UI/UX Designer')
+    expect(positionSelect.props('options')).not.toContain('Frontend Engineer')
+  })
 })

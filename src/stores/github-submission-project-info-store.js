@@ -187,7 +187,7 @@ function resolveCompanyName (ownerProfile, ownerType, ownerLogin) {
     return userCompanyName
   }
 
-  return String(ownerProfile?.name ?? ownerProfile?.login ?? ownerLogin ?? '').trim()
+  return ''
 }
 
 function resolveLinkedInUrl (sources) {
