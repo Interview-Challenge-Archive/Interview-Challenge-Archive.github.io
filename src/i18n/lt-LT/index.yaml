@@ -178,8 +178,8 @@ dock:
         projectType: Projekto tipas
         companyName: Įmonės pavadinimas
         companyLinkedInUrl: Įmonės LinkedIn puslapis
-        positionTitle: Pozicija
-        positionLevel: Pozicijos lygis
+        positionTitle: Rolė
+        positionLevel: Lygis
         taskSummary: Užduoties santrauka
         recruiterOutcome: Recruiterio rezultatas
         positiveFeedback: Kas buvo įvardinta kaip gerai
@@ -189,8 +189,8 @@ dock:
         repository: Pasirinkite vieną iš savo viešų repozitorijų.
         companyName: Įmonė, kuri pateikė šią užduotį.
         companyLinkedInUrl: Neprivaloma įmonės LinkedIn nuoroda.
-        positionTitle: Pozicijos pasirinkimai priklauso nuo pasirinkto projekto tipo.
-        positionLevel: Koks buvo šios pozicijos seniority lygis.
+        positionTitle: Rolės pasirinkimai priklauso nuo pasirinkto projekto tipo.
+        positionLevel: Šios rolės seniority lygis.
         taskSummary: Trumpa užduoties reikalavimų santrauka.
         recruiterOutcome: Ar gavote pasiūlymą, kitą etapą ar procesas sustojo?
         positiveFeedback: Ką recruiter'is ar interviuotojas išskyrė kaip stiprybę.

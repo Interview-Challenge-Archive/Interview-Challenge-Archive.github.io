@@ -18,7 +18,7 @@ describe('InvalidHexColorError', () => {
     try {
       error.hex = '#modified'
       expect(true).toBe(false)
-    } catch (modificationError) {
+    } catch {
       expect(true).toBe(true)
     }
   })

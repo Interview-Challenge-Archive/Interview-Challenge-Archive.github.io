@@ -5,6 +5,7 @@ import SubmissionWizardDialog from 'src/components/dialogs/SubmissionWizardDialo
 import { useGitHubSubmissionProjectInfoStore } from 'src/stores/github-submission-project-info-store'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
+import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 function setupStores (pinia, {
@@ -208,10 +209,92 @@ describe('SubmissionWizardDialog', () => {
 
     const positionSelect = wrapper
       .findAllComponents({ name: 'QSelect' })
-      .find((select) => select.props('for') === 'submission-dialog-position-title')
+      .find((select) => select.props('for') === 'submission-dialog-role')
 
     expect(positionSelect).toBeDefined()
-    expect(positionSelect.props('options')).toContain('UI/UX Designer')
-    expect(positionSelect.props('options')).not.toContain('Frontend Engineer')
+    const roleOptions = positionSelect.props('options')
+    const roleOptionLabels = roleOptions.map((option) => option.label)
+
+    expect(roleOptionLabels).toContain('UI/UX Designer')
+    expect(roleOptionLabels).not.toContain('Frontend Engineer')
+  })
+
+  it('stores predefined role and level selections as internal prefixed keys', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    setupStores(pinia)
+    const wizardStore = useSubmissionWizardStore(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    const selects = wrapper.findAllComponents({ name: 'QSelect' })
+    const roleSelect = selects.find((select) => select.props('for') === 'submission-dialog-role')
+    const levelSelect = selects.find((select) => select.props('for') === 'submission-dialog-level')
+    const frontendOption = roleSelect.props('options').find((option) => option.label === 'Frontend Engineer')
+    const seniorOption = levelSelect.props('options').find((option) => option.label === 'Senior')
+
+    roleSelect.vm.$emit('update:modelValue', frontendOption.value)
+    levelSelect.vm.$emit('update:modelValue', seniorOption.value)
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('::frontendEngineer')
+    expect(wizardStore.positionLevel).toBe('::senior')
+  })
+
+  it('allows entering custom role and level values', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    setupStores(pinia)
+    const wizardStore = useSubmissionWizardStore(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    const selects = wrapper.findAllComponents({ name: 'QSelect' })
+    const roleSelect = selects.find((select) => select.props('for') === 'submission-dialog-role')
+    const levelSelect = selects.find((select) => select.props('for') === 'submission-dialog-level')
+
+    expect(roleSelect).toBeDefined()
+    expect(levelSelect).toBeDefined()
+    expect(roleSelect.props('newValueMode')).toBe('add-unique')
+    expect(levelSelect.props('newValueMode')).toBe('add-unique')
+
+    roleSelect.vm.$emit('input-value', 'Solutions Architect')
+    roleSelect.vm.$emit('blur')
+    levelSelect.vm.$emit('input-value', 'Expert')
+    levelSelect.vm.$emit('blur')
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('Solutions Architect')
+    expect(wizardStore.positionLevel).toBe('Expert')
   })
 })

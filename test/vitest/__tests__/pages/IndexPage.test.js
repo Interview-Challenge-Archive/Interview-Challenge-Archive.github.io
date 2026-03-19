@@ -61,7 +61,6 @@ describe('IndexPage', () => {
     useMeta.mockClear()
     vi.restoreAllMocks()
 
-    const store = useGitHubProjectsStore()
     vi.mock('src/stores/github-projects-store', async (importOriginal) => {
       const actual = await importOriginal()
       return {
@@ -184,7 +183,7 @@ describe('IndexPage', () => {
     mockRoute.query = { query: 'Frontend' }
     setViewport(1280, 900, '460px 460px')
 
-    const wrapper = mountWithApp(IndexPage, { pinia })
+    mountWithApp(IndexPage, { pinia })
     await nextTick()
 
     expect(document.body.classList.contains('no-scroll')).toBe(true)
@@ -193,7 +192,7 @@ describe('IndexPage', () => {
   it('shows scrollbar when real content exceeds viewport', async () => {
     setViewport(1280, 300, '460px 460px')
 
-    const wrapper = mountWithApp(IndexPage, { pinia })
+    mountWithApp(IndexPage, { pinia })
     await nextTick()
 
     expect(document.body.classList.contains('no-scroll')).toBe(false)
@@ -217,7 +216,6 @@ describe('IndexPage', () => {
     await nextTick()
     await nextTick()
 
-    const projects = wrapper.findAll('.home-project-tile').length
     const placeholders = wrapper.findAll('.decorative-placeholder-tile:not(.loading-skeleton-tile)').length
 
     expect(placeholders).toBe(0)

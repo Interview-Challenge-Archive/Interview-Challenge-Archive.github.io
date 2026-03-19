@@ -247,37 +247,48 @@
             </div>
 
             <div>
-              <label for="submission-dialog-position-title" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionTitle') }}</label>
+              <label for="submission-dialog-role" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionTitle') }}</label>
               <q-select
                 v-model="positionTitle"
-                for="submission-dialog-position-title"
+                for="submission-dialog-role"
                 outlined
                 dense
                 use-input
                 fill-input
                 hide-selected
                 input-debounce="0"
+                new-value-mode="add-unique"
+                emit-value
+                map-options
                 :options="positionTitleOptions"
                 :disable="!projectType"
                 :hint="t('dock.submissions.dialog.hints.positionTitle')"
+                @input-value="onRoleInputValue"
+                @new-value="onRoleNewValue"
+                @blur="onRoleBlur"
               />
             </div>
 
             <div>
-              <label for="submission-dialog-position-level" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionLevel') }}</label>
+              <label for="submission-dialog-level" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.positionLevel') }}</label>
               <q-select
                 v-model="positionLevel"
-                for="submission-dialog-position-level"
+                for="submission-dialog-level"
                 outlined
                 dense
                 use-input
                 fill-input
                 hide-selected
                 input-debounce="0"
+                new-value-mode="add-unique"
+                emit-value
+                map-options
                 :options="positionLevelOptions"
                 :disable="!projectType"
                 :hint="t('dock.submissions.dialog.hints.positionLevel')"
-                @new-value="(value, done) => onCustomSelectValue(positionLevel, value, done)"
+                @input-value="onLevelInputValue"
+                @new-value="onLevelNewValue"
+                @blur="onLevelBlur"
               />
             </div>
           </div>
@@ -414,6 +425,7 @@ import positionRolesConfig from 'src/config/position_roles.yml'
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
 const TOTAL_STEPS = 5
+const PREDEFINED_SELECT_VALUE_PREFIX = '::'
 
 const props = defineProps({
   mode: {
@@ -474,6 +486,8 @@ const {
 } = storeToRefs(submissionWizardStore)
 const organizationOptionsLimit = ref(SELECT_PAGE_SIZE)
 const repositoryOptionsLimit = ref(SELECT_PAGE_SIZE)
+const roleInputValue = ref('')
+const levelInputValue = ref('')
 
 const isSubmitMode = computed(() => props.mode === 'submit')
 const dialogTitle = computed(() => isSubmitMode.value
@@ -570,10 +584,23 @@ const positionLevelOptionKeys = computed(() => {
 })
 const positionTitleOptions = computed(() =>
   positionTitleOptionKeys.value.map((optionKey) =>
-    t(`dock.submissions.dialog.positionTitleOptions.${optionKey}`)))
+    ({
+      label: t(`dock.submissions.dialog.positionTitleOptions.${optionKey}`),
+      value: encodePredefinedSelectValue(optionKey)
+    })))
+const allPositionTitleOptionKeys = computed(() => {
+  const configuredOptionsByProjectType = positionRolesConfig?.positionTitlesByProjectType ?? {}
+  const allOptionKeys = Object.values(configuredOptionsByProjectType)
+    .filter((optionKeys) => Array.isArray(optionKeys))
+    .flat()
+  return [...new Set(allOptionKeys)]
+})
 const positionLevelOptions = computed(() =>
   positionLevelOptionKeys.value.map((optionKey) =>
-    t(`dock.submissions.dialog.positionLevelOptions.${optionKey}`)))
+    ({
+      label: t(`dock.submissions.dialog.positionLevelOptions.${optionKey}`),
+      value: encodePredefinedSelectValue(optionKey)
+    })))
 const recruiterOutcomeOptions = computed(() => [
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.offer'), value: 'offer' },
   { label: t('dock.submissions.dialog.recruiterOutcomeOptions.nextRound'), value: 'next-round' },
@@ -783,7 +810,7 @@ async function refetchProjectInfoAndAutofill () {
       : ''
     autofillField(companyName, projectInfo.companyName)
     autofillField(companyLinkedInUrl, projectInfo.companyLinkedInUrl)
-    autofillField(positionTitle, projectInfo.positionTitle)
+    autofillField(positionTitle, normalizeAutofilledPositionTitle(projectInfo.positionTitle))
     alignPositionTitleWithProjectType()
     autofillField(taskSummary, projectInfo.summary)
   } catch {
@@ -842,6 +869,8 @@ function resetDetailsForm () {
   recruiterOutcome.value = 'stopped'
   positiveFeedback.value = ''
   negativeFeedback.value = ''
+  roleInputValue.value = ''
+  levelInputValue.value = ''
 }
 
 function initializeWizardSession () {
@@ -849,6 +878,8 @@ function initializeWizardSession () {
     owner: props.owner,
     repository: props.repository
   })
+  roleInputValue.value = ''
+  levelInputValue.value = ''
   organizationOptionsLimit.value = SELECT_PAGE_SIZE
   repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   githubSubmissionProjectInfoStore.reset()
@@ -856,35 +887,148 @@ function initializeWizardSession () {
 
 function clearWizardSession () {
   submissionWizardStore.reset()
+  roleInputValue.value = ''
+  levelInputValue.value = ''
   organizationOptionsLimit.value = SELECT_PAGE_SIZE
   repositoryOptionsLimit.value = SELECT_PAGE_SIZE
   githubSubmissionProjectInfoStore.reset()
 }
 
-function onCustomSelectValue (fieldReference, value, done) {
-  const normalizedValue = String(value ?? '').trim()
+function onRoleInputValue (value) {
+  onSelectInputValue(roleInputValue, value)
+}
+
+function onLevelInputValue (value) {
+  onSelectInputValue(levelInputValue, value)
+}
+
+function onRoleNewValue (value, done) {
+  onCustomSelectValue(positionTitle, roleInputValue, positionTitleOptions, value, done)
+}
+
+function onLevelNewValue (value, done) {
+  onCustomSelectValue(positionLevel, levelInputValue, positionLevelOptions, value, done)
+}
+
+function onRoleBlur () {
+  commitSelectInputValue(positionTitle, roleInputValue, positionTitleOptions)
+}
+
+function onLevelBlur () {
+  commitSelectInputValue(positionLevel, levelInputValue, positionLevelOptions)
+}
+
+function onSelectInputValue (inputReference, value) {
+  inputReference.value = String(value ?? '')
+}
+
+function commitSelectInputValue (fieldReference, inputReference, optionsReference) {
+  const normalizedInput = String(inputReference.value ?? '').trim()
+
+  if (!normalizedInput) {
+    return
+  }
+
+  const normalizedSelectedValue = String(fieldReference.value ?? '').trim()
+
+  if (normalizedSelectedValue) {
+    const selectedLabel = resolveOptionLabelByValue(optionsReference.value, normalizedSelectedValue)
+
+    if (selectedLabel && selectedLabel === normalizedInput) {
+      inputReference.value = ''
+      return
+    }
+
+    if (!selectedLabel && normalizedSelectedValue === normalizedInput) {
+      inputReference.value = ''
+      return
+    }
+  }
+
+  applyCustomSelectValue(fieldReference, inputReference, optionsReference, normalizedInput)
+}
+
+function onCustomSelectValue (fieldReference, inputReference, optionsReference, value, done) {
+  const normalizedValue = applyCustomSelectValue(fieldReference, inputReference, optionsReference, value)
 
   if (!normalizedValue) {
     done(null)
     return
   }
 
-  fieldReference.value = normalizedValue
   done(normalizedValue)
 }
 
+function applyCustomSelectValue (fieldReference, inputReference, optionsReference, value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    return ''
+  }
+
+  const predefinedValue = resolveOptionValueByLabel(optionsReference.value, normalizedValue)
+  fieldReference.value = predefinedValue || normalizedValue
+  inputReference.value = ''
+  return fieldReference.value
+}
+
 function alignPositionTitleWithProjectType () {
-  const normalizedPositionTitle = String(positionTitle.value ?? '').trim()
+  const selectedPositionTitleKey = decodePredefinedSelectValue(positionTitle.value)
 
-  if (!normalizedPositionTitle) {
+  if (!selectedPositionTitleKey) {
     return
   }
 
-  if (positionTitleOptions.value.includes(normalizedPositionTitle)) {
+  if (positionTitleOptionKeys.value.includes(selectedPositionTitleKey)) {
     return
   }
 
-  positionTitle.value = ''
+  if (allPositionTitleOptionKeys.value.includes(selectedPositionTitleKey)) {
+    positionTitle.value = ''
+  }
+}
+
+function normalizeAutofilledPositionTitle (value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    return ''
+  }
+
+  const predefinedValue = resolveOptionValueByLabel(positionTitleOptions.value, normalizedValue)
+  return predefinedValue || normalizedValue
+}
+
+function encodePredefinedSelectValue (optionKey) {
+  return `${PREDEFINED_SELECT_VALUE_PREFIX}${String(optionKey ?? '').trim()}`
+}
+
+function decodePredefinedSelectValue (value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue.startsWith(PREDEFINED_SELECT_VALUE_PREFIX)) {
+    return ''
+  }
+
+  return normalizedValue.slice(PREDEFINED_SELECT_VALUE_PREFIX.length).trim()
+}
+
+function resolveOptionLabelByValue (options, value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  return options.find((option) => option.value === normalizedValue)?.label ?? ''
+}
+
+function resolveOptionValueByLabel (options, label) {
+  const normalizedLabel = String(label ?? '').trim().toLowerCase()
+
+  if (!normalizedLabel) {
+    return ''
+  }
+
+  return options.find((option) =>
+    String(option?.label ?? '').trim().toLowerCase() === normalizedLabel
+  )?.value ?? ''
 }
 
 function autofillField (fieldReference, value) {
