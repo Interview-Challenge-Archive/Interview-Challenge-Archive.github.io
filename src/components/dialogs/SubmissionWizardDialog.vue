@@ -1,5 +1,5 @@
 <template>
-  <q-dialog ref="dialogRef" persistent :maximized="isMobileDialogFullScreen" @hide="onDialogHide">
+  <q-dialog ref="dialogRef" persistent :maximized="isMobileDialogFullScreen" @hide="handleDialogHide">
     <q-card class="submission-wizard-dialog q-pa-md">
       <div class="submission-wizard-dialog__header row items-center no-wrap q-mb-md">
         <div class="text-h6 row items-center no-wrap col submission-wizard-dialog__header-title">
@@ -17,7 +17,7 @@
           dense
           icon="close"
           :aria-label="t('dock.submissions.dialog.actions.close')"
-          @click="onDialogCancel"
+          @click="handleDialogCancel"
         />
       </div>
 
@@ -120,7 +120,7 @@
               <label for="submission-dialog-repository" class="text-caption text-grey-8 q-mb-xs">{{ t('dock.submissions.dialog.fields.repository') }}</label>
               <q-select
                 v-if="isSubmitMode"
-                v-model="repository"
+                v-model="selectedRepository"
                 for="submission-dialog-repository"
                 outlined
                 dense
@@ -151,7 +151,7 @@
               </q-select>
               <q-input
                 v-else
-                v-model="repository"
+                v-model="selectedRepository"
                 for="submission-dialog-repository"
                 outlined
                 dense
@@ -363,7 +363,7 @@
             flat
             no-caps
             :label="t('dock.submissions.dialog.actions.cancel')"
-            @click="onDialogCancel"
+            @click="handleDialogCancel"
           />
         </div>
 
@@ -408,6 +408,7 @@ import { useDialogPluginComponent, useQuasar } from 'quasar'
 import { useGitHubSubmissionProjectInfoStore } from 'src/stores/github-submission-project-info-store'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
+import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 import positionRolesConfig from 'src/config/position_roles.yml'
 
 const SELECT_PAGE_SIZE = 50
@@ -437,13 +438,14 @@ const { t } = useI18n()
 const $q = useQuasar()
 const {
   dialogRef,
-  onDialogHide,
-  onDialogCancel,
-  onDialogOK
+  onDialogHide: onDialogHidePlugin,
+  onDialogCancel: onDialogCancelPlugin,
+  onDialogOK: onDialogOKPlugin
 } = useDialogPluginComponent()
 const githubSubmissionProjectInfoStore = useGitHubSubmissionProjectInfoStore()
 const githubSubmissionRepositoriesStore = useGitHubSubmissionRepositoriesStore()
 const githubSubmissionsStore = useGitHubSubmissionsStore()
+const submissionWizardStore = useSubmissionWizardStore()
 const {
   isLoading: isLoadingProjectInfo,
   errorMessageKey: projectInfoErrorMessageKey
@@ -454,21 +456,22 @@ const {
   errorMessageKey
 } = storeToRefs(githubSubmissionRepositoriesStore)
 const { submissions } = storeToRefs(githubSubmissionsStore)
-
-const step = ref(1)
-const organization = ref(String(props.owner ?? '').trim())
-const repository = ref(String(props.repository ?? '').trim())
-const projectType = ref('')
-const isProjectTypeAutofilled = ref(false)
-const autofilledProjectTypeValue = ref('')
-const companyName = ref('')
-const companyLinkedInUrl = ref('')
-const positionTitle = ref('')
-const positionLevel = ref('')
-const taskSummary = ref('')
-const recruiterOutcome = ref('stopped')
-const positiveFeedback = ref('')
-const negativeFeedback = ref('')
+const {
+  step,
+  organization,
+  repository: selectedRepository,
+  projectType,
+  isProjectTypeAutofilled,
+  autofilledProjectTypeValue,
+  companyName,
+  companyLinkedInUrl,
+  positionTitle,
+  positionLevel,
+  taskSummary,
+  recruiterOutcome,
+  positiveFeedback,
+  negativeFeedback
+} = storeToRefs(submissionWizardStore)
 const organizationOptionsLimit = ref(SELECT_PAGE_SIZE)
 const repositoryOptionsLimit = ref(SELECT_PAGE_SIZE)
 
@@ -486,7 +489,7 @@ const dialogHeaderRepositorySuffix = computed(() => {
   }
 
   const normalizedOrganization = String(organization.value ?? '').trim()
-  const normalizedRepository = String(repository.value ?? '').trim()
+  const normalizedRepository = String(selectedRepository.value ?? '').trim()
 
   if (!normalizedOrganization || !normalizedRepository) {
     return ''
@@ -580,8 +583,8 @@ const canGoNext = computed(() => {
   if (step.value === 1) {
     return Boolean(
       organization.value
-      && repository.value
-      && !allRepositoryOptions.value.find((option) => option.value === repository.value)?.disable
+      && selectedRepository.value
+      && !allRepositoryOptions.value.find((option) => option.value === selectedRepository.value)?.disable
     )
   }
 
@@ -623,7 +626,7 @@ watch(organization, async (nextOrganization, previousOrganization) => {
   }
 
   if (nextOrganization !== previousOrganization) {
-    repository.value = ''
+    selectedRepository.value = ''
     repositoryOptionsLimit.value = SELECT_PAGE_SIZE
     resetDetailsForm()
     githubSubmissionProjectInfoStore.reset()
@@ -632,7 +635,7 @@ watch(organization, async (nextOrganization, previousOrganization) => {
   await loadRepositoriesForOrganization(nextOrganization)
 })
 
-watch(repository, (nextRepository, previousRepository) => {
+watch(selectedRepository, (nextRepository, previousRepository) => {
   if (nextRepository === previousRepository) {
     return
   }
@@ -655,6 +658,8 @@ watch(projectType, (nextProjectType, previousProjectType) => {
 })
 
 onMounted(async () => {
+  initializeWizardSession()
+
   if (!isSubmitMode.value) {
     return
   }
@@ -703,10 +708,10 @@ function finishWizard () {
     return
   }
 
-  onDialogOK({
+  onDialogOKPlugin({
     mode: props.mode,
     owner: organization.value,
-    repository: repository.value,
+    repository: selectedRepository.value,
     details: {
       projectType: projectType.value,
       companyName: companyName.value,
@@ -719,6 +724,16 @@ function finishWizard () {
       negativeFeedback: negativeFeedback.value
     }
   })
+}
+
+function handleDialogHide () {
+  clearWizardSession()
+  onDialogHidePlugin()
+}
+
+function handleDialogCancel () {
+  clearWizardSession()
+  onDialogCancelPlugin()
 }
 
 async function ensureInitialSelection () {
@@ -758,7 +773,7 @@ async function refetchProjectInfoAndAutofill () {
   try {
     const projectInfo = await githubSubmissionProjectInfoStore.refetchProjectInfo(
       organization.value,
-      repository.value
+      selectedRepository.value
     )
 
     const wasProjectTypeAutofilled = autofillField(projectType, projectInfo.projectType)
@@ -827,6 +842,23 @@ function resetDetailsForm () {
   recruiterOutcome.value = 'stopped'
   positiveFeedback.value = ''
   negativeFeedback.value = ''
+}
+
+function initializeWizardSession () {
+  submissionWizardStore.reset({
+    owner: props.owner,
+    repository: props.repository
+  })
+  organizationOptionsLimit.value = SELECT_PAGE_SIZE
+  repositoryOptionsLimit.value = SELECT_PAGE_SIZE
+  githubSubmissionProjectInfoStore.reset()
+}
+
+function clearWizardSession () {
+  submissionWizardStore.reset()
+  organizationOptionsLimit.value = SELECT_PAGE_SIZE
+  repositoryOptionsLimit.value = SELECT_PAGE_SIZE
+  githubSubmissionProjectInfoStore.reset()
 }
 
 function onCustomSelectValue (fieldReference, value, done) {
