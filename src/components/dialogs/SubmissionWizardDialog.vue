@@ -7,11 +7,14 @@
         v-model="step"
         flat
         animated
-        class="bg-transparent"
+        :contracted="isContractedStepper"
+        :header-class="isContractedStepper ? 'q-pa-none' : ''"
+        class="bg-transparent submission-wizard-dialog__stepper"
       >
         <q-step
           :name="1"
           :title="t('dock.submissions.dialog.steps.repository')"
+          icon="folder"
           :done="step > 1"
         >
           <div class="column q-gutter-md">
@@ -122,6 +125,7 @@
         <q-step
           :name="2"
           :title="t('dock.submissions.dialog.steps.projectType')"
+          icon="category"
           :done="step > 2"
         >
           <div class="column q-gutter-md">
@@ -161,6 +165,7 @@
         <q-step
           :name="3"
           :title="t('dock.submissions.dialog.steps.company')"
+          icon="business"
           :done="step > 3"
         >
           <div class="column q-gutter-md">
@@ -203,6 +208,7 @@
         <q-step
           :name="4"
           :title="t('dock.submissions.dialog.steps.summary')"
+          icon="description"
           :done="step > 4"
         >
           <div class="column q-gutter-md">
@@ -224,6 +230,7 @@
         <q-step
           :name="5"
           :title="t('dock.submissions.dialog.steps.feedback')"
+          icon="chat"
         >
           <div class="column q-gutter-md">
             <div>
@@ -310,7 +317,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { useDialogPluginComponent } from 'quasar'
+import { useDialogPluginComponent, useQuasar } from 'quasar'
 import { useGitHubSubmissionProjectInfoStore } from 'src/stores/github-submission-project-info-store'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
@@ -339,6 +346,7 @@ defineEmits([
 ])
 
 const { t } = useI18n()
+const $q = useQuasar()
 const {
   dialogRef,
   onDialogHide,
@@ -378,6 +386,7 @@ const dialogTitle = computed(() => isSubmitMode.value
   ? t('dock.submissions.dialog.title.submit')
   : t('dock.submissions.dialog.title.update'))
 const totalSteps = computed(() => TOTAL_STEPS)
+const isContractedStepper = computed(() => $q.screen.lt.sm)
 const allOrganizationOptions = computed(() =>
   [...organizations.value].sort(sortSelectOptionsByLabel))
 const organizationOptions = computed(() =>
@@ -647,7 +656,59 @@ function autofillField (fieldReference, value) {
 
 <style scoped lang="scss">
 .submission-wizard-dialog {
-  width: min(720px, 96vw);
+  width: min(860px, 96vw);
   max-width: 96vw;
+
+  &__stepper {
+    :deep(.q-stepper__header) {
+      flex-wrap: nowrap;
+    }
+
+    :deep(.q-stepper__tab) {
+      min-width: 0;
+      flex: 1 1 0;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    :deep(.q-stepper__label) {
+      min-width: 0;
+    }
+
+    :deep(.q-stepper__title) {
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .submission-wizard-dialog {
+    &__stepper {
+      :deep(.q-stepper__header--contracted) {
+        min-height: 56px;
+      }
+
+      :deep(.q-stepper__header--contracted .q-stepper__tab) {
+        padding-top: 14px;
+        padding-bottom: 10px;
+      }
+
+      :deep(.q-stepper__header--contracted .q-stepper__tab:first-child .q-stepper__dot) {
+        transform: translateX(16px);
+      }
+
+      :deep(.q-stepper__header--contracted .q-stepper__tab:last-child .q-stepper__dot) {
+        transform: translateX(-16px);
+      }
+
+      :deep(.q-stepper__content .q-stepper__step-inner) {
+        padding-top: 12px;
+      }
+    }
+  }
 }
 </style>
