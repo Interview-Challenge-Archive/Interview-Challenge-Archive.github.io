@@ -2,8 +2,15 @@
   <q-dialog ref="dialogRef" persistent :maximized="isMobileDialogFullScreen" @hide="onDialogHide">
     <q-card class="submission-wizard-dialog q-pa-md">
       <div class="submission-wizard-dialog__header row items-center no-wrap q-mb-md">
-        <div class="text-h6 text-uppercase">{{ dialogTitle }}</div>
-        <q-space />
+        <div class="text-h6 row items-center no-wrap col submission-wizard-dialog__header-title">
+          <span class="text-uppercase">{{ dialogTitle }}</span>
+          <span
+            v-if="dialogHeaderRepositorySuffix"
+            class="q-ml-sm col ellipsis text-grey-6 text-body2 submission-wizard-dialog__header-repository"
+          >
+            {{ dialogHeaderRepositorySuffix }}
+          </span>
+        </div>
         <q-btn
           flat
           round
@@ -473,6 +480,20 @@ const totalSteps = computed(() => TOTAL_STEPS)
 const isDesktopWizardLayout = computed(() => $q.screen.gt.sm)
 const isContractedStepper = computed(() => $q.screen.lt.sm)
 const isMobileDialogFullScreen = computed(() => $q.screen.lt.sm)
+const dialogHeaderRepositorySuffix = computed(() => {
+  if (!isDesktopWizardLayout.value || step.value === 1) {
+    return ''
+  }
+
+  const normalizedOrganization = String(organization.value ?? '').trim()
+  const normalizedRepository = String(repository.value ?? '').trim()
+
+  if (!normalizedOrganization || !normalizedRepository) {
+    return ''
+  }
+
+  return `${normalizedOrganization}/${normalizedRepository}`
+})
 const stepperHeaderClass = computed(() => {
   if (isDesktopWizardLayout.value) {
     return 'hidden'
@@ -864,6 +885,14 @@ function autofillField (fieldReference, value) {
 
   &__header {
     flex: 0 0 auto;
+  }
+
+  &__header-title {
+    min-width: 0;
+  }
+
+  &__header-repository {
+    min-width: 0;
   }
 
   &__scroll {
