@@ -1,47 +1,48 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="submission-wizard-dialog q-pa-md">
-      <div class="text-h6 q-mb-md">{{ dialogTitle }}</div>
+      <div class="submission-wizard-dialog__header text-h6 q-mb-md">{{ dialogTitle }}</div>
 
-      <div class="submission-wizard-dialog__layout row no-wrap">
-        <aside v-if="isDesktopWizardLayout" class="submission-wizard-dialog__sidebar col-auto">
-          <div class="submission-wizard-dialog__step-nav column">
-            <button
-              v-for="wizardStep in wizardSteps"
-              :key="wizardStep.name"
-              type="button"
-              class="submission-wizard-dialog__step-link row items-center no-wrap"
-              :class="{
-                'submission-wizard-dialog__step-link--active': step === wizardStep.name,
-                'submission-wizard-dialog__step-link--done': step > wizardStep.name
-              }"
-              :disabled="!canNavigateToStep(wizardStep.name)"
-              @click="goToStep(wizardStep.name)"
-            >
-              <q-avatar
-                size="24px"
-                class="q-mr-sm"
-                :class="step > wizardStep.name ? 'bg-positive text-white' : (step === wizardStep.name ? 'bg-dark text-white' : 'bg-grey-3 text-grey-8')"
+      <q-scroll-area class="submission-wizard-dialog__scroll">
+        <div class="submission-wizard-dialog__layout row no-wrap">
+          <aside v-if="isDesktopWizardLayout" class="submission-wizard-dialog__sidebar col-auto">
+            <div class="submission-wizard-dialog__step-nav column">
+              <button
+                v-for="wizardStep in wizardSteps"
+                :key="wizardStep.name"
+                type="button"
+                class="submission-wizard-dialog__step-link row items-center no-wrap"
+                :class="{
+                  'submission-wizard-dialog__step-link--active': step === wizardStep.name,
+                  'submission-wizard-dialog__step-link--done': step > wizardStep.name
+                }"
+                :disabled="!canNavigateToStep(wizardStep.name)"
+                @click="goToStep(wizardStep.name)"
               >
-                <q-icon :name="step > wizardStep.name ? 'check' : wizardStep.icon" size="14px" />
-              </q-avatar>
-              <div class="column">
-                <div class="text-caption text-grey-6">Step {{ wizardStep.name }}</div>
-                <div class="text-body2">{{ wizardStep.title }}</div>
-              </div>
-            </button>
-          </div>
-        </aside>
+                <q-avatar
+                  size="24px"
+                  class="q-mr-sm"
+                  :class="step > wizardStep.name ? 'bg-positive text-white' : (step === wizardStep.name ? 'bg-dark text-white' : 'bg-grey-3 text-grey-8')"
+                >
+                  <q-icon :name="step > wizardStep.name ? 'check' : wizardStep.icon" size="14px" />
+                </q-avatar>
+                <div class="column">
+                  <div class="text-caption text-grey-6">Step {{ wizardStep.name }}</div>
+                  <div class="text-body2">{{ wizardStep.title }}</div>
+                </div>
+              </button>
+            </div>
+          </aside>
 
-        <div class="col">
-          <q-stepper
-            v-model="step"
-            flat
-            animated
-            :contracted="isContractedStepper"
-            :header-class="stepperHeaderClass"
-            class="bg-transparent submission-wizard-dialog__stepper"
-          >
+          <div class="submission-wizard-dialog__content-col col">
+            <q-stepper
+              v-model="step"
+              flat
+              animated
+              :contracted="isContractedStepper"
+              :header-class="stepperHeaderClass"
+              class="bg-transparent submission-wizard-dialog__stepper"
+            >
         <q-step
           :name="1"
           :title="t('dock.submissions.dialog.steps.repository')"
@@ -305,11 +306,12 @@
             </div>
           </div>
         </q-step>
-          </q-stepper>
+            </q-stepper>
+          </div>
         </div>
-      </div>
+      </q-scroll-area>
 
-      <div class="row items-center q-gutter-sm q-mt-md">
+      <div class="submission-wizard-dialog__actions row items-center q-gutter-sm q-mt-md">
         <q-space />
         <q-btn
           v-if="step === 1"
@@ -722,9 +724,29 @@ function autofillField (fieldReference, value) {
 .submission-wizard-dialog {
   width: min(860px, 96vw);
   max-width: 96vw;
+  height: min(92vh, 860px);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &__header {
+    flex: 0 0 auto;
+  }
+
+  &__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+  }
 
   &__layout {
-    min-height: 520px;
+    height: 100%;
+    min-height: 0;
+  }
+
+  &__actions {
+    flex: 0 0 auto;
   }
 
   &__sidebar {
@@ -732,6 +754,11 @@ function autofillField (fieldReference, value) {
     border-right: 1px solid #e0e0e0;
     margin-right: 16px;
     padding-right: 16px;
+  }
+
+  &__content-col {
+    height: 100%;
+    min-height: 0;
   }
 
   &__step-nav {
@@ -796,7 +823,11 @@ function autofillField (fieldReference, value) {
 
 @media (max-width: 599px) {
   .submission-wizard-dialog {
+    height: 96vh;
+    max-height: 96vh;
+
     &__layout {
+      height: auto;
       min-height: 0;
     }
 
@@ -821,9 +852,15 @@ function autofillField (fieldReference, value) {
       :deep(.q-stepper__header--contracted .q-stepper__tab:last-child .q-stepper__dot) {
         transform: translateX(-16px);
       }
+    }
+  }
+}
 
-      :deep(.q-stepper__content .q-stepper__step-inner) {
-        padding-top: 12px;
+@media (min-width: 600px) {
+  .submission-wizard-dialog {
+    &__stepper {
+      :deep(.q-stepper__step-inner) {
+        padding-top: 0;
       }
     }
   }
