@@ -37,16 +37,21 @@
     "test:unit:ci": "vitest run"
   },
   "dependencies": {
+    "@interview-challenge-archive/document-markdown-reader": "^0.1.2",
     "@octokit/rest": "^22.0.1",
     "@openfeature/web-sdk": "^1.7.3",
     "@quasar/extras": "^1.16.4",
     "@quasar/quasar-ui-qmarkdown": "^2.0.5",
+    "@toast-ui/editor": "^3.2.2",
     "jszip": "^3.10.1",
     "mammoth": "^1.12.0",
     "marked": "^17.0.4",
+    "pdfjs-dist": "^5.5.207",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.7.1",
     "quasar": "^2.16.0",
+    "turndown": "^7.2.2",
+    "turndown-plugin-gfm": "^1.0.2",
     "vue": "^3.5.30",
     "vue-i18n": "^11.3.0",
     "vue-router": "^4.6.4"
