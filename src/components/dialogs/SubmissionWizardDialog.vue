@@ -63,9 +63,21 @@
             >
         <q-step
           :name="1"
+          :title="t('dock.submissions.dialog.steps.summary')"
+          icon="description"
+          :done="step > 1"
+        >
+          <SubmissionWizardStepSummary
+            ref="stepSummaryRef"
+            @validity-change="setStepValidity(1, $event)"
+          />
+        </q-step>
+
+        <q-step
+          :name="2"
           :title="t('dock.submissions.dialog.steps.repository')"
           icon="folder"
-          :done="step > 1"
+          :done="step > 2"
         >
           <SubmissionWizardStepRepository
             ref="stepRepositoryRef"
@@ -79,45 +91,33 @@
             @organizations-virtual-scroll="onOrganizationsVirtualScroll"
             @repositories-virtual-scroll="onRepositoriesVirtualScroll"
             @draft-organization-change="handleRepositoryStepOrganizationDraftChange"
-            @validity-change="setStepValidity(1, $event)"
-          />
-        </q-step>
-
-        <q-step
-          :name="2"
-          :title="t('dock.submissions.dialog.steps.projectType')"
-          icon="category"
-          :done="step > 2"
-        >
-          <SubmissionWizardStepProjectType
-            ref="stepProjectTypeRef"
-            :is-loading-project-info="isLoadingProjectInfo"
-            :is-project-type-autofilled="isProjectTypeAutofilled"
-            :project-info-error-message="projectInfoErrorMessage"
             @validity-change="setStepValidity(2, $event)"
           />
         </q-step>
 
         <q-step
           :name="3"
-          :title="t('dock.submissions.dialog.steps.company')"
-          icon="business"
+          :title="t('dock.submissions.dialog.steps.projectType')"
+          icon="category"
           :done="step > 3"
         >
-          <SubmissionWizardStepCompany
-            ref="stepCompanyRef"
+          <SubmissionWizardStepProjectType
+            ref="stepProjectTypeRef"
+            :is-loading-project-info="isLoadingProjectInfo"
+            :is-project-type-autofilled="isProjectTypeAutofilled"
+            :project-info-error-message="projectInfoErrorMessage"
             @validity-change="setStepValidity(3, $event)"
           />
         </q-step>
 
         <q-step
           :name="4"
-          :title="t('dock.submissions.dialog.steps.summary')"
-          icon="description"
+          :title="t('dock.submissions.dialog.steps.company')"
+          icon="business"
           :done="step > 4"
         >
-          <SubmissionWizardStepSummary
-            ref="stepSummaryRef"
+          <SubmissionWizardStepCompany
+            ref="stepCompanyRef"
             @validity-change="setStepValidity(4, $event)"
           />
         </q-step>
@@ -195,7 +195,6 @@ import SubmissionWizardStepProjectType from 'src/components/dialogs/submission-w
 import SubmissionWizardStepCompany from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepCompany.vue'
 import SubmissionWizardStepSummary from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepSummary.vue'
 import SubmissionWizardStepFeedback from 'src/components/dialogs/submission-wizard-steps/SubmissionWizardStepFeedback.vue'
-import { normalizeTextSummaryToHtml } from 'src/utils/task-summary-importer'
 
 const SELECT_PAGE_SIZE = 50
 const SELECT_LOAD_MORE_THRESHOLD = 8
@@ -310,10 +309,10 @@ const stepperHeaderClass = computed(() => {
   return ''
 })
 const wizardSteps = computed(() => [
-  { name: 1, title: t('dock.submissions.dialog.steps.repository'), icon: 'folder' },
-  { name: 2, title: t('dock.submissions.dialog.steps.projectType'), icon: 'category' },
-  { name: 3, title: t('dock.submissions.dialog.steps.company'), icon: 'business' },
-  { name: 4, title: t('dock.submissions.dialog.steps.summary'), icon: 'description' },
+  { name: 1, title: t('dock.submissions.dialog.steps.summary'), icon: 'description' },
+  { name: 2, title: t('dock.submissions.dialog.steps.repository'), icon: 'folder' },
+  { name: 3, title: t('dock.submissions.dialog.steps.projectType'), icon: 'category' },
+  { name: 4, title: t('dock.submissions.dialog.steps.company'), icon: 'business' },
   { name: 5, title: t('dock.submissions.dialog.steps.feedback'), icon: 'chat' }
 ])
 const allOrganizationOptions = computed(() =>
@@ -443,8 +442,8 @@ async function goToNextStep () {
 
   saveCurrentStepDraft()
 
-  if (step.value === 1) {
-    step.value = 2
+  if (step.value === 2) {
+    step.value = 3
     await refetchProjectInfoAndAutofill()
     return
   }
@@ -480,23 +479,23 @@ function setStepValidity (stepNumber, isValid) {
 
 function saveCurrentStepDraft () {
   if (step.value === 1) {
+    stepSummaryRef.value?.save?.()
+    return
+  }
+
+  if (step.value === 2) {
     skipOrganizationResetOnSave.value = true
     stepRepositoryRef.value?.save?.()
     return
   }
 
-  if (step.value === 2) {
+  if (step.value === 3) {
     stepProjectTypeRef.value?.save?.()
     return
   }
 
-  if (step.value === 3) {
-    stepCompanyRef.value?.save?.()
-    return
-  }
-
   if (step.value === 4) {
-    stepSummaryRef.value?.save?.()
+    stepCompanyRef.value?.save?.()
   }
 }
 
@@ -688,10 +687,10 @@ function clearWizardSession () {
 
 function resetStepValidity () {
   stepValidityMap.value = {
-    1: Boolean(stepRepositoryRef.value?.getCanProceed?.()),
-    2: Boolean(stepProjectTypeRef.value?.getCanProceed?.()),
-    3: Boolean(stepCompanyRef.value?.getCanProceed?.()),
-    4: Boolean(stepSummaryRef.value?.getCanProceed?.()),
+    1: Boolean(stepSummaryRef.value?.getCanProceed?.()),
+    2: Boolean(stepRepositoryRef.value?.getCanProceed?.()),
+    3: Boolean(stepProjectTypeRef.value?.getCanProceed?.()),
+    4: Boolean(stepCompanyRef.value?.getCanProceed?.()),
     5: Boolean(stepFeedbackRef.value?.getCanProceed?.())
   }
 }
@@ -765,6 +764,62 @@ function autofillField (fieldReference, value) {
   fieldReference.value = normalizedValue
   return true
 }
+
+function normalizeTextSummaryToHtml (value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    return ''
+  }
+
+  if (/<[a-z][\s\S]*>/i.test(normalizedValue)) {
+    return sanitizeImportedHtml(normalizedValue)
+  }
+
+  return plainTextToHtml(normalizedValue)
+}
+
+function plainTextToHtml (text) {
+  const normalizedText = String(text ?? '')
+    .replace(/\r\n?/g, '\n')
+    .trim()
+
+  if (!normalizedText) {
+    return ''
+  }
+
+  return normalizedText
+    .split(/\n{2,}/)
+    .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`)
+    .join('')
+}
+
+function sanitizeImportedHtml (value) {
+  const normalizedValue = String(value ?? '').trim()
+
+  if (!normalizedValue) {
+    return ''
+  }
+
+  return normalizedValue
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+    .replace(/<\/?(iframe|object|embed|link)\b[^>]*>/gi, '')
+    .replace(/\son[a-z-]+\s*=\s*"[^"]*"/gi, '')
+    .replace(/\son[a-z-]+\s*=\s*'[^']*'/gi, '')
+    .replace(/\son[a-z-]+\s*=\s*[^\s>]+/gi, '')
+    .replace(/\s(href|src)\s*=\s*(['"])\s*javascript:[^'"]*\2/gi, '')
+    .trim()
+}
+
+function escapeHtml (value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
 </script>
 
 <style scoped lang="scss">
@@ -793,11 +848,20 @@ function autofillField (fieldReference, value) {
     flex: 1 1 auto;
     min-height: 0;
     height: 100%;
+
+    :deep(.q-scrollarea__content) {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
   }
 
   &__layout {
+    width: 100%;
+    max-width: 100%;
     height: 100%;
     min-height: 0;
+    overflow-x: hidden;
   }
 
   &__actions {
@@ -812,8 +876,13 @@ function autofillField (fieldReference, value) {
   }
 
   &__content-col {
+    flex: 1 1 0;
+    width: 1px;
     height: 100%;
     min-height: 0;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   &__step-nav {
@@ -851,6 +920,11 @@ function autofillField (fieldReference, value) {
   }
 
   &__stepper {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+
     :deep(.q-stepper__header) {
       flex-wrap: nowrap;
     }
@@ -872,6 +946,18 @@ function autofillField (fieldReference, value) {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    :deep(.q-stepper__step-inner) {
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    :deep(.q-stepper__step-content) {
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
     }
   }
 }
