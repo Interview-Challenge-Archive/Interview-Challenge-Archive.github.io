@@ -72,6 +72,13 @@ function findNextButton (wrapper) {
     .find((button) => button.props('label') === 'Next')
 }
 
+async function goToRepositoryStep (wrapper) {
+  wrapper.findComponent({ name: 'SubmissionWizardStepSummary' }).vm.$emit('validity-change', true)
+  await flushPromises()
+  await findNextButton(wrapper).trigger('click')
+  await flushPromises()
+}
+
 describe('SubmissionWizardDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -90,6 +97,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const selects = wrapper.findAllComponents({ name: 'QSelect' })
     const repositorySelect = selects[1]
@@ -118,6 +126,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
 
@@ -145,6 +154,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
     const repositoryOption = repositorySelect.props('options').find((option) => option.value === 'repo-a')
@@ -170,6 +180,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const inputs = wrapper.findAllComponents({ name: 'QInput' })
     const readonlyInputs = inputs.filter((input) => input.props('readonly'))
@@ -191,6 +202,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
     repositorySelect.vm.$emit('update:modelValue', 'repo-a')
@@ -230,6 +242,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
     repositorySelect.vm.$emit('update:modelValue', 'repo-a')
@@ -273,6 +286,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
     repositorySelect.vm.$emit('update:modelValue', 'repo-a')
