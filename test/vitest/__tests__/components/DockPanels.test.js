@@ -104,7 +104,6 @@ describe('AccountDockPanel', () => {
 describe('SubmitDockPanel', () => {
   it('renders the expanded submission form and action', () => {
     const wrapper = mountWithApp(SubmitDockPanel)
-    const inputs = wrapper.findAllComponents({ name: 'QInput' })
     const selects = wrapper.findAllComponents({ name: 'QSelect' })
     const checkboxes = wrapper.findAllComponents({ name: 'QCheckbox' })
     const offerOutcome = wrapper.findComponent({ name: 'QOptionGroup' })

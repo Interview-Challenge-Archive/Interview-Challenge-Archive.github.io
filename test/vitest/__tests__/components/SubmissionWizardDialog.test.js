@@ -2,17 +2,37 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import SubmissionWizardDialog from 'src/components/dialogs/SubmissionWizardDialog.vue'
+import { useGitHubSubmissionProjectInfoStore } from 'src/stores/github-submission-project-info-store'
 import { useGitHubSubmissionRepositoriesStore } from 'src/stores/github-submission-repositories-store'
 import { useGitHubSubmissionsStore } from 'src/stores/github-submissions-store'
+import { useSubmissionWizardStore } from 'src/stores/submission-wizard-store'
 import { mountWithApp } from '../../helpers/mount-with-app'
 
 function setupStores (pinia, {
   organizations = [{ label: 'octo-org', value: 'octo-org', avatarUrl: 'https://example.test/octo-org.png' }],
   repositories = [{ id: 1, owner: 'octo-org', name: 'repo-a', updatedAt: '2026-03-01T00:00:00Z' }],
-  submissions = []
+  submissions = [],
+  projectInfo = {
+    owner: 'octo-org',
+    repository: 'repo-a',
+    repositoryUrl: 'https://github.com/octo-org/repo-a',
+    summary: 'Project summary',
+    topics: ['frontend'],
+    languages: ['JavaScript'],
+    projectType: 'software-development',
+    companyName: 'Octo Corp',
+    companyLinkedInUrl: 'https://www.linkedin.com/company/octo-corp/',
+    positionTitle: 'Frontend Engineer'
+  }
 } = {}) {
+  const projectInfoStore = useGitHubSubmissionProjectInfoStore(pinia)
   const repositoriesStore = useGitHubSubmissionRepositoriesStore(pinia)
   const submissionsStore = useGitHubSubmissionsStore(pinia)
+
+  projectInfoStore.projectInfo = projectInfo
+  projectInfoStore.isLoading = false
+  projectInfoStore.errorMessageKey = ''
+  projectInfoStore.refetchProjectInfo = vi.fn().mockResolvedValue(projectInfo)
 
   repositoriesStore.organizations = organizations
   repositoriesStore.repositoriesByOrganization = {
@@ -26,6 +46,7 @@ function setupStores (pinia, {
   submissionsStore.loadSubmissions = vi.fn().mockResolvedValue(submissions)
 
   return {
+    projectInfoStore,
     repositoriesStore,
     submissionsStore
   }
@@ -51,6 +72,13 @@ function findNextButton (wrapper) {
     .find((button) => button.props('label') === 'Next')
 }
 
+async function goToRepositoryStep (wrapper) {
+  wrapper.findComponent({ name: 'SubmissionWizardStepSummary' }).vm.$emit('validity-change', true)
+  await flushPromises()
+  await findNextButton(wrapper).trigger('click')
+  await flushPromises()
+}
+
 describe('SubmissionWizardDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -69,6 +97,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const selects = wrapper.findAllComponents({ name: 'QSelect' })
     const repositorySelect = selects[1]
@@ -85,6 +114,32 @@ describe('SubmissionWizardDialog', () => {
     expect(findNextButton(wrapper).props('disable')).toBe(false)
   })
 
+  it('refetches project info when moving from repository step to project type step', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    const { projectInfoStore } = setupStores(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+    await goToRepositoryStep(wrapper)
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    expect(projectInfoStore.refetchProjectInfo).toHaveBeenCalledWith('octo-org', 'repo-a')
+    expect(wrapper.text()).toContain('Project type')
+  })
+
   it('keeps next action disabled when selected repository is already submitted', async () => {
     const pinia = createPinia()
 
@@ -99,6 +154,7 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
 
     const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
     const repositoryOption = repositorySelect.props('options').find((option) => option.value === 'repo-a')
@@ -124,12 +180,145 @@ describe('SubmissionWizardDialog', () => {
     })
 
     await flushPromises()
+    await goToRepositoryStep(wrapper)
+
+    const inputs = wrapper.findAllComponents({ name: 'QInput' })
+    const readonlyInputs = inputs.filter((input) => input.props('readonly'))
+
+    expect(readonlyInputs).toHaveLength(2)
+    expect(readonlyInputs[0].props('modelValue')).toBe('octo-org')
+    expect(readonlyInputs[1].props('modelValue')).toBe('repo-a')
+  })
+
+  it('filters position options by selected project type', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    setupStores(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+    await goToRepositoryStep(wrapper)
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    wrapper.findComponent({ name: 'QOptionGroup' }).vm.$emit('update:modelValue', 'ui-ux-design')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    const positionSelect = wrapper
+      .findAllComponents({ name: 'QSelect' })
+      .find((select) => select.props('for') === 'submission-dialog-role')
+
+    expect(positionSelect).toBeDefined()
+    const roleOptions = positionSelect.props('options')
+    const roleOptionLabels = roleOptions.map((option) => option.label)
+
+    expect(roleOptionLabels).toContain('UI/UX Designer')
+    expect(roleOptionLabels).not.toContain('Frontend Engineer')
+  })
+
+  it('stores predefined role and level selections as internal prefixed keys', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    setupStores(pinia)
+    const wizardStore = useSubmissionWizardStore(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+    await goToRepositoryStep(wrapper)
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
 
     const selects = wrapper.findAllComponents({ name: 'QSelect' })
-    const inputs = wrapper.findAllComponents({ name: 'QInput' })
+    const roleSelect = selects.find((select) => select.props('for') === 'submission-dialog-role')
+    const levelSelect = selects.find((select) => select.props('for') === 'submission-dialog-level')
+    const frontendOption = roleSelect.props('options').find((option) => option.label === 'Frontend Engineer')
+    const seniorOption = levelSelect.props('options').find((option) => option.label === 'Senior')
 
-    expect(selects.length).toBe(0)
-    expect(inputs.length).toBe(2)
-    expect(inputs.every((input) => input.props('readonly'))).toBe(true)
+    roleSelect.vm.$emit('update:modelValue', frontendOption.value)
+    levelSelect.vm.$emit('update:modelValue', seniorOption.value)
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('::frontendEngineer')
+    expect(wizardStore.positionLevel).toBe('')
+
+    wrapper.findComponent({ name: 'SubmissionWizardStepCompany' }).vm.save()
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('::frontendEngineer')
+    expect(wizardStore.positionLevel).toBe('::senior')
+  })
+
+  it('allows entering custom role and level values', async () => {
+    const pinia = createPinia()
+
+    setActivePinia(pinia)
+    setupStores(pinia)
+    const wizardStore = useSubmissionWizardStore(pinia)
+
+    const wrapper = mountWizardDialog(pinia, {
+      mode: 'submit',
+      owner: 'octo-org'
+    })
+
+    await flushPromises()
+    await goToRepositoryStep(wrapper)
+
+    const repositorySelect = wrapper.findAllComponents({ name: 'QSelect' })[1]
+    repositorySelect.vm.$emit('update:modelValue', 'repo-a')
+    await flushPromises()
+
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+    await findNextButton(wrapper).trigger('click')
+    await flushPromises()
+
+    const selects = wrapper.findAllComponents({ name: 'QSelect' })
+    const roleSelect = selects.find((select) => select.props('for') === 'submission-dialog-role')
+    const levelSelect = selects.find((select) => select.props('for') === 'submission-dialog-level')
+
+    expect(roleSelect).toBeDefined()
+    expect(levelSelect).toBeDefined()
+    expect(roleSelect.props('newValueMode')).toBe('add-unique')
+    expect(levelSelect.props('newValueMode')).toBe('add-unique')
+
+    roleSelect.vm.$emit('input-value', 'Solutions Architect')
+    roleSelect.vm.$emit('blur')
+    levelSelect.vm.$emit('input-value', 'Expert')
+    levelSelect.vm.$emit('blur')
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('::frontendEngineer')
+    expect(wizardStore.positionLevel).toBe('')
+
+    wrapper.findComponent({ name: 'SubmissionWizardStepCompany' }).vm.save()
+    await flushPromises()
+
+    expect(wizardStore.positionTitle).toBe('Solutions Architect')
+    expect(wizardStore.positionLevel).toBe('Expert')
   })
 })

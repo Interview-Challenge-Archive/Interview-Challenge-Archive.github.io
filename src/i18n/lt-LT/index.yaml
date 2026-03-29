@@ -168,22 +168,91 @@ dock:
         update: Atnaujinti repozitoriją
       steps:
         repository: Repozitorija
-        details: Detalės
+        projectType: Projekto tipas
+        company: Įmonė
+        summary: Užduoties santrauka
+        feedback: Recruiterio feedback
       fields:
         organization: Organizacija
         repository: Repozitorija
+        projectType: Projekto tipas
+        companyName: Įmonės pavadinimas
+        companyLinkedInUrl: Įmonės LinkedIn puslapis
+        positionTitle: Rolė
+        positionLevel: Lygis
+        taskSummary: Užduoties santrauka
+        recruiterOutcome: Recruiterio rezultatas
+        positiveFeedback: Kas buvo įvardinta kaip gerai
+        negativeFeedback: Kas buvo įvardinta kaip blogai
       hints:
         organization: Pasirinkite organizaciją, kurioje esate savininkas.
         repository: Pasirinkite vieną iš savo viešų repozitorijų.
+        companyName: Įmonė, kuri pateikė šią užduotį.
+        companyLinkedInUrl: Neprivaloma įmonės LinkedIn nuoroda.
+        positionTitle: Rolės pasirinkimai priklauso nuo pasirinkto projekto tipo.
+        positionLevel: Šios rolės seniority lygis.
+        taskSummary: Parašykite struktūruotą santrauką arba importuokite failą (Markdown, RTF, Word, LibreOffice).
+        recruiterOutcome: Ar gavote pasiūlymą, kitą etapą ar procesas sustojo?
+        positiveFeedback: Ką recruiter'is ar interviuotojas išskyrė kaip stiprybę.
+        negativeFeedback: Ką recruiter'is ar interviuotojas įvardino kaip trūkumus.
+      autofill:
+        loading: Kraunama projekto informacija iš GitHub...
+        projectTypeDetected: Projekto tipas automatiškai nustatytas pagal GitHub projekto duomenis.
+      projectTypeOptions:
+        softwareDevelopment: Programinės įrangos kūrimas
+        uiUxDesign: UI/UX dizainas
+        qaTesting: QA ir testavimas
+        devOpsInfrastructure: DevOps ir infrastruktūra
+        dataMl: Duomenys ir mašininis mokymasis
+        security: Saugumas
+      positionTitleOptions:
+        applicationSecurityEngineer: Application Security inžinierius
+        backendEngineer: Backend programuotojas
+        dataEngineer: Data inžinierius
+        dataScientist: Duomenų mokslininkas
+        devOpsEngineer: DevOps inžinierius
+        frontendEngineer: Frontend programuotojas
+        fullStackEngineer: Full Stack programuotojas
+        gameDeveloper: Žaidimų programuotojas
+        interactionDesigner: Sąveikos dizaineris
+        machineLearningEngineer: Mašininio mokymosi inžinierius
+        mobileEngineer: Mobile programuotojas
+        penetrationTester: Penetracinio testavimo specialistas
+        platformEngineer: Platformos inžinierius
+        productDesigner: Produkto dizaineris
+        qaEngineer: QA inžinierius
+        qualityEngineer: Kokybės inžinierius
+        securityEngineer: Saugumo inžinierius
+        sreEngineer: SRE inžinierius
+        testAutomationEngineer: Testų automatizavimo inžinierius
+        uiUxDesigner: UI/UX dizaineris
+        visualDesigner: Vizualinis dizaineris
+      positionLevelOptions:
+        intern: Praktikantas
+        junior: Junior
+        mid: Mid
+        senior: Senior
+        lead: Lead
+        staff: Staff
+        principal: Principal
+        manager: Vadovas
+      recruiterOutcomeOptions:
+        offer: Gautas darbo pasiūlymas
+        nextRound: Perėta į kitą interviu etapą
+        stopped: Procesas sustojo
       empty:
         organizations: Šiai paskyrai nerasta organizacijų, kurias valdote.
         repositories: Pasirinktoje organizacijoje viešų repozitorijų nerasta.
-      nextStepPlaceholder: Kitas vedlio žingsnis dar neįgyvendintas.
       actions:
         cancel: Atšaukti
+        close: Uždaryti
         next: Toliau
         back: Atgal
-        close: Uždaryti
+        finish: Užbaigti
+        importTaskSummaryFile: Importuoti failą
+      errors:
+        taskSummaryImportFailed: Nepavyko importuoti užduoties santraukos failo.
+        taskSummaryImportUnsupportedFormat: "Nepalaikomas failo formatas. Palaikomi: {formats}"
     errors:
       rateLimited: Pasiektas GitHub API užklausų limitas. Prisijunkite per GitHub ir pabandykite vėliau.
       loadFailed: Nepavyko įkelti pateikimų iš GitHub.

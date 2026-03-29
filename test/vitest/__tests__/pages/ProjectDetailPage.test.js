@@ -69,7 +69,7 @@ describe('ProjectDetailPage', () => {
     }
     mockRoute.fullPath = '/projects/nonexistent/project'
 
-    const wrapper = mountWithApp(ProjectDetailPage)
+    mountWithApp(ProjectDetailPage)
 
     await flushPromises()
     await new Promise(resolve => setTimeout(resolve, 500))

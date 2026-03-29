@@ -168,22 +168,91 @@ dock:
         update: Update repository
       steps:
         repository: Repository
-        details: Details
+        projectType: Project type
+        company: Company
+        summary: Task summary
+        feedback: Recruiter feedback
       fields:
         organization: Organization
         repository: Repository
+        projectType: Project type
+        companyName: Company name
+        companyLinkedInUrl: Company LinkedIn page
+        positionTitle: Role
+        positionLevel: Level
+        taskSummary: Task summary
+        recruiterOutcome: Recruiter outcome
+        positiveFeedback: What they said was good
+        negativeFeedback: What they said was bad
       hints:
         organization: Select an organization where you are an owner.
         repository: Select one of your public repositories.
+        companyName: Company that gave this assignment.
+        companyLinkedInUrl: Optional LinkedIn company profile link.
+        positionTitle: Role options depend on selected project type.
+        positionLevel: Seniority level for this role.
+        taskSummary: Write a structured summary or import an existing file (Markdown, RTF, Word, LibreOffice).
+        recruiterOutcome: Did you get an offer, next round, or did the process stop?
+        positiveFeedback: Notes about strong parts mentioned by recruiter/interviewer.
+        negativeFeedback: Notes about weak parts or missing areas mentioned in feedback.
+      autofill:
+        loading: Loading project details from GitHub...
+        projectTypeDetected: Project type was auto-detected from GitHub project data.
+      projectTypeOptions:
+        softwareDevelopment: Software development
+        uiUxDesign: UI/UX design
+        qaTesting: QA and testing
+        devOpsInfrastructure: DevOps and infrastructure
+        dataMl: Data and machine learning
+        security: Security
+      positionTitleOptions:
+        applicationSecurityEngineer: Application Security Engineer
+        backendEngineer: Backend Engineer
+        dataEngineer: Data Engineer
+        dataScientist: Data Scientist
+        devOpsEngineer: DevOps Engineer
+        frontendEngineer: Frontend Engineer
+        fullStackEngineer: Full Stack Engineer
+        gameDeveloper: Game Developer
+        interactionDesigner: Interaction Designer
+        machineLearningEngineer: Machine Learning Engineer
+        mobileEngineer: Mobile Engineer
+        penetrationTester: Penetration Tester
+        platformEngineer: Platform Engineer
+        productDesigner: Product Designer
+        qaEngineer: QA Engineer
+        qualityEngineer: Quality Engineer
+        securityEngineer: Security Engineer
+        sreEngineer: SRE Engineer
+        testAutomationEngineer: Test Automation Engineer
+        uiUxDesigner: UI/UX Designer
+        visualDesigner: Visual Designer
+      positionLevelOptions:
+        intern: Intern
+        junior: Junior
+        mid: Mid
+        senior: Senior
+        lead: Lead
+        staff: Staff
+        principal: Principal
+        manager: Manager
+      recruiterOutcomeOptions:
+        offer: Received job offer
+        nextRound: Advanced to next interview round
+        stopped: Process stopped
       empty:
         organizations: No owned organizations are available for this account.
         repositories: No public repositories were found for the selected organization.
-      nextStepPlaceholder: Next wizard step is not implemented yet.
       actions:
         cancel: Cancel
+        close: Close
         next: Next
         back: Back
-        close: Close
+        finish: Finish
+        importTaskSummaryFile: Import file
+      errors:
+        taskSummaryImportFailed: Failed to import task summary file.
+        taskSummaryImportUnsupportedFormat: "Unsupported file format. Supported: {formats}"
     errors:
       rateLimited: GitHub API rate limit reached. Connect GitHub and try again later.
       loadFailed: Failed to load submissions from GitHub.
