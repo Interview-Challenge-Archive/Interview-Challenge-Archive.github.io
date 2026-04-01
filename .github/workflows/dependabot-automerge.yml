@@ -92,6 +92,14 @@ jobs:
             core.setOutput('should_merge', 'true');
             core.setOutput('pr_number', String(pr.number));
 
+      - name: Approve Dependabot PR
+        if: steps.eligibility.outputs.should_merge == 'true'
+        uses: peter-evans/approve-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.eligibility.outputs.pr_number }}
+          comment: "Automatically approving Dependabot PR after successful checks."
+
       - name: Enable auto-merge for Dependabot PRs
         if: steps.eligibility.outputs.should_merge == 'true'
         uses: peter-evans/enable-pull-request-automerge@v3
