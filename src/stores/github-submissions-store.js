@@ -191,7 +191,7 @@ async function searchSubmissionPullRequestsByRepository (octokit, viewerLogin) {
     return new Map()
   }
 
-  let searchResults = []
+  let searchResults
 
   try {
     searchResults = await octokit.paginate(
@@ -216,7 +216,7 @@ async function searchSubmissionPullRequestsByRepository (octokit, viewerLogin) {
 
   const pullRequestsByRepository = new Map()
 
-  for (const searchResult of searchResults) {
+  for (const searchResult of searchResults ?? []) {
     if (String(searchResult?.user?.login ?? '').trim() !== SUBMISSION_BOT_LOGIN) {
       continue
     }
