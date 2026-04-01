@@ -1,5 +1,5 @@
-import { installQuasarPlugin } from '@quasar/quasar-app-extension-testing-unit-vitest'
-import { Notify, Meta } from 'quasar'
+import { config } from '@vue/test-utils'
+import { Quasar, Notify, Meta } from 'quasar'
 import { vi } from 'vitest'
 
 // Mock useMeta globally to avoid document is not defined errors when tests finish
@@ -11,9 +11,30 @@ vi.mock('quasar', async (importOriginal) => {
   }
 })
 
-installQuasarPlugin({
-  plugins: { Notify, Meta }
-})
+config.global.plugins = [
+  [Quasar, { plugins: { Notify, Meta } }],
+  ...(config.global.plugins ?? [])
+]
+
+config.global.stubs = {
+  QLayout: {
+    name: 'QLayout',
+    template: '<div class="q-layout" v-bind="$attrs"><slot /></div>'
+  },
+  QPageContainer: {
+    name: 'QPageContainer',
+    template: '<div class="q-page-container" v-bind="$attrs"><slot /></div>'
+  },
+  QPage: {
+    name: 'QPage',
+    template: '<div class="q-page" v-bind="$attrs"><slot /></div>'
+  },
+  QFooter: {
+    name: 'QFooter',
+    template: '<footer class="q-footer" v-bind="$attrs"><slot /></footer>'
+  },
+  ...(config.global.stubs ?? {})
+}
 
 function createStorageMock () {
   const storage = new Map()
