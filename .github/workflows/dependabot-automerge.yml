@@ -92,28 +92,6 @@ jobs:
             core.setOutput('should_merge', 'true');
             core.setOutput('pr_number', String(pr.number));
 
-      - name: Approve Dependabot PR
-        if: steps.eligibility.outputs.should_merge == 'true'
-        uses: actions/github-script@v8
-        env:
-          PR_NUMBER: ${{ steps.eligibility.outputs.pr_number }}
-        with:
-          script: |
-            const prNumber = Number(process.env.PR_NUMBER);
-
-            if (!Number.isInteger(prNumber)) {
-              core.setFailed(`Invalid pull request number: ${process.env.PR_NUMBER}`);
-              return;
-            }
-
-            await github.rest.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-              event: 'APPROVE',
-              body: 'Automatically approving Dependabot PR after successful checks.',
-            });
-
       - name: Enable auto-merge for Dependabot PRs
         if: steps.eligibility.outputs.should_merge == 'true'
         uses: peter-evans/enable-pull-request-automerge@v3
