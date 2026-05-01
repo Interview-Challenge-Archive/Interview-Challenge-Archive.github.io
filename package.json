@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^22.0.1",
-    "@openfeature/web-sdk": "^1.7.3",
+    "@openfeature/web-sdk": "^1.8.0",
     "@quasar/extras": "^1.16.4",
     "@quasar/quasar-ui-qmarkdown": "^2.0.5",
     "pinia": "^3.0.1",
