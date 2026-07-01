@@ -55,7 +55,7 @@
     "@rollup/plugin-yaml": "^5.0.0",
     "@vue/test-utils": "^2.4.11",
     "autoprefixer": "^10.5.0",
-    "happy-dom": "^20.9.0",
+    "happy-dom": "^20.10.6",
     "eslint": "^10.6.0",
     "eslint-plugin-vue": "^10.9.1",
     "globals": "^17.6.0",
