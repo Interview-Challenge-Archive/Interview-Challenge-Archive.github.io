@@ -43,7 +43,7 @@
     "@quasar/quasar-ui-qmarkdown": "^3.0.0-rc.2",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.7.1",
-    "quasar": "^2.19.3",
+    "quasar": "^2.20.2",
     "vue": "^3.5.39",
     "vue-i18n": "^11.4.6",
     "vue-router": "^5.1.0"
