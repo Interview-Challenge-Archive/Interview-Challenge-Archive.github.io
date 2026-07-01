@@ -63,7 +63,7 @@
     "vite-jsconfig-paths": "^2.0.1",
     "vite-plugin-checker": "^0.14.1",
     "vitest": "^4.1.8",
-    "vue-eslint-parser": "^10.2.0"
+    "vue-eslint-parser": "^10.4.1"
   },
   "engines": {
     "node": "^28 || ^26 || ^24 || ^22 || ^20",
