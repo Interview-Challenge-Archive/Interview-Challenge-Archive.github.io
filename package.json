@@ -54,7 +54,7 @@
     "@quasar/app-vite": "~2.6.2",
     "@rollup/plugin-yaml": "^5.0.0",
     "@vue/test-utils": "^2.4.11",
-    "autoprefixer": "^10.5.0",
+    "autoprefixer": "^10.5.2",
     "happy-dom": "^20.10.6",
     "eslint": "^10.6.0",
     "eslint-plugin-vue": "^10.9.1",
