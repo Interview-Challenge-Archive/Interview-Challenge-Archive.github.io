@@ -39,7 +39,7 @@
   "dependencies": {
     "@octokit/rest": "^22.0.1",
     "@openfeature/web-sdk": "^1.10.0",
-    "@quasar/extras": "^2.0.2",
+    "@quasar/extras": "^2.0.4",
     "@quasar/quasar-ui-qmarkdown": "^4.2.1",
     "pinia": "^4.0.3",
     "pinia-plugin-persistedstate": "^4.7.1",
