@@ -41,7 +41,7 @@
     "@openfeature/web-sdk": "^1.10.0",
     "@quasar/extras": "^2.0.2",
     "@quasar/quasar-ui-qmarkdown": "^4.2.1",
-    "pinia": "^4.0.2",
+    "pinia": "^4.0.3",
     "pinia-plugin-persistedstate": "^4.7.1",
     "quasar": "^2.23.3",
     "vue": "^3.5.42",
