@@ -56,7 +56,7 @@
     "@vue/test-utils": "^2.4.11",
     "autoprefixer": "^10.5.4",
     "happy-dom": "^20.11.1",
-    "eslint": "^10.8.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-vue": "^10.10.0",
     "globals": "^17.8.0",
     "postcss": "^8.5.24",
